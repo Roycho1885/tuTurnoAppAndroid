@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".PrincipalActivity">
+
+    <TextView
+        android:id="@+id/versiandaa"
+        android:layout_marginBottom="20dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cliente"/>
+
+    <Button
+        android:id="@+id/botonfecha"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/diseboton"
+        android:textColor="@drawable/seleccionboton"
+        android:text="seleccionar fecha" />
+
+    <TextView
+        android:id="@+id/setfechaa"
+        android:layout_margin="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:ems="10" />
+
+    <Button
+        android:id="@+id/botonturno"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/diseboton"
+        android:textColor="@drawable/seleccionboton"
+        android:text="elegir turno" />
+
+    <TextView
+    android:id="@+id/mostrarturnoo"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:textSize="20sp"
+    android:textStyle="bold"
+    android:gravity="center"
+    android:layout_margin="10dp"
+    android:ems="10"
+    android:layout_gravity="center"/>
+
+</LinearLayout>

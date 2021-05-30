@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:id="@+id/otroscroll"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".LaFuria.ui.home.HomeFragment">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/setfecha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="40dp"
+            android:ems="10"
+            android:focusable="true"
+            android:fontFamily="@font/nougat_extrablack"
+            android:gravity="center"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="16dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/botondisci"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="40dp"
+            android:hint="@string/hintdis"
+            app:boxBackgroundMode="outline"
+            app:layout_constraintTop_toTopOf="@+id/setfecha">
+
+            <AutoCompleteTextView
+                android:id="@+id/dropdown_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+        
+        <ListView
+            android:id="@+id/listaturnos"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginTop="30dp"
+            android:listSelector="@drawable/lista_selector"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/botondisci"
+            tools:ignore="NestedScrolling"
+            android:focusable="true" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView3"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-8540442919500654/3836759968">
+    </com.google.android.gms.ads.AdView>
+
+</LinearLayout>
+
+</ScrollView>

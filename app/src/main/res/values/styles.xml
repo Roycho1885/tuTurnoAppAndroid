@@ -1,0 +1,41 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/secondaryLightColor</item>
+        <item name="android:fontFamily">@font/goodtime</item>
+    </style>
+
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">10dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="estilonavigation" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/goodtime</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="estilodrawer" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/goodtime</item>
+    </style>
+
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:fontFamily">@font/goodtime</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+</resources>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".RecuperoActivity">
+
+    <ProgressBar
+        android:id="@+id/progressBar3"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:indeterminate="true"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txtemail"
+            android:drawableStart="@drawable/ic_mail_outline_black_24dp"
+            android:ems="10"
+            android:hint="@string/correo"
+            android:autofillHints="@string/correo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:layout_margin="10dp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:onClick="enviaremail"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/envioemail"
+        android:layout_margin="10dp"
+        android:background="@drawable/diseboton"
+        android:textColor="@drawable/seleccionboton"/>
+</LinearLayout>

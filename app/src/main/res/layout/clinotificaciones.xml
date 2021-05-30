@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:text="@string/txtnotificacionescli" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/botondisciplinasnoti"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:hint="@string/hintdisciplina1"
+            app:boxBackgroundMode="outline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <AutoCompleteTextView
+                android:id="@+id/gruponotif"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_baseline_directions_run_24"
+                android:textSize="16sp"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/botonsuscribir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/diseboton"
+            android:drawableStart="@drawable/ic_baseline_check_circle_24"
+            android:text="@string/botondejarsuscri"
+            android:textColor="@drawable/seleccionboton" />
+        <Button
+            android:id="@+id/botondejarseguir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/ic_baseline_cancel_24"
+            android:background="@drawable/diseboton"
+            android:text="@string/botondejarsuscri"
+            android:textColor="@drawable/seleccionboton" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="@string/aclaracionnotifi"
+            android:textSize="12sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

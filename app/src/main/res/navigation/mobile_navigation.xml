@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.tuTurno.app.LaFuria.ui.home.HomeFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_principal">
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.tuTurno.app.LaFuria.ui.ListaTurnos.ListTurnos"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_listturnos" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/contacto"
+        android:name="com.tuTurno.app.LaFuria.FragmentContacto"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_contacto" >
+    </fragment>
+    <fragment
+        android:id="@+id/cliconfig"
+        android:name="com.tuTurno.app.LaFuria.fragmentsConfigCli.CliPager"
+        android:label="@string/app_name"
+        tools:layout="@layout/clinotificaciones">
+    </fragment>
+
+    <fragment
+        android:id="@+id/acercade"
+        android:name="com.tuTurno.app.LaFuria.Acercade"
+        android:label="@string/app_name"
+        tools:layout="@layout/acercade" >
+    </fragment>
+
+
+</navigation>

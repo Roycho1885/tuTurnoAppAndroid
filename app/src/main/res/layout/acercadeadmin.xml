@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="ScrollViewCount"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="150dp"
+            android:layout_height="140dp"
+            android:layout_margin="15sp"
+            android:layout_gravity="center"
+            android:layout_marginTop="50sp"
+            android:contentDescription="@string/app_name"
+            app:srcCompat="@drawable/tuturnoicon"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/acercade"
+            android:textAlignment="center"
+            android:textSize="15sp">
+        </TextView>
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="170dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:contentDescription="@string/app_name"
+            app:srcCompat="@drawable/logofirebase"
+            android:focusable="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/acercade1"
+            android:textAlignment="center">
+        </TextView>
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:contentDescription="@string/app_name"
+            app:srcCompat="@drawable/bowa"
+            android:focusable="true" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/textosigue"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:text="@string/acercade4"
+                android:layout_centerHorizontal="true">
+            </TextView>
+
+            <ImageView
+                android:id="@+id/imagenweb"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="20dp"
+                android:layout_below="@+id/textosigue"
+                android:clickable="true"
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@drawable/web"
+                android:focusable="true" />
+
+            <ImageView
+                android:id="@+id/imagenfacebook"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:clickable="true"
+                android:layout_toEndOf="@+id/imagenweb"
+                android:layout_below="@+id/textosigue"
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@drawable/facebook"
+                android:focusable="true" />
+
+            <ImageView
+                android:id="@+id/imageninstagram"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_below="@+id/textosigue"
+                android:clickable="true"
+                android:layout_toEndOf="@+id/imagenfacebook"
+                android:layout_marginStart="20dp"
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@drawable/instagram"
+                android:focusable="true" />
+
+
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btncalificar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/diseboton"
+            android:text="@string/calificarapp"
+            android:textColor="@drawable/seleccionboton" />
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:adSize="BANNER"
+            app:adUnitId="ca-app-pub-8540442919500654/3182014220">
+
+        </com.google.android.gms.ads.AdView>
+
+    </LinearLayout>
+
+
+</ScrollView>

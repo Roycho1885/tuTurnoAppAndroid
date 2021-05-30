@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:id="@+id/scrolll"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="#FFFFFF"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:text="@string/tituloverpagos"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView8"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:adSize="BANNER"
+            app:adUnitId="ca-app-pub-8540442919500654/7595111301">
+        </com.google.android.gms.ads.AdView>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/botonmesdesple"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxBackgroundMode="filled"
+            app:boxStrokeColor="#ff9e40"
+            app:hintTextColor="#ff9e40"
+            android:layout_margin="10dp"
+            android:hint="@string/selemes">
+            <AutoCompleteTextView
+                android:id="@+id/desplemes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:textSize="16sp"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/botonbuscar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:autofillHints="@string/nombre"
+                android:drawableStart="@drawable/ic_baseline_search_24"
+                android:ems="10"
+                android:hint="@string/buscar"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/botonverpagos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/diseboton"
+            android:text="@string/tituloverpagos"
+            android:textColor="@drawable/seleccionboton" />
+
+        <ListView
+            android:id="@+id/listacuotasclientespagas"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:choiceMode="singleChoice"
+            tools:ignore="NestedScrolling" />
+
+    </LinearLayout>
+</ScrollView>

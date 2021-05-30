@@ -1,0 +1,114 @@
+<resources>
+    <string name="app_name">tuTurno</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="dni">DNI</string>
+    <string name="direccion">Dirección</string>
+    <string name="gym">Selecciona Gimnasio</string>
+    <string name="correo">Email</string>
+    <string name="contraseña">Contraseña</string>
+    <string name="codigo">Código</string>
+    <string name="codigoacceso">Ingrese el nuevo código</string>
+    <string name="codigoactual">Código Actual</string>
+    <string name="codigoboton">Aceptar</string>
+    <string name="config">Configuración</string>
+    <string name="usuario">Usuario</string>
+    <string name="olvidar">¿Olvidaste tu contraseña?</string>
+    <string name="registrar">Registrar</string>
+    <string name="iniciar">Iniciar Sesión</string>
+    <string name="envioemail">Enviar contraseña</string>
+    <string name="cuentacrear">Crear Cuenta</string>
+    <string name="calificarapp">Calificar en Play Store</string>
+    <string name="actualizardatos">Actualizar Datos</string>
+    <string name="cliente">Hola </string>
+    <string name="title_activity_drawer_navigation">DrawerNavigation</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Compartir</string>
+    <string name="botondialogo">Cerrar</string>
+    <string name="noturnos">El fin de semana no se asignan turnos.</string>
+    <string name="buscar">Buscar</string>
+
+    <string name="turnoasig">Turno Asignado</string>
+    <string name="turnomodi">Modificar Turno</string>
+    <string name="turnoelim">Eliminar Turno</string>
+    <string name="botoncargarlista">Cargar Lista</string>
+    <string name="botoncargar">Cargar</string>
+    <string name="botoncargarfoto">Cargar Logo</string>
+    <string name="botonmarcaradmin">Admin</string>
+    <string name="botondesmarcaradmin">Admin</string>
+
+
+
+    <string name="abrir">Abrir</string>
+    <string name="cerrar">Cerrar</string>
+
+    <string name="menu_listturnos">Mi turno</string>
+    <string name="menu_turnos">Mi Turno</string>
+    <string name="menu_sesion">Cerrar Sesión</string>
+    <string name="menu_config">Configuración</string>
+    <string name="menu_home">Home</string>
+    <string name="hintdis">Seleccionar Disciplina</string>
+    <string name="hinttur">Seleccionar Turno</string>
+    <string name="hincli">Seleccionar Cliente</string>
+    <string name="titucupo">Cupos</string>
+    <string name="menu_contacto">Contacto</string>
+
+
+    <string name="contacto1">Destinatario</string>
+    <string name="contacto2">Mensaje</string>
+    <string name="contacto3">tuturno.app.contacto@gmail.com</string>
+    <string name="contacto4">Asunto</string>
+    <string name="contacto5">Enviar</string>
+    <string name="contacto6">mensaje</string>
+    <string name="contacto7">asunto</string>
+
+
+
+    <string name="errorcontra">Ingrese contraseña</string>
+    <string name="errorusu">Ingrese email</string>
+
+    <string name="acercade">Aplicación creada por Genoff, Roy Alexis\n Versión 1.2\n</string>
+    <string name="acercade1">Agradecimiento</string>
+    <string name="acercade2"><u>Visita nuestra web</u></string>
+    <string name="acercade3">Acerca de</string>
+    <string name="acercade4">Síguenos</string>
+
+    <string name="checkboxcoach">Ingreso Coach</string>
+    <string name="checkboxpolitica"><u>Acepta nuestras Políticas de Privacidad</u></string>
+    <string name="alertdialog">Ingrese código de verificación</string>
+
+    <string name="tituloturno">Agregar Disciplina y Turno</string>
+    <string name="tituloturno1">Agregar Turno a Disciplina existente</string>
+    <string name="hintdisciplina">Ingrese Disciplina</string>
+    <string name="hintdisciplina1">Seleccione Disciplina</string>
+    <string name="botondisci">Agregar</string>
+    <string name="horaturno">Ingrese hora de turno</string>
+    <string name="diasturno">Seleccione dias</string>
+    <string name="cupoturno">Ingrese cupo</string>
+    <string name="botoneliminar">Eliminar Turno</string>
+    <string name="botondejarsuscri">Suscripción</string>
+    <string name="aclaracioneliminar">Recuerda que al eliminar todos los turnos la disciplina tambien se elimina.</string>
+    <string name="aclaracionnotifi">Recuerda que al desinstalar la app automáticamente se cancelan tus suscripciones.</string>
+
+    <string name="txtnotificacionescli">Agregar grupo para recibir notificaciones</string>
+    <string name="txtnotificacionesadmin">Seleccionar grupo para enviar notificaciones</string>
+    <string name="titulonotiadmin">Escriba un título</string>
+    <string name="detallenotiadmin">Escriba un detalle</string>
+
+    <string name="fechatarea">Ingrese fecha</string>
+    <string name="fechapago">Ingrese fecha de pago</string>
+    <string name="botonregistrarpago">Registrar Pago</string>
+    <string name="tituloverpagos">Ver Pagos</string>
+    <string name="mespago">Seleccione mes correspondiente</string>
+    <string name="selemes">Seleccione mes</string>
+    <string name="txtfechapago">Fecha de Pago: </string>
+    <string name="txtfechavenc">Vencimiento: </string>
+    <string name="txtultimopago">Ultimo Pago: </string>
+    <string name="txtestado">Estado: </string>
+    <string name="horatarea">Ingrese hora</string>
+    <string name="btnguardar">Guardar Tarea</string>
+    <string name="btneliminar">Eliminar Tarea</string>
+
+
+</resources>

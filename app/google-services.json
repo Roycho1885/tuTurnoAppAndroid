@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "704664803591",
+    "firebase_url": "https://tuturno-91997.firebaseio.com",
+    "project_id": "tuturno-91997",
+    "storage_bucket": "tuturno-91997.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704664803591:android:f0ef01d9db1f9459f40da2",
+        "android_client_info": {
+          "package_name": "com.tuTurno.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "704664803591-130teudvnm19lb0v4abip85r751mpu2m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-pQaCIgz3o3w-G6Qs1jm6jyLM_U3cXDk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "704664803591-130teudvnm19lb0v4abip85r751mpu2m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

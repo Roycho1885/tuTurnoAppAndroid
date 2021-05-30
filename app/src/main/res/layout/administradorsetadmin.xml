@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:id="@+id/misroll"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/botongym"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="40dp"
+                android:hint="@string/gym"
+                app:boxBackgroundMode="filled"
+                app:boxStrokeColor="#ff9e40"
+                app:hintTextColor="#ff9e40"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <AutoCompleteTextView
+                    android:id="@+id/txtgim"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/gym"
+                    android:backgroundTint="#FAFAFA"
+                    android:editable="false"
+                    android:ems="10"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/botoncargar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/botongym"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@drawable/diseboton"
+                android:textColor="@drawable/seleccionboton"
+                android:text="@string/botoncargarlista" />
+
+            <ListView
+                android:id="@+id/lista"
+                android:layout_width="match_parent"
+                android:layout_height="250sp"
+                android:choiceMode="singleChoice"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10sp"
+                app:layout_constraintTop_toBottomOf="@+id/botoncargar"
+                tools:ignore="NestedScrolling">
+            </ListView>
+
+            <Button
+                android:id="@+id/botonaceptar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/diseboton"
+                android:drawableStart="@drawable/ic_baseline_check_circle_24"
+                android:text="@string/botonmarcaradmin"
+                android:textColor="@drawable/seleccionboton"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toStartOf="@+id/botoncancelar"
+                app:layout_constraintHorizontal_bias="0.22"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lista"
+                tools:ignore="ButtonStyle" />
+
+            <Button
+                android:id="@+id/botoncancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/diseboton"
+                android:drawableStart="@drawable/ic_baseline_cancel_24"
+                android:text="@string/botondesmarcaradmin"
+                android:textColor="@drawable/seleccionboton"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lista"
+                tools:ignore="ButtonStyle" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+</ScrollView>

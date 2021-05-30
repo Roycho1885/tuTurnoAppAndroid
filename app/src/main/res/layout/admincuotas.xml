@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:id="@+id/scroll"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="#FFFFFF"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:text="@string/botonregistrarpago"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtfecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:drawableStart="@drawable/ic_baseline_today_24"
+                android:ems="10"
+                android:hint="@string/fechapago"
+                android:clickable="true"
+                android:editable="false"
+                android:focusable="false" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txtbuscar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:autofillHints="@string/nombre"
+            android:drawableStart="@drawable/ic_baseline_search_24"
+            android:ems="10"
+            android:hint="@string/buscar"
+            android:inputType="textPersonName" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+        <ListView
+            android:id="@+id/listacuotasclientes"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:listSelector="@drawable/lista_selector"
+            android:choiceMode="singleChoice"
+            tools:ignore="NestedScrolling" />
+
+        <Button
+            android:id="@+id/botonagregarpago"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/diseboton"
+            android:text="@string/botonregistrarpago"
+            android:textColor="@drawable/seleccionboton" />
+
+    </LinearLayout>
+</ScrollView>

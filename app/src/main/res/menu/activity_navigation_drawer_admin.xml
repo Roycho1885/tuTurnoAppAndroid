@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/fragment_admin"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/AdminCodigo"
+            android:icon="@drawable/ic_baseline_build_24"
+            android:title="@string/config" />
+        <item
+            android:id="@+id/fragment_contacto_admin"
+            android:icon="@drawable/ic_baseline_email_24"
+            android:title="@string/menu_contacto" />
+        <item
+            android:id="@+id/acercade"
+            android:icon="@drawable/ic_baseline_smartphone_24"
+            android:title="@string/acercade3" />
+    </group>
+
+</menu>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="ScrollViewCount"
+        android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/app_name"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        app:srcCompat="@drawable/tuturnoicon"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        app:endIconMode="clear_text"
+        app:errorEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txtUsuario"
+            android:drawableStart="@drawable/ic_mail_outline_black_24dp"
+            android:ems="10"
+            android:hint="@string/usuario"
+            android:textCursorDrawable="@color/secondaryColor"
+            android:autofillHints="@string/usuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:layout_margin="10dp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true"
+        app:errorEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txtContraseña"
+            android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+            android:ems="10"
+            android:hint="@string/contraseña"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:layout_margin="10dp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        android:text="@string/checkboxcoach" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/botonlogin"
+            android:onClick="login"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin = "15dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/diseboton"
+            android:textColor="@drawable/seleccionboton"
+            android:text="@string/iniciar" />
+
+
+        <Button
+            android:id="@+id/botonregistrar"
+            android:onClick="registrar"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:background="@drawable/diseboton"
+            android:layout_margin="15dp"
+            android:textColor="@drawable/seleccionboton"
+            android:text="@string/registrar" />
+
+        <TextView
+            android:id="@+id/olvidecontra"
+            android:onClick="OlvideContrasena"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:clickable="true"
+            android:layout_margin="10dp"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/olvidar"
+            android:focusable="true"/>
+
+    </TableLayout>
+
+    </LinearLayout>
+
+</ScrollView>
