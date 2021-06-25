@@ -7,36 +7,43 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.tuTurno.app.LaFuria.ui.home.HomeFragment"
+        android:name="com.tuTurno.app.Cliente.HomeCliente"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_principal">
     </fragment>
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.tuTurno.app.LaFuria.ui.ListaTurnos.ListTurnos"
+        android:name="com.tuTurno.app.Cliente.ListTurnos"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_listturnos" >
     </fragment>
 
     <fragment
         android:id="@+id/contacto"
-        android:name="com.tuTurno.app.LaFuria.FragmentContacto"
+        android:name="com.tuTurno.app.Cliente.FragmentContacto"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_contacto" >
     </fragment>
     <fragment
         android:id="@+id/cliconfig"
-        android:name="com.tuTurno.app.LaFuria.fragmentsConfigCli.CliPager"
+        android:name="com.tuTurno.app.Cliente.fragmentsConfigCli.CliPager"
         android:label="@string/app_name"
         tools:layout="@layout/clinotificaciones">
     </fragment>
 
     <fragment
         android:id="@+id/acercade"
-        android:name="com.tuTurno.app.LaFuria.Acercade"
+        android:name="com.tuTurno.app.Cliente.Acercade"
         android:label="@string/app_name"
         tools:layout="@layout/acercade" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/clitema"
+        android:name="com.tuTurno.app.Cliente.CambiarTemaCliente"
+        android:label="@string/app_name"
+        tools:layout="@layout/cambiartema" >
     </fragment>
 
 

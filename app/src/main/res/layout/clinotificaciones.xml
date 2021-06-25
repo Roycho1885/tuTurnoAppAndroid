@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:paddingBottom="10dp"
             android:layout_marginTop="10dp"
             android:textStyle="bold"
             android:text="@string/txtnotificacionescli" />
@@ -52,10 +53,8 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/diseboton"
             android:drawableStart="@drawable/ic_baseline_check_circle_24"
-            android:text="@string/botondejarsuscri"
-            android:textColor="@drawable/seleccionboton" />
+            android:text="@string/botondejarsuscri" />
         <Button
             android:id="@+id/botondejarseguir"
             android:layout_width="wrap_content"
@@ -64,9 +63,7 @@
             android:layout_margin="10dp"
             android:layout_marginTop="10dp"
             android:drawableStart="@drawable/ic_baseline_cancel_24"
-            android:background="@drawable/diseboton"
-            android:text="@string/botondejarsuscri"
-            android:textColor="@drawable/seleccionboton" />
+            android:text="@string/botondejarsuscri" />
 
         <TextView
             android:layout_width="match_parent"
@@ -78,4 +75,4 @@
             android:textSize="12sp"
             android:textStyle="bold"/>
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

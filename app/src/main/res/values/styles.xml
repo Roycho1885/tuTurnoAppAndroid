@@ -5,8 +5,87 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorAccent">@color/secondaryLightColor</item>
+        <item name="tabStyle">@style/TabLayoutStyle</item>
+        <item name="buttonStyle">@style/AppTheme.Button</item>
         <item name="android:fontFamily">@font/goodtime</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme1">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryColor1</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor1</item>
+        <item name="colorSecondary">@color/secondaryColor1</item>
+        <item name="colorAccent">@color/secondaryLightColor1</item>
+        <item name="tabStyle">@style/TabLayoutStyle1</item>
+        <item name="android:fontFamily">@font/goodtime</item>
+        <item name="buttonStyle">@style/AppTheme.Button1</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme2">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryColor2</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor2</item>
+        <item name="colorSecondary">@color/secondaryColor2</item>
+        <item name="colorAccent">@color/secondaryLightColor2</item>
+        <item name="android:fontFamily">@font/goodtime</item>
+        <item name="buttonStyle">@style/AppTheme.Button2</item>
+        <item name="tabStyle">@style/TabLayoutStyle2</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme3">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryColor3</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor3</item>
+        <item name="colorSecondary">@color/secondaryColor3</item>
+        <item name="colorAccent">@color/secondaryLightColor3</item>
+        <item name="android:fontFamily">@font/goodtime</item>
+        <item name="buttonStyle">@style/AppTheme.Button3</item>
+        <item name="tabStyle">@style/TabLayoutStyle3</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppThemeSuperAdmin" parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorAccent">@color/secondaryLightColor</item>
+        <item name="tabStyle">@style/TabLayoutStyle</item>
+        <item name="buttonStyle">@style/AppTheme.Button</item>
+        <item name="android:fontFamily">@font/goodtime</item>
+    </style>
+
+    <style name="TabLayoutStyle" parent="Widget.Design.TabLayout">
+        <item name="android:background">@color/primaryColor</item>
+        <item name="tabIconTint">@color/primaryTextColor</item>
+        <item name="tabIndicatorColor">@color/secondaryLightColor</item>
+    </style>
+
+    <style name="TabLayoutStyle1" parent="Widget.Design.TabLayout">
+        <item name="android:background">@color/secondaryColor1</item>
+        <item name="tabIconTint">@color/primaryTextColor1</item>
+        <item name="tabIndicatorColor">@color/primaryDarkColor1</item>
+    </style>
+
+    <style name="TabLayoutStyle2" parent="Widget.Design.TabLayout">
+        <item name="android:background">@color/secondaryColor1</item>
+        <item name="tabIconTint">@color/primaryTextColor1</item>
+        <item name="tabIndicatorColor">@color/secondaryColor2</item>
+    </style>
+
+    <style name="TabLayoutStyle3" parent="Widget.Design.TabLayout">
+        <item name="android:background">@color/secondaryColor3</item>
+        <item name="tabIconTint">@color/primaryTextColor1</item>
+        <item name="tabIndicatorColor">@color/primaryDarkColor3</item>
     </style>
 
     <style name="Divider">
@@ -14,6 +93,27 @@
         <item name="android:layout_height">10dp</item>
         <item name="android:background">?android:attr/listDivider</item>
     </style>
+
+    <style name="AppTheme.Button" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/botones</item>
+        <item name="android:textColor">@drawable/seleccionboton</item>
+    </style>
+
+    <style name="AppTheme.Button1" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/botones1</item>
+        <item name="android:textColor">@drawable/seleccionboton</item>
+    </style>
+
+    <style name="AppTheme.Button2" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/botones2</item>
+        <item name="android:textColor">@drawable/seleccionboton</item>
+    </style>
+
+    <style name="AppTheme.Button3" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/botones3</item>
+        <item name="android:textColor">@drawable/seleccionboton</item>
+    </style>
+
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -37,5 +137,11 @@
         <item name="android:fontFamily">@font/goodtime</item>
         <item name="android:textSize">17sp</item>
     </style>
+
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="colorAccent">#8d948d</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
 
 </resources>

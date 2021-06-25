@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".Cliente.CambiarTemaCliente">
+
+
+    <RadioGroup
+        android:id="@+id/group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/titulotema" />
+
+        <RadioButton
+            android:id="@+id/tema1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/primaryColor"
+            android:textSize="16sp"
+            android:text="@string/tema1"/>
+
+
+        <RadioButton
+            android:id="@+id/tema2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/primaryColor1"
+            android:textSize="16sp"
+            android:text="@string/tema2"/>
+
+        <RadioButton
+            android:id="@+id/tema3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/primaryColor2"
+            android:textSize="16sp"
+            android:text="@string/tema3"/>
+
+        <RadioButton
+            android:id="@+id/tema4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/primaryColor3"
+            android:textSize="16sp"
+            android:text="@string/tema4"/>
+
+    </RadioGroup>
+
+</LinearLayout>

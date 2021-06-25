@@ -14,8 +14,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.tuTurno.app.LoginActivity"
-            android:screenOrientation="portrait"
-            android:label="tuTurno">
+            android:label="tuTurno"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,26 +25,26 @@
         </activity>
         <activity
             android:name="com.tuTurno.app.RecuperoActivity"
-            android:screenOrientation="portrait"
-            android:label="Recuperar Contraseña" />
+            android:label="Recuperar Contraseña"
+            android:configChanges="orientation|screenSize"/>
         <activity
             android:name="com.tuTurno.app.RegistroActivity"
-            android:screenOrientation="portrait"
-            android:label="Registrar Cliente" />
+            android:label="Registrar Cliente"
+            android:configChanges="orientation|screenSize"/>
         <activity
-            android:name="com.tuTurno.app.LaFuria.ActividadPrincipal"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-
+            android:name="com.tuTurno.app.Cliente.ActividadCliente"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|screenSize">
         </activity>
         <activity
-            android:name="com.tuTurno.app.LaFuria.ActividadAdmin"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name="com.tuTurno.app.Admin.ActividadAdmin"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|screenSize">
         </activity>
         <activity
-            android:name="com.tuTurno.app.ActividadAdministrador"
-            android:screenOrientation="portrait">
+            android:name="com.tuTurno.app.SuperAdmin.ActividadSuperAdmin"
+            android:theme="@style/AppThemeSuperAdmin"
+            android:configChanges="orientation|screenSize">
         </activity>
 
         <!-- Crop Imagenes-->

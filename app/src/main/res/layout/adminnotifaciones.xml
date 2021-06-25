@@ -87,9 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="20dp"
-            android:background="@drawable/diseboton"
-            android:text="@string/contacto5"
-            android:textColor="@drawable/seleccionboton" />
+            android:text="@string/contacto5" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

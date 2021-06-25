@@ -118,9 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:background="@drawable/diseboton"
-            android:text="@string/calificarapp"
-            android:textColor="@drawable/seleccionboton" />
+            android:text="@string/calificarapp" />
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adView"

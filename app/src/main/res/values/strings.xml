@@ -12,6 +12,7 @@
     <string name="codigoactual">Código Actual</string>
     <string name="codigoboton">Aceptar</string>
     <string name="config">Configuración</string>
+    <string name="tema">Cambiar Colores</string>
     <string name="usuario">Usuario</string>
     <string name="olvidar">¿Olvidaste tu contraseña?</string>
     <string name="registrar">Registrar</string>
@@ -25,6 +26,15 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Compartir</string>
+
+    <string name="action_color">Cambiar Tema</string>
+    <string name="tema1">Tema 1</string>
+    <string name="tema2">Tema 2</string>
+    <string name="tema3">Tema 3</string>
+    <string name="tema4">Tema 4</string>
+    <string name="titulotema">Elige un tema</string>
+
+
     <string name="botondialogo">Cerrar</string>
     <string name="noturnos">El fin de semana no se asignan turnos.</string>
     <string name="buscar">Buscar</string>

@@ -29,8 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.tuTurno.app.LaFuria.ActividadAdmin;
-import com.tuTurno.app.LaFuria.ActividadPrincipal;
+import com.tuTurno.app.Admin.ActividadAdmin;
+import com.tuTurno.app.Cliente.ActividadCliente;
 
 import java.util.Objects;
 
@@ -182,10 +182,10 @@ public class LoginActividad extends AppCompatActivity {
                 if (user.equals("roygenoff@gmail.com") || user.equals("facundoca14@gmail.com") || user.equals("juanmanuelmartinez65.jmm@gmail.com")) {
                     startActivity(new Intent(this, ActividadAdmin.class));
                 } else {
-                    startActivity(new Intent(this, ActividadPrincipal.class));
+                    startActivity(new Intent(this, ActividadCliente.class));
                 }
             } else {
-                startActivity(new Intent(this, ActividadPrincipal.class));
+                startActivity(new Intent(this, ActividadCliente.class));
             }
         //}
 

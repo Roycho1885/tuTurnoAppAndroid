@@ -3,7 +3,6 @@ package com.tuTurno.app
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
-import android.app.TaskStackBuilder.create
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -13,25 +12,19 @@ import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.ScrollerCompat.create
-import com.google.android.datatransport.runtime.dagger.internal.ProviderOfLazy.create
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory.create
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory.create
-import com.google.android.play.core.review.ReviewManagerFactory.create
-import com.google.android.play.core.splitinstall.testing.FakeSplitInstallManagerFactory.create
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.database.*
-import com.tuTurno.app.LaFuria.ActividadAdmin
-import com.tuTurno.app.LaFuria.ActividadPrincipal
+import com.tuTurno.app.Admin.ActividadAdmin
+import com.tuTurno.app.Cliente.ActividadCliente
+import com.tuTurno.app.SuperAdmin.ActividadSuperAdmin
 import models.cliente
 import java.util.*
 
@@ -47,6 +40,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var firebaseDatabase:FirebaseDatabase
     private lateinit var databaseReference:DatabaseReference
     private lateinit var progressDialog: ProgressDialog
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +68,11 @@ class LoginActivity : AppCompatActivity() {
 
         iniciarFirebase()
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+            progressDialog.dismiss()
     }
 
     fun OlvideContrasena(view:View) {
@@ -169,13 +169,13 @@ class LoginActivity : AppCompatActivity() {
 
     private fun recibirnombre(user:String , admin:String){
         if(user=="roygenoff@gmail.com"){
-            startActivity(Intent(this, ActividadAdministrador::class.java))
+            startActivity(Intent(this, ActividadSuperAdmin::class.java))
         }else{
 
                 if (checkadmin.isChecked && admin.equals("Si")) {
                     startActivity(Intent(this, ActividadAdmin::class.java))
                 }else{
-                    startActivity(Intent(this, ActividadPrincipal::class.java))
+                    startActivity(Intent(this, ActividadCliente::class.java))
                 }
         }
     }

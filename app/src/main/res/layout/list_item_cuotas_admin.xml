@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        app:cardBackgroundColor="@color/browser_actions_title_color"
+        app:cardBackgroundColor="@color/secondaryColor1"
         app:cardCornerRadius="20dp"
         app:cardUseCompatPadding="false"
         app:cardPreventCornerOverlap="true">

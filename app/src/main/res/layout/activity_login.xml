@@ -34,7 +34,6 @@
             android:drawableStart="@drawable/ic_mail_outline_black_24dp"
             android:ems="10"
             android:hint="@string/usuario"
-            android:textCursorDrawable="@color/secondaryColor"
             android:autofillHints="@string/usuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -81,8 +80,6 @@
             android:layout_gravity="center"
             android:layout_margin = "15dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/diseboton"
-            android:textColor="@drawable/seleccionboton"
             android:text="@string/iniciar" />
 
 
@@ -92,9 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:background="@drawable/diseboton"
             android:layout_margin="15dp"
-            android:textColor="@drawable/seleccionboton"
             android:text="@string/registrar" />
 
         <TextView

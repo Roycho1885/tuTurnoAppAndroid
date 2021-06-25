@@ -7,29 +7,37 @@
 
     <fragment
         android:id="@+id/fragment_admin"
-        android:name="com.tuTurno.app.LaFuria.ui.ListaTurnos.ListAdmin"
+        android:name="com.tuTurno.app.Admin.HomeAdmin"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_listar_admin">
+        tools:layout="@layout/fragment_home_admin">
     </fragment>
 
     <fragment
         android:id="@+id/fragment_contacto_admin"
-        android:name="com.tuTurno.app.LaFuria.FragmentContacto_admin"
+        android:name="com.tuTurno.app.Admin.FragmentContacto_admin"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_contacto_admin">
     </fragment>
 
     <fragment
         android:id="@+id/acercade"
-        android:name="com.tuTurno.app.LaFuria.AcercadeAdmin"
+        android:name="com.tuTurno.app.Admin.AcercadeAdmin"
         android:label="@string/app_name"
         tools:layout="@layout/acercadeadmin">
     </fragment>
+
     <fragment
         android:id="@+id/AdminCodigo"
-        android:name="com.tuTurno.app.LaFuria.fragmentsConfig.AdminPager"
+        android:name="com.tuTurno.app.Admin.fragmentsConfig.AdminPager"
         android:label="@string/app_name"
         tools:layout="@layout/admincodigo">
+    </fragment>
+
+    <fragment
+        android:id="@+id/clitema"
+        android:name="com.tuTurno.app.Admin.CambiarTemaAdmin"
+        android:label="@string/app_name"
+        tools:layout="@layout/cambiartema" >
     </fragment>
 
 </navigation>

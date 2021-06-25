@@ -79,9 +79,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/diseboton"
-            android:text="@string/codigoboton"
-            android:textColor="@drawable/seleccionboton" />
+            android:text="@string/codigoboton" />
 
 
     </LinearLayout>

@@ -3,9 +3,36 @@
   <color name="primaryColor">#344989</color>
   <color name="primaryLightColor">#a4a4a4</color>
   <color name="primaryDarkColor">#494949</color>
-  <color name="secondaryColor">#82b1ff</color>
+  <color name="secondaryColor">#212121</color>
   <color name="secondaryLightColor">#ff9e40</color>
   <color name="secondaryDarkColor">#4d82cb</color>
   <color name="primaryTextColor">#ffffff</color>
   <color name="secondaryTextColor">#000000</color>
+
+  <color name="primaryColor1">#d50000</color>
+  <color name="primaryLightColor1">#ff5131</color>
+  <color name="primaryDarkColor1">#9b0000</color>
+  <color name="secondaryColor1">#212121</color>
+  <color name="secondaryLightColor1">#d50000</color>
+  <color name="secondaryDarkColor1">#000000</color>
+  <color name="primaryTextColor1">#ffffff</color>
+  <color name="secondaryTextColor1">#ffffff</color>
+
+  <color name="primaryColor2">#37474f</color>
+  <color name="primaryLightColor2">#62727b</color>
+  <color name="primaryDarkColor2">#102027</color>
+  <color name="secondaryColor2">#32681d</color>
+  <color name="secondaryLightColor2">#619648</color>
+  <color name="secondaryDarkColor2">#003d00</color>
+  <color name="primaryTextColor2">#ffffff</color>
+  <color name="secondaryTextColor2">#ffffff</color>
+
+  <color name="primaryColor3">#f48fb1</color>
+  <color name="primaryLightColor3">#ffc1e3</color>
+  <color name="primaryDarkColor3">#bf5f82</color>
+  <color name="secondaryColor3">#455a64</color>
+  <color name="secondaryLightColor3">#718792</color>
+  <color name="secondaryDarkColor3">#1c313a</color>
+  <color name="primaryTextColor3">#000000</color>
+  <color name="secondaryTextColor3">#ffffff</color>
 </resources>
