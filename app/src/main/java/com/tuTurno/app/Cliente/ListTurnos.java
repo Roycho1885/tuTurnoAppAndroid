@@ -121,8 +121,6 @@ public class ListTurnos extends Fragment {
             e.printStackTrace();
         }
 
-
-
         iniciarFirebase();
 
         //CLICK EN LISTVIEW DATOS TURNO

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Admin.fragmentsHomeAdmin.HomeRegistroAdmin">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/regasist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tituloregistroasist"
+        android:gravity="center"
+        android:textSize="16sp"/>
+
+
+        <TextView
+            android:id="@+id/setfecha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nougat_extrablack"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_below="@+id/regasist"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/setfecha">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txtdni"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:maxLength="8"
+            android:autofillHints="@string/dni"
+            android:drawableStart="@drawable/ic_person_black_24dp"
+            android:ems="10"
+            android:hint="@string/dni"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    </RelativeLayout>
+</ScrollView>

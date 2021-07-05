@@ -1,4 +1,4 @@
-package com.tuTurno.app.Admin;
+package com.tuTurno.app.Admin.fragmentsHomeAdmin;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -31,7 +31,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 import com.tuTurno.app.ListViewAdaptadorLA;
 import com.tuTurno.app.R;
 
@@ -43,6 +42,7 @@ import java.util.Calendar;
 import java.util.Objects;
 
 import models.DatosTurno;
+import models.MisFunciones;
 import models.cliente;
 import models.gimnasios;
 import models.turno;
@@ -52,31 +52,22 @@ public class HomeAdmin extends Fragment {
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private Context micontexto;
-    private TextView cliente_admin;
-    private TextView setFecha;
+    private TextView cliente_admin, setFecha;
     private CollapsingToolbarLayout tool;
     private NavigationView navi;
-    private String user;
-    private String fechaactual;
-    private String nombre;
-    private String apellido;
-    private String urldire;
-    private ArrayAdapter<String> miadapter2;
+    private String user, fechaactual, nombre, apellido, urldire;
     private cliente c,cli = new cliente();
     private DatosTurno t = new DatosTurno();
-    private String urllogo;
 
     private ArrayList<DatosTurno> listturnos = new ArrayList<>();
 
-
-    private ArrayList<String> arraydisci;
-    private ArrayList<String> arrayturnos;
-    private ArrayAdapter miadapter;
-    String disci1;
-    String horaturno;
+    private ArrayList<String> arraydisci, arrayturnos;
+    private ArrayAdapter<String> miadapter, miadapter2;
+    String disci1, horaturno;
     boolean menudisci = false;
     boolean menuturno = false;
     boolean band = false;
+    MisFunciones cargarNav = new MisFunciones();
 
 
     //para el listview
@@ -106,16 +97,18 @@ public class HomeAdmin extends Fragment {
         cliente_admin = requireActivity().findViewById(R.id.versianda);
         fab.setImageResource(R.drawable.lista_admin);
 
+
+
+
         //ESTO ES PARA EL LISTVIEW
         milistaturnoscliente = root.findViewById(R.id.listadeturnoscliente);
 
-        fab.setVisibility(View.VISIBLE);
-        fab.setEnabled(true);
 
         tool = requireActivity().findViewById(R.id.CollapsingToolbar);
         navi = requireActivity().findViewById(R.id.nav_view_admin);
 
         View head = navi.getHeaderView(0);
+        final ImageView fondo = head.findViewById(R.id.fondo);
         final ImageView logo = head.findViewById(R.id.imageViewlogo);
         final TextView textologo = head.findViewById(R.id.textologo);
         final TextView txtdirecli = head.findViewById(R.id.textodire);
@@ -175,10 +168,7 @@ public class HomeAdmin extends Fragment {
                             gimnasios g = shot.getValue(gimnasios.class);
                             assert g != null;
                             if(cli.getGym().equals(g.getNombre())){
-                                txtdirecli.setText(g.getDireccion());
-                                urldire = g.getUrldire();
-                                urllogo= g.getLogo();
-                                Picasso.with(micontexto).load(urllogo).into(logo);
+                                urldire= cargarNav.cargarDatosNav(micontexto,g.getDireccion(), g.getUrldire(),g.getLogo(),g.getFondonav(),txtdirecli,logo,fondo);
                             }
                         }
                     }
@@ -188,6 +178,7 @@ public class HomeAdmin extends Fragment {
 
                     }
                 });
+
 
                 //CARGO DISCIPLINA
                 arraydisci = new ArrayList<>();
@@ -223,6 +214,7 @@ public class HomeAdmin extends Fragment {
         menudis.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View v, int position, long id) {
+
                 //LIMPIO EL BOTON TURNO CUANDO PRESIONO BOTON DISCIPLINA
                 menutur.post(new Runnable() {
                     @Override

@@ -152,7 +152,7 @@ public class AdminCuotas extends Fragment {
             }
         });
 
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+        final DatePickerDialog.OnDateSetListener date =  new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int ano, int mes, int diames) {
                 micalendario.set(Calendar.YEAR,ano);
@@ -273,5 +273,9 @@ public class AdminCuotas extends Fragment {
         micalendario.add(Calendar.DAY_OF_YEAR,30);
         fechavenc = (sdf.format(micalendario.getTime()));
 
+    }
+
+    private int numeroMes(){
+        return Calendar.MONTH;
     }
 }

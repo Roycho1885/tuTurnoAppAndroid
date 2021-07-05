@@ -35,7 +35,8 @@ public class AdminCodigo extends Fragment {
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
    // private gimnasios codigoacceso = new gimnasios();
-    private gimnasios c = new gimnasios();
+    private gimnasios gyms, gym = new gimnasios();
+
 
 
     @Override
@@ -51,6 +52,7 @@ public class AdminCodigo extends Fragment {
         FloatingActionButton fab= requireActivity().findViewById(R.id.fab_admin);
         fab.setVisibility(View.GONE);
 
+
         final EditText txtcodigo = root.findViewById(R.id.txtCodigoo);
         final TextView codigoactual = root.findViewById(R.id.codigoctualtext);
         final Button botonaceptar = root.findViewById(R.id.button2);
@@ -64,10 +66,17 @@ public class AdminCodigo extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot shot : snapshot.getChildren()){
-                    c = shot.getValue(gimnasios.class);
-                    assert c != null;
-                    if(gimnasio.getText().toString().equals(c.getNombre())){
-                        codigoactual.setText(c.codigoacceso);
+                    gyms = shot.getValue(gimnasios.class);
+                    assert gyms != null;
+                    if(gimnasio.getText().toString().equals(gyms.getNombre())){
+                        gym = shot.getValue(gimnasios.class);
+                        assert gym != null;
+                        codigoactual.setText(gym.codigoacceso);
+                        gym.setNombre(gym.getNombre());
+                        gym.setLogo(gym.getLogo());
+                        gym.setDireccion(gym.getDireccion());
+                        gym.setUrldire(gym.getUrldire());
+                        gym.setFondonav(gym.getFondonav());
                     }
                 }
             }
@@ -82,14 +91,13 @@ public class AdminCodigo extends Fragment {
             @Override
             public void onClick(View view) {
 
+
                 if(txtcodigo.getText().toString().equals("")){
                     txtcodigo.setError("Ingrese Código");
                 }else{
                     codigoss = txtcodigo.getText().toString().trim();
-                    c.setNombre(c.getNombre());
-                    c.setCodigoacceso(codigoss);
-                    c.setLogo(c.getLogo());
-                    databaseReference.child("Gimnasios").child(gimnasio.getText().toString()).setValue(c);
+                    gym.setCodigoacceso(codigoss);
+                    databaseReference.child("Gimnasios").child(gimnasio.getText().toString()).setValue(gym);
                     Snackbar.make(view,"Código modificado correctamente",Snackbar.LENGTH_SHORT).show();
                     txtcodigo.setText("");
                     codigoactual.setText(codigoss);

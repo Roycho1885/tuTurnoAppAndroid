@@ -1,67 +1,67 @@
   package com.tuTurno.app.Cliente;
 
   import android.annotation.SuppressLint;
-  import android.content.Context;
-  import android.content.Intent;
-  import android.net.Uri;
-  import android.os.Bundle;
-  import android.text.InputType;
-  import android.view.LayoutInflater;
-  import android.view.MotionEvent;
-  import android.view.View;
-  import android.view.ViewGroup;
-  import android.widget.AdapterView;
-  import android.widget.ArrayAdapter;
-  import android.widget.AutoCompleteTextView;
-  import android.widget.ImageView;
-  import android.widget.ListView;
-  import android.widget.ScrollView;
-  import android.widget.TextView;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.text.InputType;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
-  import androidx.annotation.NonNull;
-  import androidx.annotation.Nullable;
-  import androidx.fragment.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-  import com.google.android.gms.ads.AdRequest;
-  import com.google.android.gms.ads.AdView;
-  import com.google.android.gms.ads.MobileAds;
-  import com.google.android.gms.ads.initialization.InitializationStatus;
-  import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-  import com.google.android.gms.tasks.OnCompleteListener;
-  import com.google.android.gms.tasks.Task;
-  import com.google.android.material.appbar.CollapsingToolbarLayout;
-  import com.google.android.material.floatingactionbutton.FloatingActionButton;
-  import com.google.android.material.navigation.NavigationView;
-  import com.google.android.material.snackbar.Snackbar;
-  import com.google.android.material.textfield.TextInputLayout;
-  import com.google.firebase.FirebaseApp;
-  import com.google.firebase.auth.FirebaseAuth;
-  import com.google.firebase.database.DataSnapshot;
-  import com.google.firebase.database.DatabaseError;
-  import com.google.firebase.database.DatabaseReference;
-  import com.google.firebase.database.FirebaseDatabase;
-  import com.google.firebase.database.ValueEventListener;
-  import com.google.firebase.iid.FirebaseInstanceId;
-  import com.google.firebase.iid.InstanceIdResult;
-  import com.squareup.picasso.Picasso;
-  import com.tuTurno.app.ListViewAdaptadorHF;
-  import com.tuTurno.app.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.tuTurno.app.ListViewAdaptadorHF;
+import com.tuTurno.app.R;
 
-  import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNull;
 
-  import java.text.DateFormat;
-  import java.text.ParseException;
-  import java.text.SimpleDateFormat;
-  import java.util.ArrayList;
-  import java.util.Calendar;
-  import java.util.Date;
-  import java.util.Objects;
-  import java.util.UUID;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
+import java.util.UUID;
 
-  import models.DatosTurno;
-  import models.cliente;
-  import models.gimnasios;
-  import models.turno;
+import models.DatosTurno;
+import models.MisFunciones;
+import models.cliente;
+import models.gimnasios;
+import models.turno;
 
 public class HomeCliente extends Fragment {
 
@@ -95,8 +95,8 @@ public class HomeCliente extends Fragment {
     private DatosTurno datosturno = new DatosTurno();
     private String user;
     private cliente c,cli = new cliente();
-    private String urllogo;
     private String horaturno;
+    MisFunciones cargarNav = new MisFunciones();
 
 
     //para el listview
@@ -145,6 +145,7 @@ public class HomeCliente extends Fragment {
         navi = requireActivity().findViewById(R.id.nav_view);
 
         View head = navi.getHeaderView(0);
+        final ImageView fondo = head.findViewById(R.id.fondo);
         final ImageView logo = head.findViewById(R.id.imageViewlogo);
         final TextView textologo = head.findViewById(R.id.textologo);
         final TextView txtdirecli = head.findViewById(R.id.textodire);
@@ -267,10 +268,7 @@ public class HomeCliente extends Fragment {
                             gimnasios g = shot.getValue(gimnasios.class);
                             assert g != null;
                             if(cli.getGym().equals(g.getNombre())){
-                                txtdirecli.setText(g.getDireccion());
-                                urldire = g.getUrldire();
-                                urllogo= g.getLogo();
-                                Picasso.with(micontexto).load(urllogo).into(logo);
+                                urldire= cargarNav.cargarDatosNav(micontexto,g.getDireccion(), g.getUrldire(),g.getLogo(),g.getFondonav(),txtdirecli,logo,fondo);
                             }
                         }
                     }

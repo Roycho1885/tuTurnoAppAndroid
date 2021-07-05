@@ -1,38 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
-    android:background="@drawable/fondo1"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:id="@+id/imageViewlogo"
-        android:layout_width="88dp"
-        android:layout_height="86dp"
-        android:contentDescription="@string/app_name"
-        android:paddingTop="@dimen/nav_header_vertical_spacing" />
+        android:id="@+id/fondo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:contentDescription="TODO" />
 
-    <TextView
-        android:id="@+id/textologo"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageViewlogo"
-        android:paddingTop="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin">
 
-    <TextView
-        android:id="@+id/textodire"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textologo"
-        android:paddingTop="5dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <ImageView
+            android:id="@+id/imageViewlogo"
+            android:layout_width="88dp"
+            android:layout_height="86dp"
+            android:contentDescription="@string/app_name"
+            android:paddingTop="@dimen/nav_header_vertical_spacing" />
+
+        <TextView
+            android:id="@+id/textologo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <TextView
+            android:id="@+id/textodire"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -40,21 +41,24 @@ import com.tuTurno.app.R;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
 import models.cuotas;
 
 public class AdminVerCuotas extends Fragment {
 
     private DatabaseReference databaseReference;
-    private AutoCompleteTextView botonmesdesple;
     private EditText buscar;
     private Button verpagos;
     private ScrollView scroll;
     private ArrayAdapter miadaptador;
-    String meses,anioo;
+    String meses,anioo, anoseleccionado;
     Context micontexto;
     boolean bandera;
     Calendar micalendario;
+
+    private ArrayList<String> arrayano, arraymeses;
+    private ArrayAdapter<String> adapterano, adaptermeses;
 
     //para el listview
     private final ArrayList<cuotas> listacuotaspagas = new ArrayList<>();
@@ -74,9 +78,11 @@ public class AdminVerCuotas extends Fragment {
         View root = inflater.inflate(R.layout.adminvercuotas, container, false);
         milistacuotasadminpagas = root.findViewById(R.id.listacuotasclientespagas);
         buscar = root.findViewById(R.id.botonbuscar);
-        botonmesdesple = root.findViewById(R.id.desplemes);
+        final AutoCompleteTextView botonanodesple = root.findViewById(R.id.despleano);
+        final AutoCompleteTextView botonmesdesple = root.findViewById(R.id.desplemes);
         verpagos = root.findViewById(R.id.botonverpagos);
         scroll = root.findViewById(R.id.scrolll);
+
         //para los diferentes gimnasios
         final TextView gimnasio = requireActivity().findViewById(R.id.textologo);
 
@@ -98,6 +104,21 @@ public class AdminVerCuotas extends Fragment {
         mAdView.loadAd(adRequest);
 
         iniciarFirebase();
+
+        botonanodesple.post(new Runnable() {
+            @Override
+            public void run() {
+                botonanodesple.getText().clear();
+            }
+        });
+
+        botonmesdesple.post(new Runnable() {
+            @Override
+            public void run() {
+                botonmesdesple.getText().clear();
+            }
+        });
+
         formatearfecha();
 
         scroll.setOnTouchListener(new View.OnTouchListener() {
@@ -115,6 +136,58 @@ public class AdminVerCuotas extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
                 v.getParent().requestDisallowInterceptTouchEvent(true);
                 return false;
+            }
+        });
+
+        //CARGO BOTON ANO CORRESPONDIENTE
+        arrayano = new ArrayList<>();
+        databaseReference.child(gimnasio.getText().toString()).child("Cuotas").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot shot : snapshot.getChildren()){
+                    arrayano.add(Objects.requireNonNull(shot.getKey()));
+                }
+                adapterano = new ArrayAdapter<>(micontexto, android.R.layout.simple_list_item_1, arrayano);
+                botonanodesple.setAdapter(adapterano);
+                botonanodesple.setInputType(InputType.TYPE_NULL);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+        botonanodesple.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                //LIMPIO BOTON MES
+                botonmesdesple.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        botonmesdesple.getText().clear();
+                    }
+                });
+
+                arraymeses = new ArrayList<>();
+                anoseleccionado = adapterView.getAdapter().getItem(i).toString();
+
+                databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anoseleccionado).orderByChild("mespago").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot shot: snapshot.getChildren()){
+                            arraymeses.add(Objects.requireNonNull(shot.getKey()));
+                        }
+                        adaptermeses = new ArrayAdapter<>(micontexto, android.R.layout.simple_list_item_1, arraymeses);
+                        botonmesdesple.setAdapter(adaptermeses);
+                        botonmesdesple.setInputType(InputType.TYPE_NULL);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 
@@ -141,8 +214,12 @@ public class AdminVerCuotas extends Fragment {
                             for(DataSnapshot shot : snapshot.getChildren()){
                                 cuotas cu = shot.getValue(cuotas.class);
                                 assert cu != null;
-                                listacuotaspagas.add(cu);
-                                milistacuotasadminpagas.setAdapter(adaptador);
+                                
+                                //POSIBLE SOLICION A NUMERO DE MES
+                                if(cu.getClientenombre() != null){
+                                    listacuotaspagas.add(cu);
+                                    milistacuotasadminpagas.setAdapter(adaptador);
+                                }
                             }
                             if(snapshot.getValue()==null){
                                 Snackbar.make(view, "Para este mes no existen pagos efectuados", Snackbar.LENGTH_SHORT).show();
@@ -192,4 +269,5 @@ public class AdminVerCuotas extends Fragment {
         int index1 = fechaactualmodi.indexOf("-",3);
         anioo = fechaactualmodi.substring(index1+1);
     }
+
 }

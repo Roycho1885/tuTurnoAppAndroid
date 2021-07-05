@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:id="@+id/scroolmonto"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Admin.fragmentsConfig.AdminConfigCuota">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/configcuota"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tituloconfigcuota"
+            android:gravity="center"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/botondisci"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="40dp"
+            android:hint="@string/hintdis"
+            app:boxBackgroundMode="outline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/configcuota">
+
+            <AutoCompleteTextView
+                android:id="@+id/dropdown_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cursorVisible="false"
+                android:textSize="16sp"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtmonto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:autofillHints="@string/monto"
+                android:drawableStart="@drawable/ic_baseline_monto"
+                android:ems="10"
+                android:hint="@string/monto"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/codigoboton" />
+
+
+        <ListView
+            android:id="@+id/listacuota"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginVertical="10dp"
+            android:layout_marginBottom="20dp"
+            tools:ignore="NestedScrolling"
+            android:focusable="true" />
+
+
+    </LinearLayout>
+
+</ScrollView>

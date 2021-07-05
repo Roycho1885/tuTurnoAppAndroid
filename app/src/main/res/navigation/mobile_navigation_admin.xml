@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/fragment_admin"
-        android:name="com.tuTurno.app.Admin.HomeAdmin"
+        android:name="com.tuTurno.app.Admin.fragmentsHomeAdmin.AdminHomePager"
         android:label="@string/app_name"
-        tools:layout="@layout/fragment_home_admin">
+        tools:layout="@layout/homeregistroadmin">
     </fragment>
 
     <fragment

@@ -19,6 +19,12 @@ public class SlidePagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
     }
 
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
+    }
+
     @NonNull
     @Override
     public Fragment getItem(int position) {

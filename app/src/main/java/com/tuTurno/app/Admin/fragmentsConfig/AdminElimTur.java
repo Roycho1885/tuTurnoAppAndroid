@@ -81,6 +81,13 @@ public class AdminElimTur extends Fragment {
 
         iniciarFirebase();
 
+        menuelim.post(new Runnable() {
+            @Override
+            public void run() {
+                menuelim.getText().clear();
+            }
+        });
+
         //ListView Click
         adaptador = new ListViewAdaptadorAdEliTur(micontexto,listturnoseliminar);
         milistaturnoseliminar.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -14,11 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tuTurno.app.R;
 
@@ -39,20 +34,11 @@ public class Acercade extends Fragment {
         ImageView web = root.findViewById(R.id.imagenweb);
         ImageView facebook = root.findViewById(R.id.imagenfacebook);
         ImageView instagram = root.findViewById(R.id.imageninstagram);
-        ImageView bowa = root.findViewById(R.id.imageView2);
         Button calificar = root.findViewById(R.id.btncalificar);
 
         FloatingActionButton fab= requireActivity().findViewById(R.id.fab);
         fab.setVisibility(View.GONE);
 
-        MobileAds.initialize(micontexto, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
-        AdView mAdView = root.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
 
         firebase.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,13 +48,6 @@ public class Acercade extends Fragment {
             }
         });
 
-        bowa.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent b = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/bowaoficial/"));
-                startActivity(b);
-            }
-        });
 
        web.setOnClickListener(new View.OnClickListener() {
             @Override

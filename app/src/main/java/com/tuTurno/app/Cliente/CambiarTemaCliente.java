@@ -26,11 +26,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 import com.tuTurno.app.R;
 
 import java.util.Objects;
 
+import models.MisFunciones;
 import models.cliente;
 import models.gimnasios;
 
@@ -49,10 +49,13 @@ public class CambiarTemaCliente extends Fragment {
     private String nombre;
     private String apellido;
     private String urllogo;
+    private String urlfondo;
+    private String urldire;
     private CollapsingToolbarLayout tool;
     private TextView cliente;
     private NavigationView navi;
     private cliente c,cli = new cliente();
+    MisFunciones cargarNav = new MisFunciones();
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -92,6 +95,7 @@ public class CambiarTemaCliente extends Fragment {
         navi = requireActivity().findViewById(R.id.nav_view);
 
         View head = navi.getHeaderView(0);
+        final ImageView fondo = head.findViewById(R.id.fondo);
         final ImageView logo = head.findViewById(R.id.imageViewlogo);
         final TextView textologo = head.findViewById(R.id.textologo);
         final TextView txtdirecli = head.findViewById(R.id.textodire);
@@ -162,9 +166,7 @@ public class CambiarTemaCliente extends Fragment {
                             gimnasios g = shot.getValue(gimnasios.class);
                             assert g != null;
                             if(cli.getGym().equals(g.getNombre())){
-                                txtdirecli.setText(g.getDireccion());
-                                urllogo= g.getLogo();
-                                Picasso.with(micontexto).load(urllogo).into(logo);
+                                urldire= cargarNav.cargarDatosNav(micontexto,g.getDireccion(), g.getUrldire(),g.getLogo(),g.getFondonav(),txtdirecli,logo,fondo);
                             }
                         }
                     }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +38,7 @@ import java.util.Calendar;
 import java.util.Objects;
 import java.util.UUID;
 
+import models.CuotaConfig;
 import models.turno;
 
 public class AdminAgregarTur extends Fragment {
@@ -49,7 +50,8 @@ public class AdminAgregarTur extends Fragment {
     String disci;
     String disci1;
     boolean band2;
-    private turno infoturno = new turno();
+    private final turno infoturno = new turno();
+    private final CuotaConfig monto = new CuotaConfig();
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -60,6 +62,7 @@ public class AdminAgregarTur extends Fragment {
 
     EditText txtdias;
     EditText txtdias1;
+    EditText txtmonto;
     final ArrayList<Integer> list = new ArrayList<>();
     final ArrayList<String> turnoslista = new ArrayList<>();
     String dias = "";
@@ -79,14 +82,16 @@ public class AdminAgregarTur extends Fragment {
         final EditText txthoraturno = root.findViewById(R.id.txthoraturno);
         txtdias = root.findViewById(R.id.txtdias);
         txtdias1 = root.findViewById(R.id.txtdias1);
+        txtmonto = root.findViewById(R.id.txtmonto);
         final EditText txthoraturno1 = root.findViewById(R.id.txthoraturno1);
         final EditText txtdisciplina = root.findViewById(R.id.txtDisciplina);
         final EditText txtcupo = root.findViewById(R.id.txtcupo);
         final EditText txtcupo1 = root.findViewById(R.id.txtcupo1);
         final Button botonagregarturno = root.findViewById(R.id.botonagregaturno);
         final Button botonagregarturno1 = root.findViewById(R.id.botonagregaturno1);
-        final TextInputLayout botontur = root.findViewById(R.id.botondisciexis);
+        //final TextInputLayout botontur = root.findViewById(R.id.botondisciexis);
         final AutoCompleteTextView menutur = root.findViewById(R.id.discidesple);
+
         //para los diferentes gimnasios
         final TextView gimnasio = requireActivity().findViewById(R.id.textologo);
 
@@ -102,6 +107,7 @@ public class AdminAgregarTur extends Fragment {
                 calendar = Calendar.getInstance();
                 horaactual = calendar.get(Calendar.HOUR_OF_DAY);
                 minactual = calendar.get(Calendar.MINUTE);
+
 
                 timedialog = new TimePickerDialog(micontexto, new TimePickerDialog.OnTimeSetListener() {
                     @SuppressLint({"SetTextI18n", "DefaultLocale"})
@@ -136,20 +142,24 @@ public class AdminAgregarTur extends Fragment {
             @Override
             public void onClick(View view) {
                 disci = txtdisciplina.getText().toString().trim();
-                if(txthoraturno.getText().toString().equals("") || disci.equals("") || txtcupo.getText().toString().equals("") || txtdias.getText().toString().equals("")){
+                if(txthoraturno.getText().toString().equals("") || disci.equals("") || txtcupo.getText().toString().equals("")
+                        || txtdias.getText().toString().equals("") || txtmonto.getText().toString().equals("")){
                     Snackbar.make(view,"Complete todo los campos",Snackbar.LENGTH_SHORT).show();
                 }else{
                     if(arraydisci.contains(disci)){
                         Snackbar.make(view,"Disciplina ya existente",Snackbar.LENGTH_SHORT).show();
                     }else{
                         agregarturno(disci, txthoraturno.getText().toString().trim(),txtdias.getText().toString().trim(),txtcupo.getText().toString().trim());
+                        agregarmonto(disci,txtmonto.getText().toString().trim());
                         databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(disci).child(infoturno.getId()).setValue(infoturno);
+                        databaseReference.child(gimnasio.getText().toString()).child("ConfigCuota").child(monto.getId()).setValue(monto);
                         Snackbar.make(view,"Disciplina y Turno agregado correctamente",Snackbar.LENGTH_SHORT).show();
-                        txtdisciplina.setText("");
-                        txtdias.setText("");
-                        txthoraturno.setText("");
-                        txtcupo.setText("");
                     }
+                    txtdisciplina.setText("");
+                    txtdias.setText("");
+                    txthoraturno.setText("");
+                    txtcupo.setText("");
+                    txtmonto.setText("");
                 }
 
             }
@@ -216,10 +226,8 @@ public class AdminAgregarTur extends Fragment {
                                 turnoslista.add(Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString());
                             }
 
-                            for(int i = 0; i<turnoslista.size();i++){
-                                if(txthoraturno1.getText().toString().contains(turnoslista.get(i))){
+                                if(turnoslista.contains(txthoraturno1.getText().toString())){
                                     Snackbar.make(view,"Turno ya existente",Snackbar.LENGTH_SHORT).show();
-                                    break;
                                 }else{
                                     agregarturno(disci1, txthoraturno1.getText().toString().trim(),txtdias1.getText().toString().trim(),txtcupo1.getText().toString().trim());
                                     databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(disci1).child(infoturno.getId()).setValue(infoturno);
@@ -232,12 +240,11 @@ public class AdminAgregarTur extends Fragment {
                                         }
                                     });
 
-                                    txthoraturno1.setText("");
-                                    txtcupo1.setText("");
-                                    txtdias1.setText("");
-                                    break;
                                 }
-                            }
+                            txthoraturno1.setText("");
+                            txtcupo1.setText("");
+                            txtdias1.setText("");
+
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
@@ -254,7 +261,7 @@ public class AdminAgregarTur extends Fragment {
     //ALERTDIALOG PARA NUEVAS DISCIPLINAS Y TURNOS
     private void mostrarAlertDialog() {
         list.clear();
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(micontexto);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(),R.style.AlertDialogCustom));
         alertDialog.setTitle("Seleccione días");
         final String[] items = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Todos"};
         final boolean[] checkedItems = {false, false, false, false, false, false};
@@ -319,7 +326,7 @@ public class AdminAgregarTur extends Fragment {
     //ALERTDIALOG PARA LAS DISCIPLINAS EXISTENTES
     private void mostrarAlertDialog1() {
         list.clear();
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(micontexto);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(),R.style.AlertDialogCustom));
         alertDialog.setTitle("Seleccione días");
         final String[] items = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Todos"};
         final boolean[] checkedItems = {false, false, false, false, false, false};
@@ -388,6 +395,12 @@ public class AdminAgregarTur extends Fragment {
         infoturno.setDias(dias);
         infoturno.setCupo(cupo);
         infoturno.setCupoalmacenado(cupo);
+    }
+
+    private void agregarmonto(String disciplina, String txtingmonto) {
+        monto.setId(UUID.randomUUID().toString());
+        monto.setDisciplina(disciplina);
+        monto.setMonto(txtingmonto);
     }
 
     private void  iniciarFirebase(){

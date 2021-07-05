@@ -22,7 +22,6 @@ public class ServicioMensajeriaFirebase extends FirebaseMessagingService {
         if(remoteMessage.getNotification()!=null){
             String title = remoteMessage.getNotification().getTitle();
             String body = remoteMessage.getNotification().getBody();
-
             mayorqueoreo(title,body);
         }
     }

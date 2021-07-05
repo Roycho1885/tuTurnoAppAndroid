@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">tuTurno</string>
     <string name="nombre">Nombre</string>
+    <string name="monto">Ingrese Monto</string>
     <string name="apellido">Apellido</string>
     <string name="dni">DNI</string>
+    <string name="dnihomeregistro">Ingrese DNI</string>
+    <string name="tituloregistroasist">Registrar Asistencia</string>
+    <string name="tituloverasist">Ver Asistencias</string>
+    <string name="tituloconfigcuota">Configurar Cuota</string>
     <string name="direccion">Dirección</string>
     <string name="gym">Selecciona Gimnasio</string>
     <string name="correo">Email</string>
@@ -10,6 +15,7 @@
     <string name="codigo">Código</string>
     <string name="codigoacceso">Ingrese el nuevo código</string>
     <string name="codigoactual">Código Actual</string>
+    <string name="montoactual">Monto Actual</string>
     <string name="codigoboton">Aceptar</string>
     <string name="config">Configuración</string>
     <string name="tema">Cambiar Colores</string>
@@ -112,6 +118,7 @@
     <string name="tituloverpagos">Ver Pagos</string>
     <string name="mespago">Seleccione mes correspondiente</string>
     <string name="selemes">Seleccione mes</string>
+    <string name="seleano">Seleccione año</string>
     <string name="txtfechapago">Fecha de Pago: </string>
     <string name="txtfechavenc">Vencimiento: </string>
     <string name="txtultimopago">Ultimo Pago: </string>
