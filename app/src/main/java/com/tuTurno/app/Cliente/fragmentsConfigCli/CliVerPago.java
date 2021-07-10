@@ -115,7 +115,7 @@ public class CliVerPago extends Fragment {
         micalendario1 = Calendar.getInstance();
         final String fecha_actual = sdf.format(micalendario1.getTime());
 
-        databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("Clientes").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for(DataSnapshot shot : snapshot.getChildren()){

@@ -57,11 +57,13 @@ public class ListViewAdaptadorCuotasAdmin extends BaseAdapter implements Filtera
         TextView nombre = view.findViewById(R.id.txtnyacuotasadmin);
         TextView ultimopago = view.findViewById(R.id.txtultimopago);
         TextView fechavence = view.findViewById(R.id.txtfechavenc);
+        TextView disciplina = view.findViewById(R.id.txtdiscielegida);
         ImageView estadopago = view.findViewById(R.id.imgestado);
 
         nombre.setText(items.getApellido() +" "+ items.getNombre());
         ultimopago.setText(items.getUltimopago());
         fechavence.setText(items.getFechavencimiento());
+        disciplina.setText(items.getDisciplinaelegida());
         estadopago.setImageResource(items.getEstadopago());
 
         return view;
@@ -91,7 +93,8 @@ public class ListViewAdaptadorCuotasAdmin extends BaseAdapter implements Filtera
                 ArrayList<cliente> filters = new ArrayList<cliente>();
                 for(int i=0;i<listafitro.size();i++){
                     if(listafitro.get(i).getApellido().toUpperCase().contains(charSequence)){
-                        cliente c = new cliente(listafitro.get(i).getApellido(),listafitro.get(i).getNombre(),listafitro.get(i).getUltimopago(), listafitro.get(i).getFechavencimiento(),listafitro.get(i).getEstadopago());
+                        cliente c = new cliente(listafitro.get(i).getApellido(),listafitro.get(i).getNombre(),listafitro.get(i).getUltimopago(),
+                                listafitro.get(i).getFechavencimiento(),listafitro.get(i).getEstadopago(),listafitro.get(i).getDisciplinaelegida());
                         filters.add(c);
                     }
                 }

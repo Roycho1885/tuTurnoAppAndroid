@@ -142,6 +142,8 @@ public class RegistroActivity extends AppCompatActivity {
     cli.setUltimopago("Nunca");
     cli.setFechavencimiento("Nunca");
     cli.setEstadopago(0);
+    cli.setEstadodeuda("0");
+    cli.setDisciplinaelegida("0");
 
         cargando.setTitle("Registrando...");
         cargando.setMessage("Espere por favor...");

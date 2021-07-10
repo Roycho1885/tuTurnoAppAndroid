@@ -93,6 +93,8 @@ public class CliDatosPersonales extends Fragment {
                     cli.setUltimopago(clin.getUltimopago());
                     cli.setFechavencimiento(clin.getFechavencimiento());
                     cli.setEstadopago(clin.getEstadopago());
+                    cli.setEstadodeuda(clin.getEstadodeuda());
+                    cli.setDisciplinaelegida(clin.getDisciplinaelegida());
                     databaseReference.child("Clientes").child(clin.getId()).setValue(clin);
                     Snackbar.make(view,"Datos Actualizados Correctamente",Snackbar.LENGTH_SHORT).show();
                 }else {
@@ -100,7 +102,7 @@ public class CliDatosPersonales extends Fragment {
                         txtNombre.setError("Ingrese Nombre");
                     }
                     if(txtApellido.getText().toString().equals("")){
-                        txtApellido.setError("Ingrese Apellid");
+                        txtApellido.setError("Ingrese Apellido");
                     }
                     if(txtdni.getText().toString().equals("")){
                         txtdni.setError("Ingrese DNI");

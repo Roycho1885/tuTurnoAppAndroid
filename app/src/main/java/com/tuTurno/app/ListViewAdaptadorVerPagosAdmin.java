@@ -53,10 +53,12 @@ public class ListViewAdaptadorVerPagosAdmin extends BaseAdapter implements Filte
         TextView nombrecliente = view.findViewById(R.id.txt_nombreyapellidocliente);
         TextView fechapago = view.findViewById(R.id.txtfechadepago);
         TextView fechavenc = view.findViewById(R.id.txtfechavenc);
+        TextView disciplina = view.findViewById(R.id.txtdisciele);
 
         nombrecliente.setText(items.getClientenombre());
         fechapago.setText(items.getFechapago());
         fechavenc.setText(items.getFechavenc());
+        disciplina.setText(items.getDisciplinaele());
 
         return view;
     }
@@ -83,7 +85,8 @@ public class ListViewAdaptadorVerPagosAdmin extends BaseAdapter implements Filte
                 ArrayList<cuotas> filters = new ArrayList<cuotas>();
                 for(int i=0;i<listafitro.size();i++){
                     if(listafitro.get(i).getClientenombre().toUpperCase().contains(charSequence)){
-                        cuotas c = new cuotas(listafitro.get(i).getClientenombre(),listafitro.get(i).getFechapago(),listafitro.get(i).getFechavenc(),listafitro.get(i).getMespago());
+                        cuotas c = new cuotas(listafitro.get(i).getClientenombre(),
+                                listafitro.get(i).getFechapago(),listafitro.get(i).getFechavenc(),listafitro.get(i).getMespago(),listafitro.get(i).getDisciplinaele());
                         filters.add(c);
                     }
                 }

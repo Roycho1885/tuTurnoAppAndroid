@@ -30,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.tuTurno.app.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import models.cliente;
 
@@ -89,9 +90,9 @@ public class AdministradorSetAdmin extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot shot : snapshot.getChildren()){
-                    arraygimnasios.add(shot.child("nombre").getValue().toString());
+                    arraygimnasios.add(Objects.requireNonNull(shot.child("nombre").getValue()).toString());
                 }
-                myadapter = new ArrayAdapter<String>(micontexto, android.R.layout.simple_list_item_1,arraygimnasios);
+                myadapter = new ArrayAdapter<>(micontexto, android.R.layout.simple_list_item_1, arraygimnasios);
                 dropdowntxt.setAdapter(myadapter);
                 dropdowntxt.setInputType(InputType.TYPE_NULL);
 

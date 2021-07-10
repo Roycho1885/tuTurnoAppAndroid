@@ -14,8 +14,11 @@ public class cliente {
     public String ultimopago;
     public String fechavencimiento;
     public int estadopago;
+    public String estadodeuda;
+    public String disciplinaelegida;
 
-    public cliente(String id, String nombre, String apellido, String dni, String direccion, String email, String gym, String admin,String token, String ultimopago,String fechavencimiento, int estadopago) {
+    public cliente(String id, String nombre, String apellido, String dni, String direccion, String email, String gym,
+                   String admin,String token, String ultimopago,String fechavencimiento, int estadopago, String estadodeuda, String disciplinaelegida) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -28,17 +31,36 @@ public class cliente {
         this.ultimopago = ultimopago;
         this.fechavencimiento = fechavencimiento;
         this.estadopago = estadopago;
+        this.estadodeuda = estadodeuda;
+        this.disciplinaelegida = disciplinaelegida;
     }
 
     public cliente() {
     }
 
-    public cliente(String apellido,String nombre, String ultimopago,String fechavencimiento, int estadopago){
+    public cliente(String apellido,String nombre, String ultimopago,String fechavencimiento, int estadopago, String disciplinaelegida){
         this.apellido = apellido;
         this.nombre = nombre;
         this.ultimopago = ultimopago;
         this.fechavencimiento = fechavencimiento;
         this.estadopago = estadopago;
+        this.disciplinaelegida = disciplinaelegida;
+    }
+
+    public String getDisciplinaelegida() {
+        return disciplinaelegida;
+    }
+
+    public void setDisciplinaelegida(String disciplinaelegida) {
+        this.disciplinaelegida = disciplinaelegida;
+    }
+
+    public String getEstadodeuda() {
+        return estadodeuda;
+    }
+
+    public void setEstadodeuda(String estadodeuda) {
+        this.estadodeuda = estadodeuda;
     }
 
     public String getFechavencimiento() {

@@ -5,12 +5,15 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -37,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 import models.cliente;
 import models.cuotas;
@@ -50,9 +54,11 @@ public class AdminCuotas extends Fragment {
     Context micontexto;
     cliente cli;
     Calendar micalendario,micalendario1;
-    String mess,anioo,fechavenc,nombreyapellido,emailcliente;
-    boolean bandera,bandera1,bandera3;
-    Date fechaactual,fechavence;
+    String mess,anioo,fechavenc,nombreyapellido,emailcliente, disci1;
+    boolean bandera,bandera1,bandera3, menueli;
+    Date fechaactual,fechavence, fechaultipago, fechaelegida;
+    private ArrayList<String> arraydisci;
+    private ArrayAdapter miadapter;
 
 
 
@@ -72,6 +78,7 @@ public class AdminCuotas extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.admincuotas, container, false);
+        final AutoCompleteTextView menudisci = root.findViewById(R.id.botondisciplina);
 
 
         //para los diferentes gimnasios
@@ -87,6 +94,14 @@ public class AdminCuotas extends Fragment {
 
         iniciarFirebase();
 
+        menudisci.post(new Runnable() {
+            @Override
+            public void run() {
+                menudisci.getText().clear();
+            }
+        });
+
+        arraydisci = new ArrayList<>();
 
         otroscroll.setOnTouchListener(new View.OnTouchListener() {
 
@@ -106,6 +121,34 @@ public class AdminCuotas extends Fragment {
             }
         });
 
+
+        //CARGO LAS DISCIPLINAS
+        databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot shot : snapshot.getChildren()){
+                    arraydisci.add(Objects.requireNonNull(shot.getKey()));
+                }
+                miadapter = new ArrayAdapter<>(micontexto, android.R.layout.simple_list_item_1, arraydisci);
+                menudisci.setAdapter(miadapter);
+                menudisci.setInputType(InputType.TYPE_NULL);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        });
+
+        menudisci.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                menueli = true;
+                disci1 = adapterView.getAdapter().getItem(i).toString().trim();
+            }
+        });
+
         //CARGO LISTVIEW CON CLIENTES
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
         micalendario1 = Calendar.getInstance();
@@ -118,24 +161,26 @@ public class AdminCuotas extends Fragment {
                         cli = shot.getValue(cliente.class);
                         String fecha_actual = sdf.format(micalendario1.getTime());
                         String fecha_vence = cli.getFechavencimiento();
+                        String fecha_ulti = cli.getUltimopago();
 
 
                         if(fecha_vence.equals("Nunca")){
                             cli.setEstadopago(R.drawable.ic_baseline_cancel_24);
-                            cuotas.setEstadopago(R.drawable.ic_baseline_cancel_24);
                         }else {
                             try {
                                 fechaactual = sdf.parse(fecha_actual);
                                 fechavence = sdf.parse(fecha_vence);
+                                fechaultipago = sdf.parse(fecha_ulti);
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
                             if(fechaactual.compareTo(fechavence)<0){
                                 cli.setEstadopago(R.drawable.ic_baseline_check_circle_24);
-                                cuotas.setEstadopago(R.drawable.ic_baseline_check_circle_24);
                             }else {
                                 cli.setEstadopago(R.drawable.ic_baseline_cancel_24);
-                                cuotas.setEstadopago(R.drawable.ic_baseline_cancel_24);
+                                cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
+                                        cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), cli.getUltimopago(), cli.getFechavencimiento(), cli.getEstadopago(), "Debe", cli.getDisciplinaelegida());
+                                databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
                             }
                         }
                         listaclientes.add(cli);
@@ -151,6 +196,7 @@ public class AdminCuotas extends Fragment {
 
             }
         });
+
 
         final DatePickerDialog.OnDateSetListener date =  new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -209,12 +255,15 @@ public class AdminCuotas extends Fragment {
             @Override
             public void onClick(final View view) {
                 bandera3 = false;
-                if(!bandera1){
-                    Snackbar.make(view, "Seleccione una fecha", Snackbar.LENGTH_SHORT).show();
+                if(!menueli){
+                    Snackbar.make(view, "Seleccione una disciplina", Snackbar.LENGTH_SHORT).show();
                 }else{
+                    if(!bandera1){
+                        Snackbar.make(view, "Seleccione una fecha", Snackbar.LENGTH_SHORT).show();
+                    }else{
                         if(!bandera){
                             Snackbar.make(view, "Seleccione un cliente", Snackbar.LENGTH_SHORT).show();
-                        }else{
+                    }else{
                             //CONTROLO QUE EL CLIENTE YA TENGA EL PAGO EFECTUADO
                             databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -231,12 +280,21 @@ public class AdminCuotas extends Fragment {
                                     if(bandera3){
                                         Snackbar.make(view, "Para este mes y cliente ya existe un pago registrado.", Snackbar.LENGTH_SHORT).show();
                                     }else {
-                                        cliente clien = new cliente(cli.getId(),cli.getNombre(),cli.getApellido(),cli.getDni(),cli.getDireccion(),
-                                                cli.getEmail(),cli.getGym(),cli.getAdmin(),cli.getToken(),fechapago.getText().toString(),fechavenc,cli.getEstadopago());
-                                        cuotas= new cuotas(nombreyapellido, cli.getEmail(),fechapago.getText().toString(),fechavenc,mess,cuotas.getEstadopago());
-                                        databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
+                                        if(cli.getUltimopago().equals("Nunca")){
+                                            cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
+                                                    cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
+                                            databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
+                                        }else{
+                                            if (!fechaelegida.before(fechaultipago)) {
+                                                cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
+                                                        cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
+                                                databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
+                                            }
+                                        }
+                                        cuotas= new cuotas(nombreyapellido, cli.getEmail(),fechapago.getText().toString(),fechavenc,mess,disci1);
                                         databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
                                         Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
+
                                     }
                                 }
 
@@ -245,6 +303,7 @@ public class AdminCuotas extends Fragment {
                                 }
                             });
                         }
+                    }
                 }
             }
         });
@@ -263,6 +322,7 @@ public class AdminCuotas extends Fragment {
     private void actualizarformatofecha() {
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
         fechapago.setText(sdf.format(micalendario.getTime()));
+        fechaelegida = micalendario.getTime();
         int index1 = fechapago.getText().toString().indexOf("-",3);
         mess = fechapago.getText().toString().substring(3,index1);
         anioo = fechapago.getText().toString().substring(index1+1);

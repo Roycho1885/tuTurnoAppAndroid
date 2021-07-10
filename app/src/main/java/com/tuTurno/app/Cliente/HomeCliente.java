@@ -6,7 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
-import android.view.LayoutInflater;
+  import android.view.ContextThemeWrapper;
+  import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+  import androidx.appcompat.app.AlertDialog;
+  import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -86,7 +88,7 @@ public class HomeCliente extends Fragment {
     boolean menueli;
     private Date horaactual3 = null;
     private Date horaactual1 = null;
-    private boolean finde = false;
+    private boolean finde, deuda = false;
     private String nombre;
     private String apellido;
     private String direccion;
@@ -94,9 +96,11 @@ public class HomeCliente extends Fragment {
     private String DNI;
     private DatosTurno datosturno = new DatosTurno();
     private String user;
-    private cliente c,cli = new cliente();
-    private String horaturno;
+    private cliente c,cli, clie = new cliente();
+    String horaturno, fecha_vence;
     MisFunciones cargarNav = new MisFunciones();
+    Calendar cal, micalendario;
+    Date fechaactual, fechavence;
 
 
     //para el listview
@@ -158,9 +162,8 @@ public class HomeCliente extends Fragment {
 
 
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdff = new SimpleDateFormat("dd-MMMM-yyyy");
         final String horaactual2;
-
-
 
         iniciarFirebase();
         arraydisci = new ArrayList<>();
@@ -200,7 +203,7 @@ public class HomeCliente extends Fragment {
 
 
 
-        Calendar cal = Calendar.getInstance();
+        cal = Calendar.getInstance();
         if(cal.get(Calendar.DAY_OF_WEEK)== Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK)== Calendar.SATURDAY ){
             botondisci.setEnabled(false);
             fab.setVisibility(View.GONE);
@@ -224,6 +227,8 @@ public class HomeCliente extends Fragment {
         }
 
         //LECTURA DEL CLIENTE
+        micalendario = Calendar.getInstance();
+        final String fecha_actual = sdff.format(micalendario.getTime());
         databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -236,6 +241,37 @@ public class HomeCliente extends Fragment {
                     if(c.getEmail().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail())){
 
                         cli = shot.getValue(cliente.class);
+                        assert cli != null;
+                        fecha_vence = cli.getFechavencimiento();
+
+                        try {
+                            fechaactual = sdff.parse(fecha_actual);
+                            fechavence = sdff.parse(fecha_vence);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        if(fecha_vence.equals("Nunca")){
+                            fab.setVisibility(View.GONE);
+                            androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(),R.style.AlertDialogCustom));
+                            mensaje.setTitle("Atención!");
+                            mensaje.setIcon(R.drawable.ic_baseline_cancel_24);
+                            mensaje.setMessage("No posee abono mensual, comuníquese con Administración");
+                            mensaje.show();
+                        }else{
+                            if(fechaactual.compareTo(fechavence)>0){
+                                fab.setVisibility(View.GONE);
+                                deuda = true;
+                                androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(),R.style.AlertDialogCustom));
+                                mensaje.setTitle("Atención!");
+                                mensaje.setIcon(R.drawable.ic_baseline_cancel_24);
+                                mensaje.setMessage("Cuota vencida, comuníquese con Administración");
+                                mensaje.show();
+                            }
+                        }
+
+
+
 
                         //GUARDO TOKEN
                         FirebaseInstanceId.getInstance().getInstanceId()
@@ -245,6 +281,9 @@ public class HomeCliente extends Fragment {
                                         String token = task.getResult().getToken();
                                         assert cli != null;
                                         guardartoken(token,cli, container);
+                                        if(deuda){
+                                            guardodeuda(cli);
+                                        }
                                     }
                                 });
 
@@ -443,8 +482,31 @@ public class HomeCliente extends Fragment {
         String ulpago = c.getUltimopago();
         String fechavence = c.getFechavencimiento();
         int estpago = c.getEstadopago();
+        String estadodeuda = c.getEstadodeuda();
+        String disciplinaelegida = c.getDisciplinaelegida();
 
-        cliente cli = new cliente(id,nombre,apellido,dni,direccion,email,gym,admin,token,ulpago, fechavence,estpago);
+        cliente cli = new cliente(id,nombre,apellido,dni,direccion,email,gym,admin,token,ulpago, fechavence,estpago,estadodeuda,disciplinaelegida);
+
+        databaseReference.child("Clientes").child(id).setValue(cli);
+
+    }
+
+    private void guardodeuda(cliente c){
+        String nombre = c.getNombre();
+        String apellido = c.getApellido();
+        String dni = c.getDni();
+        String direccion = c.getDireccion();
+        String email = c.getEmail();
+        String gym = c.getGym();
+        String admin = c.getAdmin();
+        String token = c.getToken();
+        String id = c.getId();
+        String ulpago = c.getUltimopago();
+        String fechavence = c.getFechavencimiento();
+        int estpago = c.getEstadopago();
+        String disciplinaelegida = c.getDisciplinaelegida();
+
+        cliente cli = new cliente(id,nombre,apellido,dni,direccion,email,gym,admin,token,ulpago, fechavence,estpago,"Debe",disciplinaelegida);
 
         databaseReference.child("Clientes").child(id).setValue(cli);
 

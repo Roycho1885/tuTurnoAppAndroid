@@ -6,34 +6,39 @@ public class cuotas {
     public String fechapago;
     public String fechavenc;
     public String mespago;
-    public int estadopago;
+    public String disciplinaele;
 
-    public cuotas(String clientenombre, String emailcliente, String fechapago,String fechavenc,String mespago, int estadopago) {
+    public cuotas(String clientenombre, String emailcliente, String fechapago,String fechavenc,String mespago, String disciplinaele) {
         this.clientenombre = clientenombre;
         this.emailcliente = emailcliente;
         this.fechapago = fechapago;
         this.fechavenc = fechavenc;
         this.mespago = mespago;
-        this.estadopago = estadopago;
+        this.disciplinaele = disciplinaele;
     }
 
     public cuotas() {
     }
 
 
-    public cuotas(String clientenombre, String fechapago,String fechavenc,String mespago){
+    public cuotas(String clientenombre, String fechapago,String fechavenc,String mespago, String disciplinaele){
         this.clientenombre = clientenombre;
         this.fechapago = fechapago;
         this.fechavenc = fechavenc;
         this.mespago = mespago;
+        this.disciplinaele = disciplinaele;
     }
 
-    public int getEstadopago() {
-        return estadopago;
+    public void setMespago(String mespago) {
+        this.mespago = mespago;
     }
 
-    public void setEstadopago(int estadopago) {
-        this.estadopago = estadopago;
+    public String getDisciplinaele() {
+        return disciplinaele;
+    }
+
+    public void setDisciplinaele(String disciplinaele) {
+        this.disciplinaele = disciplinaele;
     }
 
     public String getEmailcliente() {

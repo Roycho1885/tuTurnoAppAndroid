@@ -11,6 +11,7 @@
     <string name="direccion">Dirección</string>
     <string name="gym">Selecciona Gimnasio</string>
     <string name="correo">Email</string>
+    <string name="disciplina">Disciplina: </string>
     <string name="contraseña">Contraseña</string>
     <string name="codigo">Código</string>
     <string name="codigoacceso">Ingrese el nuevo código</string>
