@@ -47,10 +47,6 @@
             android:configChanges="orientation|screenSize">
         </activity>
 
-        <!-- Crop Imagenes-->
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
-
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-8540442919500654~6266197352" />

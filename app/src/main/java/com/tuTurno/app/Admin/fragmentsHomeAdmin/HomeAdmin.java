@@ -1,15 +1,16 @@
 package com.tuTurno.app.Admin.fragmentsHomeAdmin;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -37,8 +39,11 @@ import com.tuTurno.app.R;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 import models.DatosTurno;
@@ -55,8 +60,8 @@ public class HomeAdmin extends Fragment {
     private TextView cliente_admin, setFecha;
     private CollapsingToolbarLayout tool;
     private NavigationView navi;
-    private String user, fechaactual, nombre, apellido, urldire;
-    private cliente c,cli = new cliente();
+    private String user, fechaactual, nombre, apellido, urldire, fecha_venc;
+    private cliente c, cli = new cliente();
     private DatosTurno t = new DatosTurno();
 
     private ArrayList<DatosTurno> listturnos = new ArrayList<>();
@@ -68,6 +73,14 @@ public class HomeAdmin extends Fragment {
     boolean menuturno = false;
     boolean band = false;
     MisFunciones cargarNav = new MisFunciones();
+    MisFunciones enviarno = new MisFunciones();
+    ProgressDialog cargando;
+    Date fechavencimiento, fechaact;
+    Calendar micalendario, micalendario1, micalendario2;
+    int numeromes, numeroactmes, noticontador;
+
+    //LISTAS PARA LAS NOTIFICACIONES
+    private ArrayList<String> tokensdeudadebe;
 
 
     //para el listview
@@ -83,6 +96,7 @@ public class HomeAdmin extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        noticontador = 0;
 
     }
 
@@ -98,10 +112,10 @@ public class HomeAdmin extends Fragment {
         fab.setImageResource(R.drawable.lista_admin);
 
 
-
-
         //ESTO ES PARA EL LISTVIEW
         milistaturnoscliente = root.findViewById(R.id.listadeturnoscliente);
+
+        tokensdeudadebe = new ArrayList<>();
 
 
         tool = requireActivity().findViewById(R.id.CollapsingToolbar);
@@ -114,48 +128,45 @@ public class HomeAdmin extends Fragment {
         final TextView txtdirecli = head.findViewById(R.id.textodire);
 
         iniciarFirebase();
+        cargando = new ProgressDialog(micontexto);
 
-        menudis.post(new Runnable() {
-            @Override
-            public void run() {
-                menudis.getText().clear();
-            }
-        });
+        menudis.post(() -> menudis.getText().clear());
 
-        menutur.post(new Runnable() {
-            @Override
-            public void run() {
-                menutur.getText().clear();
-            }
-        });
+        menutur.post(() -> menutur.getText().clear());
 
 
-        user = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
+        //user = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
 
 
         Calendar cal = Calendar.getInstance();
+        micalendario = Calendar.getInstance();
+        micalendario1 = Calendar.getInstance();
+        micalendario2 = Calendar.getInstance();
 
+        setearfecha(cal);
+        Calendar calendar = Calendar.getInstance();
+        DateFormat formato = DateFormat.getDateInstance(DateFormat.FULL);
+        fechaactual = formato.format(calendar.getTime());
+
+        @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
+        final String fecha_actual = sdf.format(micalendario1.getTime());
         //LECTURA DEL CLIENTE
         databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot shot : snapshot.getChildren()){
+                for (DataSnapshot shot : snapshot.getChildren()) {
 
                     c = shot.getValue(cliente.class);
                     assert c != null;
 
-                    if(c.getEmail().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail())){
-
+                    if (c.getEmail().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail())) {
                         cli = shot.getValue(cliente.class);
-
-
                         //CARGO NOMBRE, GIMNASIO E IMAGEN AL HEADER
                         nombre = c.getNombre();
                         apellido = c.getApellido();
-                        cliente_admin.setText(getString(R.string.cliente)+ " " + c.getNombre());
+                        cliente_admin.setText(getString(R.string.cliente) + " " + c.getNombre());
                         tool.setTitle(c.getGym());
-
                         textologo.setText(c.getGym());
                     }
                 }
@@ -164,11 +175,11 @@ public class HomeAdmin extends Fragment {
                 databaseReference.child("Gimnasios").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot shot : snapshot.getChildren()){
+                        for (DataSnapshot shot : snapshot.getChildren()) {
                             gimnasios g = shot.getValue(gimnasios.class);
                             assert g != null;
-                            if(cli.getGym().equals(g.getNombre())){
-                                urldire= cargarNav.cargarDatosNav(micontexto,g.getDireccion(), g.getUrldire(),g.getLogo(),g.getFondonav(),txtdirecli,logo,fondo);
+                            if (cli.getGym().equals(g.getNombre())) {
+                                urldire = cargarNav.cargarDatosNav(micontexto, g.getDireccion(), g.getUrldire(), g.getLogo(), g.getFondonav(), txtdirecli, logo, fondo);
                             }
                         }
                     }
@@ -185,7 +196,7 @@ public class HomeAdmin extends Fragment {
                 databaseReference.child(textologo.getText().toString()).child("Disciplinas").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot shot : snapshot.getChildren()){
+                        for (DataSnapshot shot : snapshot.getChildren()) {
                             arraydisci.add(Objects.requireNonNull(shot.getKey()));
                         }
                         miadapter = new ArrayAdapter<>(micontexto, android.R.layout.simple_list_item_1, arraydisci);
@@ -199,127 +210,178 @@ public class HomeAdmin extends Fragment {
                 });
 
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+        //ENVIO NOTIFICACIONES LOS LUNES, MIERCOLES Y VIERNES UNICAMENTE
+        if (micalendario2.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY || micalendario2.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY
+                || micalendario2.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
 
+            //EL CONTADOR CONTROLA QUE SE HAYA EJECUTADO POR LO MENOS UN ENVIO DE NOTIFICACIONES
+            if (noticontador < 1) {
 
-        setearfecha(cal);
-        Calendar calendar = Calendar.getInstance();
-        DateFormat formato = DateFormat.getDateInstance(DateFormat.FULL);
-        fechaactual = formato.format(calendar.getTime());
-
-
-        menudis.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View v, int position, long id) {
-
-                //LIMPIO EL BOTON TURNO CUANDO PRESIONO BOTON DISCIPLINA
-                menutur.post(new Runnable() {
+                //LECTURA CLIENTES PARA NOTIFICACIONES
+                databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void run() {
-                        menutur.getText().clear();
-                    }
-                });
-                arrayturnos = new ArrayList<>();
-                menudisci = true;
-                disci1 = parent.getAdapter().getItem(position).toString();
-                int posi = fechaactual.indexOf(",");
-                final String diass = fechaactual.substring(0,posi);
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot shot : snapshot.getChildren()) {
+                            c = shot.getValue(cliente.class);
+                            assert c != null;
+                            //COLECTO LOS TOKENS PARA NOTIFICACIONES SEGUN ESTADO DEUDA
+                            if (c.getGym().equals(textologo.getText().toString()) && c.getAdmin().equals("No")) {
+                                if (c.getEstadodeuda().equals("Debe") || c.getEstadodeuda().equals("0")) {
+                                    fecha_venc = c.getUltimopago();
 
-                //CARGO LOS TURNOS
-                databaseReference.child(textologo.getText().toString()).child("Disciplinas").child(disci1).orderByChild("horacomienzo").addValueEventListener(new ValueEventListener() {
-                    @SuppressLint("Assert")
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot shot: dataSnapshot.getChildren()){
-                            turno tur = shot.getValue(turno.class);
-                            assert tur != null;
-                            if(tur.getDias().toLowerCase().contains(diass) || tur.getDias().toLowerCase().contains("todos")) {
-                                String hora = Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString();
-                                arrayturnos.add(hora);
+                                    //CALCULAMOS LOS MESES QUE EL CLIENTE ESTA SIN ACTIVIDAD
+                                    try {
+                                        fechaact = sdf.parse(fecha_actual);
+                                        fechavencimiento = sdf.parse(fecha_venc);
+                                        micalendario.setTime(fechavencimiento);
+                                        micalendario1.setTime(fechaact);
+                                        numeromes = micalendario.get(Calendar.MONTH);
+                                        numeroactmes = micalendario1.get(Calendar.MONTH);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    //PREGUNTAMOS SI LA FECHA DE ULTIMO PAGO PASO 3 MESES PARA ELIMINAR CLIENTE
+                                    //DESPUES DE BORRAR COLOCA EL EMAIL EN BORRARCLIENTES PARA QUITAR CUENTA
+                                    if ((numeroactmes - numeromes) >= 3) {
+                                        cliente cli = new cliente(c.getEmail());
+                                        databaseReference.child("BorrarClientes").child(textologo.getText().toString()).push().setValue(cli);
+                                        databaseReference.child("Clientes").child(c.getId()).removeValue();
+                                    } else {
+                                        tokensdeudadebe.add(c.getToken());
+                                    }
+                                }
                             }
                         }
-                        miadapter2 = new ArrayAdapter<>(micontexto, android.R.layout.simple_list_item_1, arrayturnos);
-                        menutur.setAdapter(miadapter2);
-                        menutur.setInputType(InputType.TYPE_NULL);
+                        //ENVIAMOS NOTIFICACION SI LA LISTA DE TOKEN DEUDORES NO ESTA VACIA
+                        if (tokensdeudadebe.size() != 0) {
+                            androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
+                            mensaje.setTitle("Atención!");
+                            mensaje.setIcon(R.drawable.ic_baseline_notification_important_24);
+                            mensaje.setMessage("¿Desea enviar notificaciones a los deudores?");
+                            mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
+                                noticontador = noticontador + 1;
+                                cargando.setTitle("Enviando...");
+                                cargando.setMessage("Espere por favor...");
+                                cargando.show();
+                                for (int u = 0; u < tokensdeudadebe.size(); u++) {
+                                    enviarno.enviarnotificacionapi(tokensdeudadebe.get(u), "Atención!", "Tu cuota se encuentra vencida, pasa por administración", container, cargando);
+                                }
+                            });
 
+                            mensaje.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss());
+
+                            AlertDialog dialog = mensaje.create();
+                            dialog.show();
+                        }
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
-
             }
+        }
+
+
+        menudis.setOnItemClickListener((parent, v, position, id) -> {
+
+            //LIMPIO EL BOTON TURNO CUANDO PRESIONO BOTON DISCIPLINA
+            menutur.post(() -> menutur.getText().clear());
+            arrayturnos = new ArrayList<>();
+            menudisci = true;
+            disci1 = parent.getAdapter().getItem(position).toString();
+            int posi = fechaactual.indexOf(",");
+            final String diass = fechaactual.substring(0, posi);
+
+            //CARGO LOS TURNOS
+            databaseReference.child(textologo.getText().toString()).child("Disciplinas").child(disci1).orderByChild("horacomienzo").addValueEventListener(new ValueEventListener() {
+                @SuppressLint("Assert")
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                        turno tur = shot.getValue(turno.class);
+                        assert tur != null;
+                        if (tur.getDias().toLowerCase().contains(diass) || tur.getDias().toLowerCase().contains("todos")) {
+                            String hora = Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString();
+                            arrayturnos.add(hora);
+                        }
+                    }
+                    miadapter2 = new ArrayAdapter<>(micontexto, android.R.layout.simple_list_item_1, arrayturnos);
+                    menutur.setAdapter(miadapter2);
+                    menutur.setInputType(InputType.TYPE_NULL);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
         });
 
-        menutur.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-                horaturno = parent.getAdapter().getItem(i).toString();
-                menuturno = true;
-            }
+        menutur.setOnItemClickListener((parent, view, i, id) -> {
+            horaturno = parent.getAdapter().getItem(i).toString();
+            menuturno = true;
         });
 
         //BOTON DIRECCION DEL NAVHEADER
-        txtdirecli.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent j = new Intent(Intent.ACTION_VIEW, Uri.parse(urldire));
-                startActivity(j);
-            }
+        txtdirecli.setOnClickListener(view -> {
+            Intent j = new Intent(Intent.ACTION_VIEW, Uri.parse(urldire));
+            startActivity(j);
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                if (!menudisci || !menuturno) {
-                    Snackbar.make(v, "Seleccione Disciplina y Turno", Snackbar.LENGTH_SHORT).show();
-                } else {
-                    band = false;
-                    databaseReference.child(textologo.getText().toString()).child("Datos Turnos").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            listturnos.clear();
-                            for (DataSnapshot shot : snapshot.getChildren()) {
-                                t = shot.getValue(DatosTurno.class);
-                                assert t != null;
-                                if (Objects.equals(shot.child("disciplina").getValue(), disci1) && (Objects.equals(shot.child("turno").getValue(), horaturno)) && (Objects.equals(shot.child("fecha").getValue(),fechaactual))) {
-                                    listturnos.add(t);
-                                    adaptador = new ListViewAdaptadorLA(micontexto,listturnos);
-                                    milistaturnoscliente.setAdapter(adaptador);
-                                    band = true;
-                                }
+        fab.setOnClickListener(v -> {
+            if (!menudisci || !menuturno) {
+                Snackbar.make(v, "Seleccione Disciplina y Turno", Snackbar.LENGTH_SHORT).show();
+            } else {
+                band = false;
+                databaseReference.child(textologo.getText().toString()).child("Datos Turnos").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        listturnos.clear();
+                        for (DataSnapshot shot : snapshot.getChildren()) {
+                            t = shot.getValue(DatosTurno.class);
+                            assert t != null;
+                            if (Objects.equals(shot.child("disciplina").getValue(), disci1) && (Objects.equals(shot.child("turno").getValue(), horaturno)) && (Objects.equals(shot.child("fecha").getValue(), fechaactual))) {
+                                listturnos.add(t);
+                                adaptador = new ListViewAdaptadorLA(micontexto, listturnos);
+                                milistaturnoscliente.setAdapter(adaptador);
+                                band = true;
                             }
+                        }
 
-                            if (!band) {
-                                milistaturnoscliente.setAdapter(null);
-                                Snackbar.make(v, "Por el momento no existen turnos por motrar", Snackbar.LENGTH_SHORT).show();
+                        if (!band) {
+                            milistaturnoscliente.setAdapter(null);
+                            Snackbar.make(v, "Por el momento no existen turnos por motrar", Snackbar.LENGTH_SHORT).show();
 //                                arrayAdapterTurnos.notifyDataSetChanged();
-                            }else{
-                                if (adaptador == null) {
-                                    Snackbar.make(v, "Por el momento no existen turnos por motrar", Snackbar.LENGTH_SHORT).show();
-                                } else {
-                                    adaptador.notifyDataSetChanged();
-                                }
+                        } else {
+                            if (adaptador == null) {
+                                Snackbar.make(v, "Por el momento no existen turnos por motrar", Snackbar.LENGTH_SHORT).show();
+                            } else {
+                                adaptador.notifyDataSetChanged();
                             }
                         }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                    }
 
-                        }
-                    });
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
-
         });
         return root;
     }
 
-    private void setearfecha(@NotNull Calendar calendar){
+    private void setearfecha(@NotNull Calendar calendar) {
         DateFormat formato = DateFormat.getDateInstance(DateFormat.FULL);
         setFecha.setText(formato.format(calendar.getTime()));
     }

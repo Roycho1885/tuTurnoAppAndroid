@@ -7,7 +7,6 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -26,18 +25,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.tuTurno.app.Api;
 import com.tuTurno.app.R;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import models.MisFunciones;
 
 public class AdminNotificaciones extends Fragment {
     private FirebaseDatabase firebaseDatabase;
@@ -51,6 +44,7 @@ public class AdminNotificaciones extends Fragment {
     boolean menueli;
     String disci1;
     ProgressDialog cargando;
+    MisFunciones enviarno = new MisFunciones();
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -97,69 +91,33 @@ public class AdminNotificaciones extends Fragment {
 
         });
 
-        menuelim.post(new Runnable() {
-            @Override
-            public void run() {
-                menuelim.getText().clear();
-            }
+        menuelim.post(() -> menuelim.getText().clear());
+
+        menuelim.setOnItemClickListener((adapterView, view, i, l) -> {
+            menueli = true;
+            disci1 = adapterView.getAdapter().getItem(i).toString();
         });
 
-        menuelim.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                menueli = true;
-                disci1 = adapterView.getAdapter().getItem(i).toString();
-            }
-        });
-
-        enviarnoti.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String titulo = txttitulonoti.getText().toString();
-                String detalle = txtdetallenoti.getText().toString();
-                if(!menueli){
-                    Snackbar.make(view,"Ingrese grupo",Snackbar.LENGTH_SHORT).show();
-                }else {
-                    if((titulo.equals("")) || (detalle.equals(""))){
-                        Snackbar.make(view,"Ingrese Título y Detalle",Snackbar.LENGTH_SHORT).show();
-                    }else{
-                        cargando.setTitle("Enviando...");
-                        cargando.setMessage("Espere por favor...");
-                        cargando.show();
-                        enviarnotificacionapi(disci1+gym,txttitulonoti.getText().toString(),txtdetallenoti.getText().toString(),view);
-                    }
+        enviarnoti.setOnClickListener(view -> {
+            String titulo = txttitulonoti.getText().toString();
+            String detalle = txtdetallenoti.getText().toString();
+            if(!menueli){
+                Snackbar.make(view,"Ingrese grupo",Snackbar.LENGTH_SHORT).show();
+            }else {
+                if((titulo.equals("")) || (detalle.equals(""))){
+                    Snackbar.make(view,"Ingrese Título y Detalle",Snackbar.LENGTH_SHORT).show();
+                }else{
+                    cargando.setTitle("Enviando...");
+                    cargando.setMessage("Espere por favor...");
+                    cargando.show();
+                    enviarno.enviarnotificacionapitemas(disci1+gym,txttitulonoti.getText().toString(),txtdetallenoti.getText().toString(),view,cargando);
+                    txtdetallenoti.setText("");
+                    txttitulonoti.setText("");
                 }
             }
         });
 
         return root;
-    }
-
-    private void enviarnotificacionapi(String topic, String titulo , String detalle, final View view){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://tuturno-91997.web.app/api/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        Api api = retrofit.create(Api.class);
-        Call<ResponseBody> call = api.enviarnotificacion(topic,titulo,detalle);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                assert response.body() != null;
-                cargando.dismiss();
-                Snackbar.make(view,"Notificación enviada con exito",Snackbar.LENGTH_SHORT).show();
-                txtdetallenoti.setText("");
-                txttitulonoti.setText("");
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                cargando.dismiss();
-                Snackbar.make(view,"No se pudo enviar la notificación, revise su conexión a internet e intente nuevamente",Snackbar.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void  iniciarFirebase(){

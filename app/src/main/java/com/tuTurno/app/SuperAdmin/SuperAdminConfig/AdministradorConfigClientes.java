@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,16 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.tuTurno.app.R;
 
@@ -43,7 +38,6 @@ public class AdministradorConfigClientes extends Fragment {
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
     ProgressDialog cargando;
-    Bitmap thumb_bitmap = null;
     private Button botoncargarfoto , botoncargartodo;
     private CircleImageView logo;
     Context micontexto;
@@ -75,19 +69,9 @@ public class AdministradorConfigClientes extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Gimnasios");
 
 
-        botoncargarfoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cargarfoto();
-            }
-        });
+        botoncargarfoto.setOnClickListener(view -> cargarfoto());
 
-        botoncargartodo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                subirtodo();
-            }
-        });
+        botoncargartodo.setOnClickListener(view -> subirtodo());
 
         return root;
 
@@ -135,28 +119,20 @@ public class AdministradorConfigClientes extends Fragment {
 
             if(imageuri != null){
                 final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("LogoClientes").child(System.currentTimeMillis()+"."+getFileExtension(imageuri));
-                storageReference.putFile(imageuri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                String url = uri.toString();
+                storageReference.putFile(imageuri).addOnCompleteListener(task -> storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String url = uri.toString();
 
-                                gimnasios gim = new gimnasios(nombre,url,codigo, direccion, "", "");
-                                databaseReference.child(nombre).setValue(gim);
-                                cargando.dismiss();
+                    gimnasios gim = new gimnasios(nombre,url,codigo, direccion, "", "");
+                    databaseReference.child(nombre).setValue(gim);
+                    cargando.dismiss();
 
-                                cargando.dismiss();
-                                Toast.makeText(micontexto,"Información cargada con éxito", Toast.LENGTH_LONG).show();
-                                txtnombrecliente.setText("");
-                                txtcodigoingreso.setText("");
-                                txtdireccioncliente.setText("");
-                                logo.setImageResource(android.R.color.transparent);
-                            }
-                        });
-                    }
-                });
+                    cargando.dismiss();
+                    Toast.makeText(micontexto,"Información cargada con éxito", Toast.LENGTH_LONG).show();
+                    txtnombrecliente.setText("");
+                    txtcodigoingreso.setText("");
+                    txtdireccioncliente.setText("");
+                    logo.setImageResource(android.R.color.transparent);
+                }));
             }
         }
     }

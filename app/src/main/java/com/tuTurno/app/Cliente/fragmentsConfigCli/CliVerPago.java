@@ -3,11 +3,10 @@ package com.tuTurno.app.Cliente.fragmentsConfigCli;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -22,8 +21,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
@@ -57,16 +54,19 @@ public class CliVerPago extends Fragment {
     private ArrayAdapter miadaptador;
     Context micontexto;
     Calendar micalendario,micalendario1;
-    String meses,anioo,emailcliente,fecha_venc;
+    String meses,anioo,emailcliente,fecha_venc, anoseleccionado;
     boolean bandera,bandera1;
     cliente c,cli;
     Date fechaactual,fechavence;
-    cuotas cu;
+    cuotas cu, ct;
 
     //para el listview
     private final ArrayList<cuotas> listacuotaspagas = new ArrayList<>();
     private ListView milistacuotasadminpagas;
     private ListViewAdaptadorVerPagosAdmin adaptador;
+
+    private ArrayList<String> arrayano, arraymeses, arraymescliente;
+    private ArrayAdapter<String> adapterano, adaptermeses;
 
 
     @Override
@@ -81,6 +81,7 @@ public class CliVerPago extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.cliverpago, container, false);
+        final AutoCompleteTextView botonanodesple = root.findViewById(R.id.despleano);
         milistacuotasadminpagas = root.findViewById(R.id.listacuotasclientespagas);
         botonmesdesple = root.findViewById(R.id.desplemes);
         verpagos = root.findViewById(R.id.botonverpagos);
@@ -91,25 +92,89 @@ public class CliVerPago extends Fragment {
         //para los diferentes gimnasios
         final TextView gimnasio = requireActivity().findViewById(R.id.textologo);
 
-        String[] mes ={"Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"};
-
-        miadaptador = new ArrayAdapter<>(micontexto,android.R.layout.simple_list_item_1,mes);
-        botonmesdesple.setAdapter(miadaptador);
         micalendario = Calendar.getInstance();
         adaptador = new ListViewAdaptadorVerPagosAdmin(micontexto,listacuotaspagas);
+        arraymeses = new ArrayList<>();
+        arraymescliente = new ArrayList<>();
 
         //PUBLICIDAD
-        MobileAds.initialize(micontexto, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
+        MobileAds.initialize(micontexto, initializationStatus -> {
         });
         AdView mAdView = root.findViewById(R.id.adView7);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
         iniciarFirebase();
+
+        botonanodesple.post(() -> botonanodesple.getText().clear());
+
+        botonmesdesple.post(() -> botonmesdesple.getText().clear());
+
         formatearfecha();
+
+        //CARGO BOTON ANO CORRESPONDIENTE
+        arrayano = new ArrayList<>();
+        databaseReference.child(gimnasio.getText().toString()).child("Cuotas").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot shot : snapshot.getChildren()){
+                    arrayano.add(Objects.requireNonNull(shot.getKey()));
+                }
+                adapterano = new ArrayAdapter<>(micontexto, android.R.layout.simple_list_item_1, arrayano);
+                botonanodesple.setAdapter(adapterano);
+                botonanodesple.setInputType(InputType.TYPE_NULL);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+        botonanodesple.setOnItemClickListener((adapterView, view, i, l) -> {
+
+            //LIMPIO BOTON MES
+            botonmesdesple.post(() -> botonmesdesple.getText().clear());
+            anoseleccionado = adapterView.getAdapter().getItem(i).toString();
+            arraymeses.clear();
+
+            databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anoseleccionado).orderByChild("mespago").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for(DataSnapshot shot: snapshot.getChildren()){
+                        arraymeses.add(Objects.requireNonNull(shot.getKey()));
+                    }
+                    for(int ii = 0; ii < arraymeses.size();ii++){
+                        arraymescliente.clear();
+                        databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anoseleccionado).child(arraymeses.get(ii)).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for(DataSnapshot shot: snapshot.getChildren()){
+                                    ct = shot.getValue(cuotas.class);
+                                    assert ct != null;
+                                    if(firebaseAuth.getCurrentUser().getEmail().equals(ct.getEmailcliente())){
+                                        arraymescliente.add(ct.mespago);
+                                    }
+                                }
+                                adaptermeses = new ArrayAdapter<>(micontexto, android.R.layout.simple_list_item_1, arraymescliente);
+                                botonmesdesple.setAdapter(adaptermeses);
+                                botonmesdesple.setInputType(InputType.TYPE_NULL);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+
+            });
+        });
 
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
         micalendario1 = Calendar.getInstance();
@@ -158,72 +223,59 @@ public class CliVerPago extends Fragment {
         });
 
 
-        scroll.setOnTouchListener(new View.OnTouchListener() {
-
-            @SuppressLint("ClickableViewAccessibility")
-            public boolean onTouch(View v, MotionEvent event) {
-                milistacuotasadminpagas.getParent()
-                        .requestDisallowInterceptTouchEvent(false);
-                return false;
-            }
+        scroll.setOnTouchListener((v, event) -> {
+            milistacuotasadminpagas.getParent()
+                    .requestDisallowInterceptTouchEvent(false);
+            return false;
         });
 
-        milistacuotasadminpagas.setOnTouchListener(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
+        milistacuotasadminpagas.setOnTouchListener((v, event) -> {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
         });
 
         //BOTON MES CORRESPONDIENTE
-        botonmesdesple.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                bandera = true;
-                meses = adapterView.getAdapter().getItem(i).toString();
-            }
+        botonmesdesple.setOnItemClickListener((adapterView, view, i, l) -> {
+            bandera = true;
+            meses = adapterView.getAdapter().getItem(i).toString();
         });
 
         //BOTON VER PAGOS
-        verpagos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                bandera1 = false;
-                listacuotaspagas.clear();
-                if(!bandera){
-                    Snackbar.make(view, "Seleccione un mes", Snackbar.LENGTH_SHORT).show();
-                }else {
-                    databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(meses.toLowerCase().trim()).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @SuppressLint("SetTextI18n")
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for(DataSnapshot shot : snapshot.getChildren()){
-                                cu = shot.getValue(cuotas.class);
-                                assert cu != null;
-                                if(emailcliente.equals(cu.getEmailcliente())){
-                                    listacuotaspagas.add(cu);
-                                    bandera1=true;
-                                    milistacuotasadminpagas.setAdapter(adaptador);
-                                }
-                            }
-
-
-                            if(snapshot.getValue()==null){
-                                Snackbar.make(view, "Para este mes no existen pagos efectuados", Snackbar.LENGTH_SHORT).show();
-                                milistacuotasadminpagas.setAdapter(null);
-                            }
-                            if(!bandera1){
-                                Snackbar.make(view, "Para este mes no existen pagos efectuados", Snackbar.LENGTH_SHORT).show();
-                                milistacuotasadminpagas.setAdapter(null);
+        verpagos.setOnClickListener(view -> {
+            bandera1 = false;
+            listacuotaspagas.clear();
+            if(!bandera){
+                Snackbar.make(view, "Seleccione un mes", Snackbar.LENGTH_SHORT).show();
+            }else {
+                databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(meses.toLowerCase().trim()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot shot : snapshot.getChildren()){
+                            cu = shot.getValue(cuotas.class);
+                            assert cu != null;
+                            if(emailcliente.equals(cu.getEmailcliente())){
+                                listacuotaspagas.add(cu);
+                                bandera1=true;
+                                milistacuotasadminpagas.setAdapter(adaptador);
                             }
                         }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        if(snapshot.getValue()==null){
+                            Snackbar.make(view, "Para este mes no existen pagos efectuados", Snackbar.LENGTH_SHORT).show();
+                            milistacuotasadminpagas.setAdapter(null);
                         }
-                    });
-                }
+                        if(!bandera1){
+                            Snackbar.make(view, "Para este mes no existen pagos efectuados", Snackbar.LENGTH_SHORT).show();
+                            milistacuotasadminpagas.setAdapter(null);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
             }
         });
 

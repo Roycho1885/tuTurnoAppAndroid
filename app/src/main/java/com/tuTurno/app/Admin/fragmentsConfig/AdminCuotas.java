@@ -8,14 +8,11 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -59,7 +56,7 @@ public class AdminCuotas extends Fragment {
     Date fechaactual,fechavence, fechaultipago, fechaelegida;
     private ArrayList<String> arraydisci;
     private ArrayAdapter miadapter;
-
+    private TextView registros;
 
 
     //para el listview
@@ -88,37 +85,26 @@ public class AdminCuotas extends Fragment {
         agregarpago = root.findViewById(R.id.botonagregarpago);
         buscar = root.findViewById(R.id.txtbuscar);
         fechapago = root.findViewById(R.id.txtfecha);
+        registros = root.findViewById(R.id.registros);
 
         adaptador = new ListViewAdaptadorCuotasAdmin(micontexto,listaclientes);
         micalendario = Calendar.getInstance();
 
         iniciarFirebase();
 
-        menudisci.post(new Runnable() {
-            @Override
-            public void run() {
-                menudisci.getText().clear();
-            }
-        });
+        menudisci.post(() -> menudisci.getText().clear());
 
         arraydisci = new ArrayList<>();
 
-        otroscroll.setOnTouchListener(new View.OnTouchListener() {
-
-            @SuppressLint("ClickableViewAccessibility")
-            public boolean onTouch(View v, MotionEvent event) {
-                milistacuotasadmin.getParent()
-                        .requestDisallowInterceptTouchEvent(false);
-                return false;
-            }
+        otroscroll.setOnTouchListener((v, event) -> {
+            milistacuotasadmin.getParent()
+                    .requestDisallowInterceptTouchEvent(false);
+            return false;
         });
 
-        milistacuotasadmin.setOnTouchListener(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
+        milistacuotasadmin.setOnTouchListener((v, event) -> {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
         });
 
 
@@ -141,24 +127,24 @@ public class AdminCuotas extends Fragment {
 
         });
 
-        menudisci.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                menueli = true;
-                disci1 = adapterView.getAdapter().getItem(i).toString().trim();
-            }
+        menudisci.setOnItemClickListener((adapterView, view, i, l) -> {
+            menueli = true;
+            disci1 = adapterView.getAdapter().getItem(i).toString().trim();
         });
 
         //CARGO LISTVIEW CON CLIENTES
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
         micalendario1 = Calendar.getInstance();
         databaseReference.child("Clientes").orderByChild("apellido").addValueEventListener(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listaclientes.clear();
+                int contador = 0;
                 for (DataSnapshot shot : snapshot.getChildren()) {
                     if (gimnasio.getText().toString().equals(shot.child("gym").getValue()) && shot.child("admin").getValue().equals("No")) {
                         cli = shot.getValue(cliente.class);
+                        contador = contador + 1;
                         String fecha_actual = sdf.format(micalendario1.getTime());
                         String fecha_vence = cli.getFechavencimiento();
                         String fecha_ulti = cli.getUltimopago();
@@ -183,6 +169,7 @@ public class AdminCuotas extends Fragment {
                                 databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
                             }
                         }
+                        registros.setText(contador + " clientes listados");
                         listaclientes.add(cli);
                         milistacuotasadmin.setAdapter(adaptador);
                         adaptador.notifyDataSetChanged();
@@ -198,26 +185,18 @@ public class AdminCuotas extends Fragment {
         });
 
 
-        final DatePickerDialog.OnDateSetListener date =  new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int ano, int mes, int diames) {
-                micalendario.set(Calendar.YEAR,ano);
-                micalendario.set(Calendar.MONTH,mes);
-                micalendario.set(Calendar.DAY_OF_MONTH,diames);
-                actualizarformatofecha();
-            }
+        final DatePickerDialog.OnDateSetListener date = (view, ano, mes, diames) -> {
+            micalendario.set(Calendar.YEAR,ano);
+            micalendario.set(Calendar.MONTH,mes);
+            micalendario.set(Calendar.DAY_OF_MONTH,diames);
+            actualizarformatofecha();
         };
 
 
         //BOTON FECHA DE PAGO
-        fechapago.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new DatePickerDialog(micontexto, date, micalendario
-                        .get(Calendar.YEAR), micalendario.get(Calendar.MONTH),
-                        micalendario.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        fechapago.setOnClickListener(view -> new DatePickerDialog(micontexto, date, micalendario
+                .get(Calendar.YEAR), micalendario.get(Calendar.MONTH),
+                micalendario.get(Calendar.DAY_OF_MONTH)).show());
 
         //BOTON BUSCAR
         buscar.addTextChangedListener(new TextWatcher() {
@@ -238,71 +217,64 @@ public class AdminCuotas extends Fragment {
         });
 
         //CLICK EN LA LISTA DE CLIENTES
-        milistacuotasadmin.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                cli = listaclientes.get(i);
-                adapterView.setSelected(true);
-                bandera = adapterView.isClickable();
-                nombreyapellido = cli.getApellido()+" "+cli.getNombre();
-                emailcliente = cli.getEmail();
-            }
+        milistacuotasadmin.setOnItemClickListener((adapterView, view, i, l) -> {
+            cli = listaclientes.get(i);
+            adapterView.setSelected(true);
+            bandera = adapterView.isClickable();
+            nombreyapellido = cli.getApellido()+" "+cli.getNombre();
+            emailcliente = cli.getEmail();
         });
 
         //CLICK EN BOTON AGREGAR PAGO
-
-        agregarpago.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                bandera3 = false;
-                if(!menueli){
-                    Snackbar.make(view, "Seleccione una disciplina", Snackbar.LENGTH_SHORT).show();
+        agregarpago.setOnClickListener(view -> {
+            bandera3 = false;
+            if(!menueli){
+                Snackbar.make(view, "Seleccione una disciplina", Snackbar.LENGTH_SHORT).show();
+            }else{
+                if(!bandera1){
+                    Snackbar.make(view, "Seleccione una fecha", Snackbar.LENGTH_SHORT).show();
                 }else{
-                    if(!bandera1){
-                        Snackbar.make(view, "Seleccione una fecha", Snackbar.LENGTH_SHORT).show();
-                    }else{
-                        if(!bandera){
-                            Snackbar.make(view, "Seleccione un cliente", Snackbar.LENGTH_SHORT).show();
-                    }else{
-                            //CONTROLO QUE EL CLIENTE YA TENGA EL PAGO EFECTUADO
-                            databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    for(DataSnapshot shot : snapshot.getChildren()){
-                                        cuotas cu = shot.getValue(cuotas.class);
-                                        assert cu != null;
-                                        if(cu.getEmailcliente().equals(emailcliente)){
-                                            if(cu.getMespago().equals(mess)){
-                                                bandera3 = true;
-                                            }
+                    if(!bandera){
+                        Snackbar.make(view, "Seleccione un cliente", Snackbar.LENGTH_SHORT).show();
+                }else{
+                        //CONTROLO QUE EL CLIENTE YA TENGA EL PAGO EFECTUADO
+                        databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for(DataSnapshot shot : snapshot.getChildren()){
+                                    cuotas cu = shot.getValue(cuotas.class);
+                                    assert cu != null;
+                                    if(cu.getEmailcliente().equals(emailcliente)){
+                                        if(cu.getMespago().equals(mess)){
+                                            bandera3 = true;
                                         }
                                     }
-                                    if(bandera3){
-                                        Snackbar.make(view, "Para este mes y cliente ya existe un pago registrado.", Snackbar.LENGTH_SHORT).show();
-                                    }else {
-                                        if(cli.getUltimopago().equals("Nunca")){
+                                }
+                                if(bandera3){
+                                    Snackbar.make(view, "Para este mes y cliente ya existe un pago registrado.", Snackbar.LENGTH_SHORT).show();
+                                }else {
+                                    if(cli.getUltimopago().equals("Nunca")){
+                                        cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
+                                                cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
+                                        databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
+                                    }else{
+                                        if (!fechaelegida.before(fechaultipago)) {
                                             cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
                                                     cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
                                             databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
-                                        }else{
-                                            if (!fechaelegida.before(fechaultipago)) {
-                                                cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                                        cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
-                                                databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
-                                            }
                                         }
-                                        cuotas= new cuotas(nombreyapellido, cli.getEmail(),fechapago.getText().toString(),fechavenc,mess,disci1);
-                                        databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
-                                        Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
-
                                     }
-                                }
+                                    cuotas= new cuotas(nombreyapellido, cli.getEmail(),fechapago.getText().toString(),fechavenc,mess,disci1);
+                                    databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
+                                    Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
                                 }
-                            });
-                        }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                            }
+                        });
                     }
                 }
             }
@@ -333,9 +305,5 @@ public class AdminCuotas extends Fragment {
         micalendario.add(Calendar.DAY_OF_YEAR,30);
         fechavenc = (sdf.format(micalendario.getTime()));
 
-    }
-
-    private int numeroMes(){
-        return Calendar.MONTH;
     }
 }

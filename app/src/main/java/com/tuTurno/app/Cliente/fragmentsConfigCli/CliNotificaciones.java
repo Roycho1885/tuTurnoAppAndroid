@@ -6,7 +6,6 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -84,36 +83,27 @@ public class CliNotificaciones extends Fragment {
 
         });
 
-        menuelim.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                menueli = true;
-                disci1 = adapterView.getAdapter().getItem(i).toString().trim();
-            }
+        menuelim.setOnItemClickListener((adapterView, view, i, l) -> {
+            menueli = true;
+            disci1 = adapterView.getAdapter().getItem(i).toString().trim();
         });
 
-        suscribirse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(menueli){
-                    String topic = disci1+gym;
-                    FirebaseMessaging.getInstance().subscribeToTopic(topic);
-                    Snackbar.make(view,"Te has suscripto correctamente",Snackbar.LENGTH_SHORT).show();
-                }else {
-                    Snackbar.make(view,"Ingrese un grupo para suscribirse",Snackbar.LENGTH_SHORT).show();
-                }
+        suscribirse.setOnClickListener(view -> {
+            if(menueli){
+                String topic = disci1+gym;
+                FirebaseMessaging.getInstance().subscribeToTopic(topic);
+                Snackbar.make(view,"Te has suscripto correctamente",Snackbar.LENGTH_SHORT).show();
+            }else {
+                Snackbar.make(view,"Ingrese un grupo para suscribirse",Snackbar.LENGTH_SHORT).show();
             }
         });
-        dejarsuscri.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(menueli){
-                    String topic = disci1+gym;
-                    FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
-                    Snackbar.make(view,"Has cancelado la suscripción correctamente",Snackbar.LENGTH_SHORT).show();
-                }else {
-                    Snackbar.make(view,"Ingrese un grupo para dejar suscripción",Snackbar.LENGTH_SHORT).show();
-                }
+        dejarsuscri.setOnClickListener(view -> {
+            if(menueli){
+                String topic = disci1+gym;
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
+                Snackbar.make(view,"Has cancelado la suscripción correctamente",Snackbar.LENGTH_SHORT).show();
+            }else {
+                Snackbar.make(view,"Ingrese un grupo para dejar suscripción",Snackbar.LENGTH_SHORT).show();
             }
         });
 

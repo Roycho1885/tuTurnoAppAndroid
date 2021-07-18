@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.TextUtils
@@ -14,6 +15,9 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.SharedElementCallback
+import androidx.preference.PreferenceManager
+import androidx.work.impl.model.Preference
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
@@ -25,6 +29,7 @@ import com.google.firebase.database.*
 import com.tuTurno.app.Admin.ActividadAdmin
 import com.tuTurno.app.Cliente.ActividadCliente
 import com.tuTurno.app.SuperAdmin.ActividadSuperAdmin
+import kotlinx.android.synthetic.main.activity_login.*
 import models.cliente
 import java.util.*
 
@@ -40,13 +45,19 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var firebaseDatabase:FirebaseDatabase
     private lateinit var databaseReference:DatabaseReference
     private lateinit var progressDialog: ProgressDialog
-
-
+    private val keyusuario = "KEYUSUARIO"
+    private val keycontra = "KEYCONTRA"
+    private var usuario = ""
+    private var contrasena = ""
+    private lateinit var preferencias:SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        //OBTENEMOS EL PREFERENCE MANAGER
+        preferencias = PreferenceManager.getDefaultSharedPreferences(this)
 
         appUpdateManager.appUpdateInfo.addOnSuccessListener {
             if(it.updateAvailability()==UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)){
@@ -63,8 +74,15 @@ class LoginActivity : AppCompatActivity() {
         checkadmin = findViewById(R.id.checkBox)
         auth = FirebaseAuth.getInstance()
 
-        progressDialog= ProgressDialog(this)
+        usuario = preferencias.getString(keyusuario,"No usuario").toString()
+        contrasena = preferencias.getString(keycontra,"No contrasena").toString()
 
+        if(usuario != "No usuario" && contrasena != "No contrasena"){
+            txtUsuario.setText(preferencias.getString(keyusuario,"No usuario"))
+            txtContrasena.setText(preferencias.getString(keycontra,"No contrasena"))
+        }
+
+        progressDialog= ProgressDialog(this)
 
         iniciarFirebase()
 
@@ -108,6 +126,13 @@ class LoginActivity : AppCompatActivity() {
 
         if (!TextUtils.isEmpty(usuario) && !TextUtils.isEmpty(contrasena)){
 
+            if(checkadmin.isChecked){
+                val editor = preferencias.edit()
+                editor.putString(keyusuario,usuario)
+                editor.putString(keycontra,contrasena)
+                editor.apply()
+            }
+
             progressDialog.setTitle("Cargando...")
             progressDialog.setMessage("Espere por favor")
             progressDialog.show()
@@ -119,7 +144,6 @@ class LoginActivity : AppCompatActivity() {
                         if(task.isSuccessful){
                             Accion(usuario)
                         }else{
-                            //Log.w("Error",task.exception)
                             try {
                                 throw task.exception!!
                             }catch (e: FirebaseAuthInvalidCredentialsException){
@@ -171,14 +195,14 @@ class LoginActivity : AppCompatActivity() {
         if(user=="roygenoff@gmail.com"){
             startActivity(Intent(this, ActividadSuperAdmin::class.java))
         }else{
-
-                if (checkadmin.isChecked && admin.equals("Si")) {
+                if (admin == "Si") {
                     startActivity(Intent(this, ActividadAdmin::class.java))
                 }else{
                     startActivity(Intent(this, ActividadCliente::class.java))
                 }
         }
     }
+
 
     private fun iniciarFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance()

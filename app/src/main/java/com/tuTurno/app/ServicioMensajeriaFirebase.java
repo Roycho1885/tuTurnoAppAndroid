@@ -41,6 +41,7 @@ public class ServicioMensajeriaFirebase extends FirebaseMessagingService {
         builder.setColor(getResources().getColor(R.color.secondaryLightColor))
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(title)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
                 .setContentText(body)
                 .setSmallIcon(R.drawable.ic_baseline_notifications_active_24)
                 .setContentInfo("nuevo");

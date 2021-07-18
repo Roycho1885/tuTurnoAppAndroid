@@ -47,6 +47,14 @@ public class cliente {
         this.disciplinaelegida = disciplinaelegida;
     }
 
+    public cliente(String id,String estadodeuda){
+        this.id = id;
+        this.estadodeuda = estadodeuda;
+    }
+
+    public cliente(String email){
+        this.email = email;
+    }
     public String getDisciplinaelegida() {
         return disciplinaelegida;
     }

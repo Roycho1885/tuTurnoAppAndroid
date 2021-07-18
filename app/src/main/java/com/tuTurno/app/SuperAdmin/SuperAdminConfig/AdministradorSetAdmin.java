@@ -116,12 +116,9 @@ public class AdministradorSetAdmin extends Fragment {
             }
         });
 
-        lista.setOnTouchListener(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
+        lista.setOnTouchListener((v, event) -> {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
         });
 
         dropdowntxt.post(new Runnable() {
@@ -131,96 +128,91 @@ public class AdministradorSetAdmin extends Fragment {
             }
         });
 
-        botoncargar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listItems.clear();
-                gym = dropdowntxt.getText().toString().trim();
-                if(gym.equals("")){
-                    Toast.makeText(micontexto,"Selecciona un gimnasio", Toast.LENGTH_SHORT).show();
-                }else{
-                    databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot shot : snapshot.getChildren()) {
-                                if (gym.equals(shot.child("gym").getValue())) {
-                                    cli = shot.getValue(cliente.class);
-                                    listItems.add(cli);
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-
-                botonaceptar.setOnClickListener(new View.OnClickListener() {
+        botoncargar.setOnClickListener(v -> {
+            listItems.clear();
+            gym = dropdowntxt.getText().toString().trim();
+            if(gym.equals("")){
+                Toast.makeText(micontexto,"Selecciona un gimnasio", Toast.LENGTH_SHORT).show();
+            }else{
+                databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onClick(View v) {
-                        comprueba = false;
-                        for(int i=0 ; i< lista.getCount();i++){
-                            if(lista.isItemChecked(i)){
-                                comprueba = true;
-                                cli = (cliente) lista.getItemAtPosition(i);
-                                cliente.setApellido(cli.getApellido());
-                                cliente.setNombre(cli.getNombre());
-                                cliente.setEmail(cli.getEmail());
-                                cliente.setGym(cli.getGym());
-                                cliente.setId(cli.getId());
-                                cliente.setDni(cli.getDni());
-                                cliente.setDireccion(cli.getDireccion());
-                                cliente.setToken(cli.getToken());
-                                cliente.setAdmin("Si");
-                                cliente.setUltimopago(cli.getUltimopago());
-                                cliente.setFechavencimiento(cli.getFechavencimiento());
-                                cliente.setEstadopago(cli.getEstadopago());
-
-                                databaseReference.child("Clientes").child(cli.getId()).setValue(cliente);
-                                Toast.makeText(micontexto,"Los cambios se realizaron correctamente", Toast.LENGTH_SHORT).show();
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot shot : snapshot.getChildren()) {
+                            if (gym.equals(shot.child("gym").getValue())) {
+                                cli = shot.getValue(cliente.class);
+                                listItems.add(cli);
+                                adapter.notifyDataSetChanged();
                             }
-                        }
-                        if(!comprueba){
-                            Toast.makeText(micontexto,"Selecciona un cliente", Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
 
-                botoncancelar.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        comprueba = false;
-                        for(int i=0 ; i< lista.getCount();i++){
-                            if(lista.isItemChecked(i)){
-                                comprueba = true;
-                                cli = (cliente) lista.getItemAtPosition(i);
-                                cliente.setApellido(cli.getApellido());
-                                cliente.setNombre(cli.getNombre());
-                                cliente.setEmail(cli.getEmail());
-                                cliente.setGym(cli.getGym());
-                                cliente.setId(cli.getId());
-                                cliente.setDni(cli.getDni());
-                                cliente.setDireccion(cli.getDireccion());
-                                cliente.setToken(cli.getToken());
-                                cliente.setAdmin("No");
-                                cliente.setUltimopago(cli.getUltimopago());
-                                cliente.setFechavencimiento(cli.getFechavencimiento());
-                                cliente.setEstadopago(cli.getEstadopago());
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                databaseReference.child("Clientes").child(cli.getId()).setValue(cliente);
-                                Toast.makeText(micontexto,"Los cambios se realizaron correctamente", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        if(!comprueba){
-                            Toast.makeText(micontexto,"Selecciona un cliente", Toast.LENGTH_SHORT).show();
-                        }
                     }
                 });
-
             }
+
+            botonaceptar.setOnClickListener(v12 -> {
+                comprueba = false;
+                for(int i=0 ; i< lista.getCount();i++){
+                    if(lista.isItemChecked(i)){
+                        comprueba = true;
+                        cli = (cliente) lista.getItemAtPosition(i);
+                        cliente.setApellido(cli.getApellido());
+                        cliente.setNombre(cli.getNombre());
+                        cliente.setEmail(cli.getEmail());
+                        cliente.setGym(cli.getGym());
+                        cliente.setId(cli.getId());
+                        cliente.setDni(cli.getDni());
+                        cliente.setDireccion(cli.getDireccion());
+                        cliente.setToken(cli.getToken());
+                        cliente.setAdmin("Si");
+                        cliente.setUltimopago(cli.getUltimopago());
+                        cliente.setFechavencimiento(cli.getFechavencimiento());
+                        cliente.setEstadopago(cli.getEstadopago());
+                        cliente.setEstadodeuda(cli.getEstadodeuda());
+                        cliente.setDisciplinaelegida(cli.getDisciplinaelegida());
+
+                        databaseReference.child("Clientes").child(cli.getId()).setValue(cliente);
+                        Toast.makeText(micontexto,"Los cambios se realizaron correctamente", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                if(!comprueba){
+                    Toast.makeText(micontexto,"Selecciona un cliente", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            botoncancelar.setOnClickListener(v1 -> {
+                comprueba = false;
+                for(int i=0 ; i< lista.getCount();i++){
+                    if(lista.isItemChecked(i)){
+                        comprueba = true;
+                        cli = (cliente) lista.getItemAtPosition(i);
+                        cliente.setApellido(cli.getApellido());
+                        cliente.setNombre(cli.getNombre());
+                        cliente.setEmail(cli.getEmail());
+                        cliente.setGym(cli.getGym());
+                        cliente.setId(cli.getId());
+                        cliente.setDni(cli.getDni());
+                        cliente.setDireccion(cli.getDireccion());
+                        cliente.setToken(cli.getToken());
+                        cliente.setAdmin("No");
+                        cliente.setUltimopago(cli.getUltimopago());
+                        cliente.setFechavencimiento(cli.getFechavencimiento());
+                        cliente.setEstadopago(cli.getEstadopago());
+                        cliente.setEstadodeuda(cli.getEstadodeuda());
+                        cliente.setDisciplinaelegida(cli.getDisciplinaelegida());
+
+                        databaseReference.child("Clientes").child(cli.getId()).setValue(cliente);
+                        Toast.makeText(micontexto,"Los cambios se realizaron correctamente", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                if(!comprueba){
+                    Toast.makeText(micontexto,"Selecciona un cliente", Toast.LENGTH_SHORT).show();
+                }
+            });
+
         });
         return root;
     }

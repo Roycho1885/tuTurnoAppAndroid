@@ -53,21 +53,18 @@ public class FragmentContacto extends Fragment {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-       fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent itSend = new Intent(android.content.Intent.ACTION_SEND);
+       fab.setOnClickListener(v -> {
+           Intent itSend = new Intent(Intent.ACTION_SEND);
 
-                itSend.setType("text/plain");
+           itSend.setType("text/plain");
 
-                itSend.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"tuturno.app.contacto@gmail.com"});
-                itSend.putExtra(android.content.Intent.EXTRA_SUBJECT, etSubject.getText().toString());
-                itSend.putExtra(android.content.Intent.EXTRA_TEXT, etBody.getText());
+           itSend.putExtra(Intent.EXTRA_EMAIL, new String[]{"tuturno.app.contacto@gmail.com"});
+           itSend.putExtra(Intent.EXTRA_SUBJECT, etSubject.getText().toString());
+           itSend.putExtra(Intent.EXTRA_TEXT, etBody.getText());
 
-                startActivity(itSend);
-                Snackbar.make(v, "Enviar", Snackbar.LENGTH_SHORT).show();
-            }
-        });
+           startActivity(itSend);
+           Snackbar.make(v, "Enviar", Snackbar.LENGTH_SHORT).show();
+       });
 
         return root;
     }

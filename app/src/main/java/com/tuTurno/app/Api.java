@@ -10,6 +10,13 @@ public interface Api {
     @FormUrlEncoded
     @POST("send")
     Call<ResponseBody> enviarnotificacion(
+            @Field("token") String token,
+            @Field("title") String title,
+            @Field("body") String body
+    );
+    @FormUrlEncoded
+    @POST("send")
+    Call<ResponseBody> enviarnotificaciontemas(
             @Field("topic") String topic,
             @Field("title") String title,
             @Field("body") String body

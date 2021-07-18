@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -60,41 +59,28 @@ public class AdministradorSetAlarma extends Fragment {
 
         iniciarFirebase();
 
-        txthoratarea.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hora = actual.get(Calendar.HOUR_OF_DAY);
-                min = actual.get(Calendar.MINUTE);
+        txthoratarea.setOnClickListener(v -> {
+            hora = actual.get(Calendar.HOUR_OF_DAY);
+            min = actual.get(Calendar.MINUTE);
 
-                TimePickerDialog timePickerDialog = new TimePickerDialog(v.getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    @SuppressLint("DefaultLocale")
-                    @Override
-                    public void onTimeSet(TimePicker view, int h, int m) {
-                        calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
-                        calendar.set(Calendar.HOUR_OF_DAY,h);
-                        calendar.set(Calendar.MINUTE,m);
-                        txthoratarea.setText(String.format("%02d:%02d",h,m));
-                    }
-                }, hora , min, true);
-                timePickerDialog.show();
-            }
+            @SuppressLint("DefaultLocale") TimePickerDialog timePickerDialog = new TimePickerDialog(v.getContext(), (view, h, m) -> {
+                calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
+                calendar.set(Calendar.HOUR_OF_DAY,h);
+                calendar.set(Calendar.MINUTE,m);
+                txthoratarea.setText(String.format("%02d:%02d",h,m));
+            }, hora , min, true);
+            timePickerDialog.show();
         });
 
-        botonguardartarea.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setAlarma(calendar.getTimeInMillis());
-                Toast.makeText(micontexto,"Alarma guardada", Toast.LENGTH_SHORT).show();
+        botonguardartarea.setOnClickListener(v -> {
+            setAlarma(calendar.getTimeInMillis());
+            Toast.makeText(micontexto,"Alarma guardada", Toast.LENGTH_SHORT).show();
 
-            }
         });
 
-        botoneliminartarea.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                elimAlarma();
-                Toast.makeText(micontexto,"Alarma cancelada", Toast.LENGTH_SHORT).show();
-            }
+        botoneliminartarea.setOnClickListener(v -> {
+            elimAlarma();
+            Toast.makeText(micontexto,"Alarma cancelada", Toast.LENGTH_SHORT).show();
         });
 
         return root;
