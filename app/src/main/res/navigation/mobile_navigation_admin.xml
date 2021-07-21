@@ -40,4 +40,24 @@
         tools:layout="@layout/cambiartema" >
     </fragment>
 
+    <fragment
+        android:id="@+id/AdminDatosClientes"
+        android:name="com.tuTurno.app.Admin.fragmentsConfig.AdminDatosClientes"
+        android:label="@string/app_name"
+        tools:layout="@layout/admindatosclientes" >
+        <action
+            android:id="@+id/action_AdminDatosClientes_to_AdminDatosPersonales"
+            app:destination="@id/AdminDatosPersonales" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/AdminDatosPersonales"
+        android:name="com.tuTurno.app.Admin.fragmentsConfig.AdminDatosPersonales"
+        android:label="@string/app_name"
+        tools:layout="@layout/admindatospersonales" >
+        <action
+            android:id="@+id/action_AdminDatosPersonales_to_AdminDatosClientes"
+            app:destination="@id/AdminDatosClientes" />
+    </fragment>
+
 </navigation>

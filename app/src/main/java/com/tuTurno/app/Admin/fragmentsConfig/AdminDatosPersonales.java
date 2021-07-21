@@ -22,8 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tuTurno.app.R;
 
-import java.util.Objects;
-
 import models.cliente;
 
 public class AdminDatosPersonales extends Fragment {
@@ -57,7 +55,8 @@ public class AdminDatosPersonales extends Fragment {
                 for (DataSnapshot shot : snapshot.getChildren()) {
                     cli = shot.getValue(cliente.class);
                     assert cli != null;
-                    if (cli.getEmail().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail())) {
+                    assert getArguments() != null;
+                    if (cli.getId().equals(getArguments().getString("idcliente"))) {
                         clin = shot.getValue(cliente.class);
                         assert clin != null;
                         txtNombre.setText(clin.getNombre());
@@ -75,42 +74,37 @@ public class AdminDatosPersonales extends Fragment {
             }
         });
 
-        btnactualizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!txtNombre.getText().toString().equals("") && !txtApellido.getText().toString().equals("") && !txtdni.getText().toString().equals("") && !txtdireccion.getText().toString().equals("")){
-                    clin.setId(clin.getId());
-                    clin.setNombre(txtNombre.getText().toString().trim());
-                    clin.setApellido(txtApellido.getText().toString().trim());
-                    clin.setDni(txtdni.getText().toString().trim());
-                    clin.setDireccion(txtdireccion.getText().toString().trim());
-                    clin.setEmail(txtEmail.getText().toString().trim());
-                    clin.setGym(clin.getGym());
-                    clin.setAdmin(clin.getAdmin());
-                    clin.setToken(clin.getToken());
-                    cli.setUltimopago(clin.getUltimopago());
-                    cli.setFechavencimiento(clin.getFechavencimiento());
-                    cli.setEstadopago(clin.getEstadopago());
-                    databaseReference.child("Clientes").child(clin.getId()).setValue(clin);
-                    Snackbar.make(view,"Datos Actualizados Correctamente",Snackbar.LENGTH_SHORT).show();
-                }else {
-                    if(txtNombre.getText().toString().equals("")){
-                        txtNombre.setError("Ingrese Nombre");
-                    }
-                    if(txtApellido.getText().toString().equals("")){
-                        txtApellido.setError("Ingrese Apellid");
-                    }
-                    if(txtdni.getText().toString().equals("")){
-                        txtdni.setError("Ingrese DNI");
-                    }
-                    if(txtdireccion.getText().toString().equals("")){
-                        txtdireccion.setError("Ingrese Dirección");
-                    }
+        btnactualizar.setOnClickListener(view -> {
+            if(!txtNombre.getText().toString().equals("") && !txtApellido.getText().toString().equals("") && !txtdni.getText().toString().equals("") && !txtdireccion.getText().toString().equals("")){
+                clin.setId(clin.getId());
+                clin.setNombre(txtNombre.getText().toString().trim());
+                clin.setApellido(txtApellido.getText().toString().trim());
+                clin.setDni(txtdni.getText().toString().trim());
+                clin.setDireccion(txtdireccion.getText().toString().trim());
+                clin.setEmail(txtEmail.getText().toString().trim());
+                clin.setGym(clin.getGym());
+                clin.setAdmin(clin.getAdmin());
+                clin.setToken(clin.getToken());
+                cli.setUltimopago(clin.getUltimopago());
+                cli.setFechavencimiento(clin.getFechavencimiento());
+                cli.setEstadopago(clin.getEstadopago());
+                databaseReference.child("Clientes").child(clin.getId()).setValue(clin);
+                Snackbar.make(view,"Datos Actualizados Correctamente",Snackbar.LENGTH_SHORT).show();
+            }else {
+                if(txtNombre.getText().toString().equals("")){
+                    txtNombre.setError("Ingrese Nombre");
+                }
+                if(txtApellido.getText().toString().equals("")){
+                    txtApellido.setError("Ingrese Apellido");
+                }
+                if(txtdni.getText().toString().equals("")){
+                    txtdni.setError("Ingrese DNI");
+                }
+                if(txtdireccion.getText().toString().equals("")){
+                    txtdireccion.setError("Ingrese Dirección");
                 }
             }
         });
-
-
 
         return root;
     }

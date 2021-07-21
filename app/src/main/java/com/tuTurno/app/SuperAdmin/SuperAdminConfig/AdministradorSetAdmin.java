@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -107,13 +106,10 @@ public class AdministradorSetAdmin extends Fragment {
 
 
         //Controlo el scrollView con el ListView
-        miscroll.setOnTouchListener(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                root.findViewById(R.id.lista).getParent()
-                        .requestDisallowInterceptTouchEvent(false);
-                return false;
-            }
+        miscroll.setOnTouchListener((v, event) -> {
+            root.findViewById(R.id.lista).getParent()
+                    .requestDisallowInterceptTouchEvent(false);
+            return false;
         });
 
         lista.setOnTouchListener((v, event) -> {
@@ -121,12 +117,7 @@ public class AdministradorSetAdmin extends Fragment {
             return false;
         });
 
-        dropdowntxt.post(new Runnable() {
-            @Override
-            public void run() {
-                dropdowntxt.getText().clear();
-            }
-        });
+        dropdowntxt.post(() -> dropdowntxt.getText().clear());
 
         botoncargar.setOnClickListener(v -> {
             listItems.clear();

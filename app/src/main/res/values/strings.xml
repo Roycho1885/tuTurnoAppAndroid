@@ -4,6 +4,7 @@
     <string name="monto">Ingrese Monto</string>
     <string name="apellido">Apellido</string>
     <string name="dni">DNI</string>
+    <string name="clientes">Clientes</string>
     <string name="dnihomeregistro">Ingrese DNI</string>
     <string name="tituloregistroasist">Registrar Asistencia</string>
     <string name="tituloverasist">Ver Asistencias</string>

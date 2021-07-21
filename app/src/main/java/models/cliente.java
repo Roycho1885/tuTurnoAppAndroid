@@ -38,6 +38,12 @@ public class cliente {
     public cliente() {
     }
 
+    public cliente(String apellido,String nombre,String disciplinaelegida){
+        this.apellido = apellido;
+        this.nombre = nombre;
+        this.disciplinaelegida = disciplinaelegida;
+    }
+
     public cliente(String apellido,String nombre, String ultimopago,String fechavencimiento, int estadopago, String disciplinaelegida){
         this.apellido = apellido;
         this.nombre = nombre;
@@ -55,6 +61,8 @@ public class cliente {
     public cliente(String email){
         this.email = email;
     }
+
+
     public String getDisciplinaelegida() {
         return disciplinaelegida;
     }

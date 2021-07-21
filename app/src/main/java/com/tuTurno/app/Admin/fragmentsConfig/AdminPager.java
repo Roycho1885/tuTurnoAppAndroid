@@ -45,7 +45,7 @@ public class AdminPager extends Fragment {
 
 
         // add your fragments
-        adapter.addFrag(new AdminDatosPersonales());
+        adapter.addFrag(new AdminDatosClientes());
         adapter.addFrag(new AdminCodigo());
         adapter.addFrag(new AdminAgregarTur());
         adapter.addFrag(new AdminElimTur());
