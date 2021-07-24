@@ -113,12 +113,9 @@ public class AdminElimTur extends Fragment {
             }
         });
 
-        milistaturnoseliminar.setOnTouchListener(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
+        milistaturnoseliminar.setOnTouchListener((v, event) -> {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
         });
 
         //TODO LO QUE TENGA QUE VER PARA ELIMINAR DISCIPLINA Y TURNO
@@ -140,13 +137,10 @@ public class AdminElimTur extends Fragment {
 
         });
 
-        menuelim.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                menueli = true;
-                disci1 = adapterView.getAdapter().getItem(i).toString();
-                listarturnos(view,disci1,gimnasio);
-            }
+        menuelim.setOnItemClickListener((adapterView, view, i, l) -> {
+            menueli = true;
+            disci1 = adapterView.getAdapter().getItem(i).toString();
+            listarturnos(view,disci1,gimnasio);
         });
 
         botonelimardisci.setOnClickListener(new View.OnClickListener() {

@@ -7,14 +7,16 @@ public class cuotas {
     public String fechavenc;
     public String mespago;
     public String disciplinaele;
+    public String monto;
 
-    public cuotas(String clientenombre, String emailcliente, String fechapago,String fechavenc,String mespago, String disciplinaele) {
+    public cuotas(String clientenombre, String emailcliente, String fechapago,String fechavenc,String mespago, String disciplinaele, String monto) {
         this.clientenombre = clientenombre;
         this.emailcliente = emailcliente;
         this.fechapago = fechapago;
         this.fechavenc = fechavenc;
         this.mespago = mespago;
         this.disciplinaele = disciplinaele;
+        this.monto = monto;
     }
 
     public cuotas() {
@@ -27,6 +29,14 @@ public class cuotas {
         this.fechavenc = fechavenc;
         this.mespago = mespago;
         this.disciplinaele = disciplinaele;
+    }
+
+    public String getMonto() {
+        return monto;
+    }
+
+    public void setMonto(String monto) {
+        this.monto = monto;
     }
 
     public void setMespago(String mespago) {

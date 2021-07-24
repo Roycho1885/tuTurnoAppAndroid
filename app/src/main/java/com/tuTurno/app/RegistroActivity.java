@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.InputType;
 import android.text.method.LinkMovementMethod;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
@@ -93,7 +92,7 @@ public class RegistroActivity extends AppCompatActivity {
                 for(DataSnapshot shot : snapshot.getChildren()){
                     arraygimnasios.add(shot.child("nombre").getValue().toString());
                 }
-               myadapter = new ArrayAdapter<String>(RegistroActivity.this, android.R.layout.simple_list_item_1,arraygimnasios);
+               myadapter = new ArrayAdapter<>(RegistroActivity.this, android.R.layout.simple_list_item_1, arraygimnasios);
                 txtgym.setAdapter(myadapter);
                 txtgym.setInputType(InputType.TYPE_NULL);
 
@@ -106,15 +105,12 @@ public class RegistroActivity extends AppCompatActivity {
         });
         
 
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        findViewById(R.id.button).setOnClickListener(v -> {
 
-                if (check.isChecked()){
-                    CrearNuevaCuenta();
-                }else{
-                    Toast.makeText(getApplicationContext(),"Acepta nuestras Políticas de Privacidad", Toast.LENGTH_SHORT).show();
-                }
+            if (check.isChecked()){
+                CrearNuevaCuenta();
+            }else{
+                Toast.makeText(getApplicationContext(),"Acepta nuestras Políticas de Privacidad", Toast.LENGTH_SHORT).show();
             }
         });
     }

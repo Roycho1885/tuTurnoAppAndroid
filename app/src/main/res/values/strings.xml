@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">tuTurno</string>
     <string name="nombre">Nombre</string>
-    <string name="monto">Ingrese Monto</string>
+    <string name="monto">Ingrese monto</string>
+    <string name="txtmonto">Monto: </string>
     <string name="apellido">Apellido</string>
     <string name="dni">DNI</string>
     <string name="clientes">Clientes</string>
@@ -118,6 +119,9 @@
     <string name="fechapago">Ingrese fecha de pago</string>
     <string name="botonregistrarpago">Registrar Pago</string>
     <string name="tituloverpagos">Ver Pagos</string>
+    <string name="tituloveringygas">Panel Ingresos y Gastos</string>
+    <string name="tituloverdetallesingygas">Panel Ingresos y Gastos Extras</string>
+    <string name="titulobtnveringygas">Mostrar</string>
     <string name="mespago">Seleccione mes correspondiente</string>
     <string name="selemes">Seleccione mes</string>
     <string name="seleano">Seleccione año</string>
@@ -128,6 +132,12 @@
     <string name="horatarea">Ingrese hora</string>
     <string name="btnguardar">Guardar Tarea</string>
     <string name="btneliminar">Eliminar Tarea</string>
+    <string name="btnregingreso">Ingreso y Gasto</string>
+    <string name="tituloingresotot">Ingreso Total:</string>
+    <string name="titulogastotot">Gasto Total:</string>
+    <string name="tituloregistroingresoygasto">Agregar Ingreso o Gasto</string>
+    <string name="titulodescrip">Ingrese descripción</string>
+    <string name="titulotipo">Ingrese tipo</string>
 
 
 </resources>

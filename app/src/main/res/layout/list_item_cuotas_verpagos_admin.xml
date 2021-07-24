@@ -79,6 +79,33 @@
                 android:textStyle="bold"/>
 
             <TextView
+                android:id="@+id/txt_montocuota"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txtmonto"
+                android:layout_marginStart="2dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:textColor="#FFFFFF"
+                android:layout_below="@+id/txtfechavenc"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:drawableStartCompat="@drawable/ic_baseline_monto" />
+
+            <TextView
+                android:id="@+id/txtmontocuota"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/txt_montocuota"
+                android:layout_below="@+id/txtfechavenc"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <TextView
                 android:id="@+id/txt_disciele"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -87,7 +114,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:textColor="#FFFFFF"
-                android:layout_below="@+id/txtfechavenc"
+                android:layout_below="@+id/txtmontocuota"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_baseline_fitness_center_24" />
@@ -101,7 +128,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginStart="5dp"
                 android:layout_toEndOf="@id/txt_disciele"
-                android:layout_below="@+id/txtfechavenc"
+                android:layout_below="@+id/txtmontocuota"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
 

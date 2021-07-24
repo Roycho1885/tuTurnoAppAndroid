@@ -60,4 +60,37 @@
             app:destination="@id/AdminDatosClientes" />
     </fragment>
 
+    <fragment
+        android:id="@+id/AdminIngresosyGastos"
+        android:name="com.tuTurno.app.Admin.fragmentsConfig.AdminIngresosyGastos"
+        android:label="@string/app_name"
+        tools:layout="@layout/adminingreygastos" >
+        <action
+            android:id="@+id/action_AdminIngresosyGastos_to_AdminRegistroIngyGas"
+            app:destination="@id/AdminRegistroIngyGas" />
+        <action
+            android:id="@+id/action_AdminIngresosyGastos_to_AdminDetallesIngyGas"
+            app:destination="@id/AdminDetallesIngyGas" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/AdminRegistroIngyGas"
+        android:name="com.tuTurno.app.Admin.fragmentsConfig.AdminRegistroIngyGas"
+        android:label="@string/app_name"
+        tools:layout="@layout/adminregistroingygas" >
+        <action
+            android:id="@+id/action_AdminRegistroIngyGas_to_AdminIngresosyGastos"
+            app:destination="@id/AdminIngresosyGastos" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/AdminDetallesIngyGas"
+        android:name="com.tuTurno.app.Admin.fragmentsConfig.AdminDetallesIngyGas"
+        android:label="@string/app_name"
+        tools:layout="@layout/admindetallesingygas" >
+        <action
+            android:id="@+id/action_AdminDetallesIngyGas_to_AdminIngresosyGastos"
+            app:destination="@id/AdminIngresosyGastos" />
+    </fragment>
+
 </navigation>

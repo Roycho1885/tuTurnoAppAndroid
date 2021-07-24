@@ -41,6 +41,7 @@ public class AdminPager extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_baseline_attach_money_24));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_baseline_monetization_on_24));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_baseline_local_atm_24));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_baseline_account_balance_wallet_24));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_baseline_notifications_24));
 
 
@@ -52,6 +53,7 @@ public class AdminPager extends Fragment {
         adapter.addFrag(new AdminCuotas());
         adapter.addFrag(new AdminVerCuotas());
         adapter.addFrag(new AdminConfigCuota());
+        adapter.addFrag(new AdminIngresosyGastos());
         adapter.addFrag(new AdminNotificaciones());
 
         // set adapter on viewpager

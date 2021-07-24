@@ -50,7 +50,7 @@ public class AdminVerCuotas extends Fragment {
     private ArrayAdapter miadaptador;
     String meses,anioo, anoseleccionado;
     Context micontexto;
-    boolean bandera;
+    boolean banderames, banderaano;
     Calendar micalendario;
     private TextView registros;
     int contador;
@@ -133,10 +133,10 @@ public class AdminVerCuotas extends Fragment {
         });
 
         botonanodesple.setOnItemClickListener((adapterView, view, i, l) -> {
+            banderaano = true;
 
             //LIMPIO BOTON MES
             botonmesdesple.post(() -> botonmesdesple.getText().clear());
-
             arraymeses = new ArrayList<>();
             anoseleccionado = adapterView.getAdapter().getItem(i).toString();
 
@@ -160,7 +160,7 @@ public class AdminVerCuotas extends Fragment {
 
         //BOTON MES CORRESPONDIENTE
         botonmesdesple.setOnItemClickListener((adapterView, view, i, l) -> {
-            bandera = true;
+            banderames = true;
             meses = adapterView.getAdapter().getItem(i).toString();
         });
 
@@ -168,8 +168,8 @@ public class AdminVerCuotas extends Fragment {
         verpagos.setOnClickListener(view -> {
             contador = 0;
             listacuotaspagas.clear();
-            if(!bandera){
-                Snackbar.make(view, "Seleccione un mes", Snackbar.LENGTH_SHORT).show();
+            if(!banderames || !banderaano){
+                Snackbar.make(view, "Seleccione año y mes", Snackbar.LENGTH_SHORT).show();
             }else {
                 databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(meses.toLowerCase().trim()).orderByChild("clientenombre").addListenerForSingleValueEvent(new ValueEventListener() {
                     @SuppressLint("SetTextI18n")
@@ -197,6 +197,9 @@ public class AdminVerCuotas extends Fragment {
                     public void onCancelled(@NonNull DatabaseError error) {
                     }
                 });
+
+                botonmesdesple.post(() -> botonmesdesple.getText().clear());
+                botonanodesple.post(() -> botonanodesple.getText().clear());
             }
         });
 

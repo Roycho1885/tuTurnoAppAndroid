@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -39,21 +41,22 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
+import models.CuotaConfig;
 import models.cliente;
 import models.cuotas;
 
 public class AdminCuotas extends Fragment {
     private DatabaseReference databaseReference;
-    private EditText buscar,fechapago;
+    private EditText buscar, fechapago;
     private Button agregarpago;
     private ScrollView otroscroll;
     private models.cuotas cuotas = new cuotas();
     Context micontexto;
     cliente cli;
-    Calendar micalendario,micalendario1;
-    String mess,anioo,fechavenc,nombreyapellido,emailcliente, disci1;
-    boolean bandera,bandera1,bandera3, menueli;
-    Date fechaactual,fechavence, fechaultipago, fechaelegida;
+    Calendar micalendario, micalendario1;
+    String mess, anioo, fechavenc, nombreyapellido, emailcliente, disci1;
+    boolean bandera, bandera1, bandera3, menueli;
+    Date fechaactual, fechavence, fechaultipago, fechaelegida;
     private ArrayList<String> arraydisci;
     private ArrayAdapter miadapter;
     private TextView registros;
@@ -87,7 +90,7 @@ public class AdminCuotas extends Fragment {
         fechapago = root.findViewById(R.id.txtfecha);
         registros = root.findViewById(R.id.registros);
 
-        adaptador = new ListViewAdaptadorCuotasAdmin(micontexto,listaclientes);
+        adaptador = new ListViewAdaptadorCuotasAdmin(micontexto, listaclientes);
         micalendario = Calendar.getInstance();
 
         iniciarFirebase();
@@ -112,7 +115,7 @@ public class AdminCuotas extends Fragment {
         databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot shot : snapshot.getChildren()){
+                for (DataSnapshot shot : snapshot.getChildren()) {
                     arraydisci.add(Objects.requireNonNull(shot.getKey()));
                 }
                 miadapter = new ArrayAdapter<>(micontexto, android.R.layout.simple_list_item_1, arraydisci);
@@ -150,9 +153,9 @@ public class AdminCuotas extends Fragment {
                         String fecha_ulti = cli.getUltimopago();
 
 
-                        if(fecha_vence.equals("Nunca")){
+                        if (fecha_vence.equals("Nunca")) {
                             cli.setEstadopago(R.drawable.ic_baseline_cancel_24);
-                        }else {
+                        } else {
                             try {
                                 fechaactual = sdf.parse(fecha_actual);
                                 fechavence = sdf.parse(fecha_vence);
@@ -160,9 +163,9 @@ public class AdminCuotas extends Fragment {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            if(fechaactual.compareTo(fechavence)<0){
+                            if (fechaactual.compareTo(fechavence) < 0) {
                                 cli.setEstadopago(R.drawable.ic_baseline_check_circle_24);
-                            }else {
+                            } else {
                                 cli.setEstadopago(R.drawable.ic_baseline_cancel_24);
                                 cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
                                         cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), cli.getUltimopago(), cli.getFechavencimiento(), cli.getEstadopago(), "Debe", cli.getDisciplinaelegida());
@@ -186,9 +189,9 @@ public class AdminCuotas extends Fragment {
 
 
         final DatePickerDialog.OnDateSetListener date = (view, ano, mes, diames) -> {
-            micalendario.set(Calendar.YEAR,ano);
-            micalendario.set(Calendar.MONTH,mes);
-            micalendario.set(Calendar.DAY_OF_MONTH,diames);
+            micalendario.set(Calendar.YEAR, ano);
+            micalendario.set(Calendar.MONTH, mes);
+            micalendario.set(Calendar.DAY_OF_MONTH, diames);
             actualizarformatofecha();
         };
 
@@ -221,52 +224,109 @@ public class AdminCuotas extends Fragment {
             cli = listaclientes.get(i);
             adapterView.setSelected(true);
             bandera = adapterView.isClickable();
-            nombreyapellido = cli.getApellido()+" "+cli.getNombre();
+            nombreyapellido = cli.getApellido() + " " + cli.getNombre();
             emailcliente = cli.getEmail();
         });
 
         //CLICK EN BOTON AGREGAR PAGO
         agregarpago.setOnClickListener(view -> {
             bandera3 = false;
-            if(!menueli){
+            if (!menueli) {
                 Snackbar.make(view, "Seleccione una disciplina", Snackbar.LENGTH_SHORT).show();
-            }else{
-                if(!bandera1){
+            } else {
+                if (!bandera1) {
                     Snackbar.make(view, "Seleccione una fecha", Snackbar.LENGTH_SHORT).show();
-                }else{
-                    if(!bandera){
+                } else {
+                    if (!bandera) {
                         Snackbar.make(view, "Seleccione un cliente", Snackbar.LENGTH_SHORT).show();
-                }else{
+                    } else {
                         //CONTROLO QUE EL CLIENTE YA TENGA EL PAGO EFECTUADO
                         databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for(DataSnapshot shot : snapshot.getChildren()){
+                                for (DataSnapshot shot : snapshot.getChildren()) {
                                     cuotas cu = shot.getValue(cuotas.class);
                                     assert cu != null;
-                                    if(cu.getEmailcliente().equals(emailcliente)){
-                                        if(cu.getMespago().equals(mess)){
+                                    if (cu.getEmailcliente().equals(emailcliente)) {
+                                        if (cu.getMespago().equals(mess)) {
                                             bandera3 = true;
                                         }
                                     }
                                 }
-                                if(bandera3){
+                                if (bandera3) {
                                     Snackbar.make(view, "Para este mes y cliente ya existe un pago registrado.", Snackbar.LENGTH_SHORT).show();
-                                }else {
-                                    if(cli.getUltimopago().equals("Nunca")){
-                                        cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                                cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
-                                        databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
-                                    }else{
-                                        if (!fechaelegida.before(fechaultipago)) {
-                                            cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                                    cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
-                                            databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
+                                } else {
+                                    //--------------------------------------------------------------------------------------------------
+                                    databaseReference.child(gimnasio.getText().toString()).child("ConfigCuota").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for (DataSnapshot shot : snapshot.getChildren()) {
+                                                CuotaConfig cuconf = shot.getValue(CuotaConfig.class);
+
+                                                assert cuconf != null;
+                                                //SEGUIR PROBANDO, AL PARECER FUNCIONA-------------------------------------------------------------------------
+                                                if (cuconf.getDisciplina().equals(disci1)) {
+                                                    //----------------------------
+                                                    if (!cli.getDisciplinaelegida().equals("0")) {
+                                                        if (!cli.getDisciplinaelegida().equals(disci1)) {
+                                                            androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
+                                                            mensaje.setTitle("Atención!");
+                                                            mensaje.setIcon(R.drawable.ic_baseline_warning_24);
+                                                            mensaje.setMessage("¿Cambiar disciplina del cliente?");
+                                                            mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
+                                                                if (cli.getUltimopago().equals("Nunca")) {
+                                                                    cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
+                                                                            cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
+                                                                    databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
+                                                                } else {
+                                                                    if (!fechaelegida.before(fechaultipago)) {
+                                                                        cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
+                                                                                cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
+                                                                        databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
+                                                                    }
+                                                                }
+                                                                cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, cuconf.getMonto());
+                                                                databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
+                                                                Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
+
+                                                            });
+                                                            mensaje.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss());
+                                                            AlertDialog dialog = mensaje.create();
+                                                            dialog.show();
+                                                        } else {
+                                                            if (cli.getUltimopago().equals("Nunca")) {
+                                                                cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
+                                                                        cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
+                                                                databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
+                                                            } else {
+                                                                if (!fechaelegida.before(fechaultipago)) {
+                                                                    cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
+                                                                            cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
+                                                                    databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
+                                                                }
+                                                            }
+                                                            cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, cuconf.getMonto());
+                                                            databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
+                                                            Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
+                                                        }
+                                                    } else {
+                                                        cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
+                                                                cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
+                                                        databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
+                                                        cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, cuconf.getMonto());
+                                                        databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
+                                                        Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
+                                                    }
+                                                    //---------------------------
+                                                }
+                                            }
                                         }
-                                    }
-                                    cuotas= new cuotas(nombreyapellido, cli.getEmail(),fechapago.getText().toString(),fechavenc,mess,disci1);
-                                    databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
-                                    Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
 
                                 }
                             }
@@ -283,7 +343,7 @@ public class AdminCuotas extends Fragment {
         return root;
     }
 
-    private void iniciarFirebase(){
+    private void iniciarFirebase() {
         FirebaseApp.initializeApp(requireActivity());
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
@@ -295,14 +355,14 @@ public class AdminCuotas extends Fragment {
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
         fechapago.setText(sdf.format(micalendario.getTime()));
         fechaelegida = micalendario.getTime();
-        int index1 = fechapago.getText().toString().indexOf("-",3);
-        mess = fechapago.getText().toString().substring(3,index1);
-        anioo = fechapago.getText().toString().substring(index1+1);
+        int index1 = fechapago.getText().toString().indexOf("-", 3);
+        mess = fechapago.getText().toString().substring(3, index1);
+        anioo = fechapago.getText().toString().substring(index1 + 1);
         bandera1 = true;
 
         //sumar 30 dias
         micalendario.setTime(micalendario.getTime());
-        micalendario.add(Calendar.DAY_OF_YEAR,30);
+        micalendario.add(Calendar.DAY_OF_YEAR, 30);
         fechavenc = (sdf.format(micalendario.getTime()));
 
     }

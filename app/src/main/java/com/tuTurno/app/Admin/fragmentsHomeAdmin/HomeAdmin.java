@@ -217,7 +217,7 @@ public class HomeAdmin extends Fragment {
         });
         //ENVIO NOTIFICACIONES LOS LUNES, MIERCOLES Y VIERNES UNICAMENTE
         if (micalendario2.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY || micalendario2.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY
-                || micalendario2.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                || micalendario2.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
 
             //EL CONTADOR CONTROLA QUE SE HAYA EJECUTADO POR LO MENOS UN ENVIO DE NOTIFICACIONES
             if (noticontador < 1) {
@@ -238,6 +238,7 @@ public class HomeAdmin extends Fragment {
                                     try {
                                         fechaact = sdf.parse(fecha_actual);
                                         fechavencimiento = sdf.parse(fecha_venc);
+                                        assert fechavencimiento != null;
                                         micalendario.setTime(fechavencimiento);
                                         micalendario1.setTime(fechaact);
                                         numeromes = micalendario.get(Calendar.MONTH);
@@ -253,7 +254,9 @@ public class HomeAdmin extends Fragment {
                                         databaseReference.child("BorrarClientes").child(textologo.getText().toString()).push().setValue(cli);
                                         databaseReference.child("Clientes").child(c.getId()).removeValue();
                                     } else {
-                                        tokensdeudadebe.add(c.getToken());
+                                        if(!c.getEstadodeuda().equals("0")){
+                                            tokensdeudadebe.add(c.getToken());
+                                        }
                                     }
                                 }
                             }
