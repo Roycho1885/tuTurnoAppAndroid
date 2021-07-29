@@ -101,7 +101,7 @@ public class AdminVerCuotas extends Fragment {
 
         botonmesdesple.post(() -> botonmesdesple.getText().clear());
 
-        formatearfecha();
+        //formatearfecha();
 
         scroll.setOnTouchListener((v, event) -> {
             milistacuotasadminpagas.getParent()
@@ -140,7 +140,7 @@ public class AdminVerCuotas extends Fragment {
             arraymeses = new ArrayList<>();
             anoseleccionado = adapterView.getAdapter().getItem(i).toString();
 
-            databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anoseleccionado).orderByChild("mespago").addValueEventListener(new ValueEventListener() {
+            databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anoseleccionado).orderByChild("mespago").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for(DataSnapshot shot: snapshot.getChildren()){
@@ -171,7 +171,7 @@ public class AdminVerCuotas extends Fragment {
             if(!banderames || !banderaano){
                 Snackbar.make(view, "Seleccione año y mes", Snackbar.LENGTH_SHORT).show();
             }else {
-                databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(meses.toLowerCase().trim()).orderByChild("clientenombre").addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anoseleccionado.trim()).child(meses.toLowerCase().trim()).orderByChild("clientenombre").addListenerForSingleValueEvent(new ValueEventListener() {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -235,7 +235,7 @@ public class AdminVerCuotas extends Fragment {
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
         String fechaactualmodi = sdf.format(micalendario.getTime());
         int index1 = fechaactualmodi.indexOf("-",3);
-        anioo = fechaactualmodi.substring(index1+1);
+        //anioo = fechaactualmodi.substring(index1+1);
     }
 
 }

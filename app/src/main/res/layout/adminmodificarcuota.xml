@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:id="@+id/scroolmonto"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Admin.fragmentsConfig.AdminConfigCuota">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp">
+
+            <TextView
+                android:id="@+id/configcuota"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/titulomodicuota"
+                android:textSize="16sp" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/botondisci"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/configcuota"
+                android:layout_margin="20dp"
+                android:hint="@string/hintdis"
+                app:boxBackgroundMode="outline">
+
+                <AutoCompleteTextView
+                    android:id="@+id/dropdown_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:cursorVisible="false"
+                    android:textSize="16sp"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <ListView
+                android:id="@+id/listacuota"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@+id/botondisci"
+                android:layout_marginVertical="10dp"
+                android:layout_marginBottom="20dp"
+                tools:ignore="NestedScrolling" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnflotante"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/listacuota"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="bottom|end"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="-36dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_add_black_24dp" />
+        </RelativeLayout>
+
+</ScrollView>

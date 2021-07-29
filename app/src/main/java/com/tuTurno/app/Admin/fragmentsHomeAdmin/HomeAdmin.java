@@ -254,7 +254,7 @@ public class HomeAdmin extends Fragment {
                                         databaseReference.child("BorrarClientes").child(textologo.getText().toString()).push().setValue(cli);
                                         databaseReference.child("Clientes").child(c.getId()).removeValue();
                                     } else {
-                                        if(!c.getEstadodeuda().equals("0")){
+                                        if (!c.getEstadodeuda().equals("0")) {
                                             tokensdeudadebe.add(c.getToken());
                                         }
                                     }

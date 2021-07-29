@@ -10,6 +10,9 @@
         android:name="com.tuTurno.app.Admin.fragmentsHomeAdmin.AdminHomePager"
         android:label="@string/app_name"
         tools:layout="@layout/homeregistroadmin">
+        <action
+            android:id="@+id/action_fragment_admin_to_AdminConfigCuota"
+            app:destination="@id/AdminConfigCuota" />
     </fragment>
 
     <fragment
@@ -91,6 +94,23 @@
         <action
             android:id="@+id/action_AdminDetallesIngyGas_to_AdminIngresosyGastos"
             app:destination="@id/AdminIngresosyGastos" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/AdminConfigCuota"
+        android:name="com.tuTurno.app.Admin.fragmentsConfig.AdminConfigCuota"
+        android:label="@string/app_name"
+        tools:layout="@layout/adminconfigcuota" >
+        <action
+            android:id="@+id/action_AdminConfigCuota_to_fragment_admin"
+            app:destination="@id/fragment_admin" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/AdminModifiCuota"
+        android:name="com.tuTurno.app.Admin.fragmentsConfig.AdminModificarCuota"
+        android:label="@string/app_name"
+        tools:layout="@layout/adminmodificarcuota" >
     </fragment>
 
 </navigation>

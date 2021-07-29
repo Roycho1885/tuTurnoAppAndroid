@@ -37,15 +37,15 @@ public class ListViewAdaptadorMonto extends BaseAdapter {
         return 0;
     }
 
-    @SuppressLint({"ViewHolder", "InflateParams"})
+    @SuppressLint({"ViewHolder", "InflateParams", "SetTextI18n"})
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         CuotaConfig items = (CuotaConfig) getItem(i);
         view = LayoutInflater.from(contexto).inflate(R.layout.lisadminmontoitems,null);
-        TextView disci = view.findViewById(R.id.txt_disciplina);
+        TextView dias = view.findViewById(R.id.txt_diasporsemana);
         TextView monto = view.findViewById(R.id.txt_monto);
 
-        disci.setText(items.getDisciplina());
+        dias.setText((items.getDiasporsemana())+ " días");
         monto.setText(items.getMonto());
 
         return view ;

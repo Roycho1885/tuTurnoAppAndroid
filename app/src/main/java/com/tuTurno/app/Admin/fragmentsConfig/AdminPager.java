@@ -52,7 +52,7 @@ public class AdminPager extends Fragment {
         adapter.addFrag(new AdminElimTur());
         adapter.addFrag(new AdminCuotas());
         adapter.addFrag(new AdminVerCuotas());
-        adapter.addFrag(new AdminConfigCuota());
+        adapter.addFrag(new AdminModificarCuota());
         adapter.addFrag(new AdminIngresosyGastos());
         adapter.addFrag(new AdminNotificaciones());
 

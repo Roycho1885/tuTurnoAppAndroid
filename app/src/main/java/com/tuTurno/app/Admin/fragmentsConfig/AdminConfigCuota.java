@@ -5,21 +5,18 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -30,11 +27,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.tuTurno.app.ListViewAdaptadorMonto;
 import com.tuTurno.app.R;
 
-import java.util.ArrayList;
-import java.util.Objects;
 import java.util.UUID;
 
 import models.CuotaConfig;
@@ -45,23 +39,14 @@ public class AdminConfigCuota extends Fragment {
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private Context micontexto;
-    private EditText txtmonto;
-    private ScrollView scroll;
+    private EditText txtmonto, txtdisciplinacuota, txtcantdias;
 
     private NavigationView navi;
-    private ArrayList<String> arraydisci, arraydimonto;
-    private ArrayAdapter<String> miadapter;
-    boolean menudisci;
     String disci1, discimodi;
     private CuotaConfig c = new CuotaConfig();
-    private ArrayList<CuotaConfig> listmontos = new ArrayList<>();
-
-    //para el listview
-    private ListView milistamonto;
-    private ListViewAdaptadorMonto adaptador;
-
-    private static final String TAG="lista";
-    private static final String TAG1="lista1";
+    boolean diass, controlcuotaexis, bundleexiste;
+    String diasele;
+    ArrayAdapter<String> miadapter;
 
 
     @Override
@@ -76,172 +61,120 @@ public class AdminConfigCuota extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.adminconfigcuota, container, false);
 
-        scroll = root.findViewById(R.id.scroolmonto);
-        final AutoCompleteTextView menudis = root.findViewById(R.id.dropdown_text);
         final Button botonaceptar = root.findViewById(R.id.button2);
         txtmonto = root.findViewById(R.id.txtmonto);
+        txtdisciplinacuota = root.findViewById(R.id.txtdisciplinacuota);
+        final AutoCompleteTextView txtcantdias = root.findViewById(R.id.dropdown_cantdias);
         navi = requireActivity().findViewById(R.id.nav_view_admin);
         View head = navi.getHeaderView(0);
         final TextView textologo = head.findViewById(R.id.textologo);
 
+        String[] vectordias = new String[]{"1", "2", "3", "4", "5"};
 
-        //ESTO ES PARA EL LISTVIEW
-        milistamonto = root.findViewById(R.id.listacuota);
 
         iniciarFirebase();
-        listarmontos(textologo);
 
-        adaptador = new ListViewAdaptadorMonto(micontexto,listmontos);
+        miadapter = new ArrayAdapter<>(micontexto, android.R.layout.simple_spinner_dropdown_item, vectordias);
+        txtcantdias.setAdapter(miadapter);
+        txtcantdias.setInputType(InputType.TYPE_NULL);
+        miadapter.notifyDataSetChanged();
 
-        menudis.post(new Runnable() {
-            @Override
-            public void run() {
-                menudis.getText().clear();
-            }
+
+        assert getArguments() != null;
+        txtdisciplinacuota.setText(getArguments().getString("disciplina"));
+
+        txtcantdias.setOnItemClickListener((parent, v, position, id) -> {
+            diass = true;
+            diasele = parent.getAdapter().getItem(position).toString();
+
         });
 
-        scroll.setOnTouchListener(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                milistamonto.getParent()
-                        .requestDisallowInterceptTouchEvent(false);
-                return false;
-            }
-        });
-
-        milistamonto.setOnTouchListener(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
-
-        //CARGO DISCIPLINA
-        arraydisci = new ArrayList<>();
-        arraydimonto = new ArrayList<>();
-        databaseReference.child(textologo.getText().toString()).child("Disciplinas").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot shot : snapshot.getChildren()){
-                    arraydisci.add(Objects.requireNonNull(shot.getKey()));
-                }
-                databaseReference.child(textologo.getText().toString()).child("ConfigCuota").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot shot: snapshot.getChildren()) {
-                            c = shot.getValue(CuotaConfig.class);
-                            if (!arraydisci.contains(c.getDisciplina())) {
-                                eliminardisciplina(textologo, c.getId());
-                                listarmontos(textologo);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-                miadapter = new ArrayAdapter<>(micontexto, android.R.layout.simple_list_item_1, arraydisci);
-                menudis.setAdapter(miadapter);
-                menudis.setInputType(InputType.TYPE_NULL);
-                miadapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-
-        menudis.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View v, int position, long id) {
-                menudisci = true;
-                disci1 = parent.getAdapter().getItem(position).toString();
-
-                //CARGO ID DE LA DISCIPLINA QUE SE VA A MODIFICAR
-                databaseReference.child(textologo.getText().toString()).child("ConfigCuota").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot shot: snapshot.getChildren()){
-                            CuotaConfig cuota = shot.getValue(CuotaConfig.class);
-                            if(disci1.equals(cuota.getDisciplina())){
-                                discimodi = cuota.getId();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-            }
-        });
+        String id = getArguments().getString("idcuota");
+        if (id != null) {
+            txtdisciplinacuota.setText(getArguments().getString("disci"));
+            txtmonto.setText(getArguments().getString("monto"));
+            txtcantdias.setText(getArguments().getString("dias"), false);
+            bundleexiste = true;
+        }
 
 
-            botonaceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        botonaceptar.setOnClickListener(view -> {
+            controlcuotaexis = false;
 
-                if(txtmonto.getText().toString().equals("") || !menudisci){
-                    Snackbar.make(view, "Seleccione disciplina e ingrese monto", Snackbar.LENGTH_SHORT).show();
-                }else{
-                    if(discimodi==null){
-                        c.setId(UUID.randomUUID().toString());
-                        c.setDisciplina(disci1);
-                        c.setMonto(txtmonto.getText().toString().trim());
-                        databaseReference.child(textologo.getText().toString()).child("ConfigCuota").child(c.getId()).setValue(c);
-                        Snackbar.make(view,"Monto cargado correctamente",Snackbar.LENGTH_SHORT).show();
-                    }else {
-                        c.setId(discimodi);
-                        c.setDisciplina(disci1);
-                        c.setMonto(txtmonto.getText().toString().trim());
-                        databaseReference.child(textologo.getText().toString()).child("ConfigCuota").child(discimodi).setValue(c);
-                        Snackbar.make(view,"Monto Modificado correctamente",Snackbar.LENGTH_SHORT).show();
-                    }
-                    menudis.post(new Runnable() {
+            if (txtmonto.getText().toString().equals("")) {
+                Snackbar.make(view, "Ingrese monto", Snackbar.LENGTH_SHORT).show();
+            } else {
+                //MODIFICACION DE CUOTA
+                if (bundleexiste) {
+                    databaseReference.child(textologo.getText().toString()).child("ConfigCuota").child(getArguments().getString("idcuota")).child("configuracioncuotas").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void run() {
-                            menudis.getText().clear();
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot shot : snapshot.getChildren()) {
+                                String dias = shot.child("diasporsemana").getValue(String.class);
+                                assert dias != null;
+                                if (dias.equals(diasele)) {
+                                    Snackbar.make(view, "Esta cuota ya existe", Snackbar.LENGTH_SHORT).show();
+                                    controlcuotaexis = true;
+                                }
+                            }
+
+                            if (!controlcuotaexis) {
+                                assert getArguments() != null;
+                                c.setIdcuotas(getArguments().getString("idcuotamodi"));
+                                if (!diass) {
+                                    c.setDiasporsemana(getArguments().getString("dias"));
+                                } else {
+                                    c.setDiasporsemana(diasele);
+                                }
+                                c.setMonto(txtmonto.getText().toString());
+
+                                assert getArguments() != null;
+                                databaseReference.child(textologo.getText().toString()).child("ConfigCuota").child(getArguments().getString("idcuota")).child("configuracioncuotas").child(c.getIdcuotas()).setValue(c);
+                                Snackbar.make(view, "Cuota modificada correctamente", Snackbar.LENGTH_SHORT).show();
+                                Navigation.findNavController(view).navigate(R.id.fragment_admin);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
                         }
                     });
-                    listarmontos(textologo);
-                    txtmonto.setText("");
+                } else {
+                    //AGREGA NUEVA CUOTA
+                    databaseReference.child(textologo.getText().toString()).child("ConfigCuota").child(getArguments().getString("keycuota")).child("configuracioncuotas").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot shot : snapshot.getChildren()) {
+                                String dias = shot.child("diasporsemana").getValue(String.class);
+                                assert dias != null;
+                                if (dias.equals(diasele)) {
+                                    Snackbar.make(view, "Esta cuota ya existe", Snackbar.LENGTH_SHORT).show();
+                                    controlcuotaexis = true;
+                                }
+                            }
+                            if (!controlcuotaexis) {
+                                c.setIdcuotas(UUID.randomUUID().toString());
+                                c.setDiasporsemana(diasele);
+                                c.setMonto(txtmonto.getText().toString());
 
+                                assert getArguments() != null;
+                                databaseReference.child(textologo.getText().toString()).child("ConfigCuota").child(getArguments().getString("keycuota")).child("configuracioncuotas").child(c.getIdcuotas()).setValue(c);
+                                Snackbar.make(view, "Cuota cargada correctamente", Snackbar.LENGTH_SHORT).show();
+                                txtmonto.setText("");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
         });
 
         return root;
-    }
-
-    private void listarmontos(TextView textologo) {
-        //CARGO LISTVIEW MONTOS DE LAS DISCIPLINAS
-        databaseReference.child(textologo.getText().toString()).child("ConfigCuota").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                listmontos.clear();
-                for(DataSnapshot shot: snapshot.getChildren()){
-                    CuotaConfig cuota = shot.getValue(CuotaConfig.class);
-                    listmontos.add(cuota);
-                    milistamonto.setAdapter(adaptador);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
-
-    private void eliminardisciplina(TextView textologo, String id){
-        databaseReference.child(textologo.getText().toString()).child("ConfigCuota").child(id).removeValue();
     }
 
     private void iniciarFirebase() {
@@ -251,6 +184,5 @@ public class AdminConfigCuota extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference.keepSynced(true);
     }
-
 
 }

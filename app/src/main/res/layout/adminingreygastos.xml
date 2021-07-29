@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:gravity="center"
         android:orientation="vertical">
 
         <TextView
@@ -81,14 +82,19 @@
             android:layout_marginBottom="20dp"
             tools:ignore="NestedScrolling" />
 
-        <RelativeLayout
-            android:id="@+id/layoutingygas"
+
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#000000"
-            android:layout_gravity="center"
-            android:longClickable="true"
-            android:focusable="true">
+            android:layout_marginBottom="30dp"
+            app:cardBackgroundColor="@color/secondaryColor1"
+            app:cardPreventCornerOverlap="true"
+            app:cardCornerRadius="9dp"
+            app:cardElevation="20dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tituloingreso"
@@ -125,8 +131,23 @@
                 android:layout_toEndOf="@+id/titulogasto"
                 android:layout_below="@+id/importeingreso">
             </TextView>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/layoutingygas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="12sp"
+                    android:focusable="true"
+                    android:layout_toEndOf="@+id/importegasto"
+                    android:layout_below="@+id/importegasto"
+                    app:rippleColor="@color/browser_actions_title_color"
+                    android:textColor="#FFFFFF"
+                    android:text="@string/titulobotondetalles"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-        </RelativeLayout>
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
 
         <LinearLayout

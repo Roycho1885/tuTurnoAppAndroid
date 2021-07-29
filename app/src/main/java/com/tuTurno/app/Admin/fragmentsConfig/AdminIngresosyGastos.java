@@ -11,8 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -21,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,13 +47,13 @@ public class AdminIngresosyGastos extends Fragment {
     Context micontexto;
     private ScrollView otroscroll;
     private Button vergastos, reginggas;
-    private RelativeLayout layout;
+    private MaterialButton layout;
     private TextView txtingreso, txtgasto;
     Calendar micalendario;
     String anioo, anoseleccionado, meses, ingreso;
     boolean banderames, banderaano;
     cuotas cuotasclass, cuot = new cuotas();
-    ingresosextras  ingresoextraa = new ingresosextras();
+    ingresosextras ingresoextraa = new ingresosextras();
     ingresosextras ingreext = new ingresosextras();
     double acumuloingreso, acumulogasto, acuingreso, acugasto, ingresoscuotas;
 
@@ -141,7 +140,7 @@ public class AdminIngresosyGastos extends Fragment {
             arraymeses = new ArrayList<>();
             anoseleccionado = adapterView.getAdapter().getItem(i).toString();
 
-            databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anoseleccionado).addValueEventListener(new ValueEventListener() {
+            databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anoseleccionado).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for (DataSnapshot shot : snapshot.getChildren()) {
@@ -175,7 +174,7 @@ public class AdminIngresosyGastos extends Fragment {
                                 assert cuot != null;
                                 acumuloingreso = Double.parseDouble(cuot.getMonto()) + acumuloingreso;
                             }
-                            txtingreso.setText(" $"+String.valueOf(acumuloingreso));
+                            txtingreso.setText(" $" + String.valueOf(acumuloingreso));
                         }
 
                         @Override
@@ -190,14 +189,16 @@ public class AdminIngresosyGastos extends Fragment {
                         for (DataSnapshot shot : snapshot.getChildren()) {
                             ingresoextraa = shot.getValue(ingresosextras.class);
                             assert ingresoextraa != null;
-                            if(ingresoextraa.getTipo().equals("ingreso")){
-                                acumuloingreso = Double.parseDouble(ingresoextraa.getMontoingreso())+ acumuloingreso;
-                            }else{
-                                acumulogasto = Double.parseDouble(ingresoextraa.getMontoingreso())+ acumulogasto;
+                            if (ingresoextraa.getAno().equals(anioo.trim())){
+                                if (ingresoextraa.getTipo().equals("ingreso")) {
+                                    acumuloingreso = Double.parseDouble(ingresoextraa.getMontoingreso()) + acumuloingreso;
+                                } else {
+                                    acumulogasto = Double.parseDouble(ingresoextraa.getMontoingreso()) + acumulogasto;
+                                }
                             }
                         }
-                        txtingreso.setText(" $"+String.valueOf(acumuloingreso));
-                        txtgasto.setText(" $"+String.valueOf(acumulogasto));
+                        txtingreso.setText(" $" + String.valueOf(acumuloingreso));
+                        txtgasto.setText(" $" + String.valueOf(acumulogasto));
                     }
 
                     @Override
@@ -230,7 +231,7 @@ public class AdminIngresosyGastos extends Fragment {
                 Snackbar.make(view, "Seleccione año y mes", Snackbar.LENGTH_SHORT).show();
             } else {
 
-                databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(meses.trim()).addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anoseleccionado.trim()).child(meses.trim()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot shot : snapshot.getChildren()) {
@@ -244,16 +245,16 @@ public class AdminIngresosyGastos extends Fragment {
                                 for (DataSnapshot shot : snapshot.getChildren()) {
                                     ingreext = shot.getValue(ingresosextras.class);
                                     assert ingreext != null;
-                                    if(ingreext.getAno().equals(anioo.trim()) && ingreext.getMes().equals(meses.trim())){
-                                        if(ingreext.getTipo().equals("ingreso")){
-                                            acuingreso = Double.parseDouble(ingreext.getMontoingreso())+ acuingreso;
-                                        }else{
-                                            acugasto = Double.parseDouble(ingreext.getMontoingreso())+ acugasto;
+                                    if (ingreext.getAno().equals(anoseleccionado.trim()) && ingreext.getMes().equals(meses.trim())) {
+                                        if (ingreext.getTipo().equals("ingreso")) {
+                                            acuingreso = Double.parseDouble(ingreext.getMontoingreso()) + acuingreso;
+                                        } else {
+                                            acugasto = Double.parseDouble(ingreext.getMontoingreso()) + acugasto;
                                         }
                                     }
                                 }
                                 ingreext.setMontoingreso(ingresoscuotas + " de cuotas");
-                                ingreext.setMontoingresoextra(acuingreso +" de ingresos extras");
+                                ingreext.setMontoingresoextra(acuingreso + " de ingresos extras");
                                 ingreext.setMontogasto(acugasto + " de gastos extras");
                                 listaingygas.add(ingreext);
                                 milistaingygas.setAdapter(adaptador);
@@ -283,17 +284,8 @@ public class AdminIngresosyGastos extends Fragment {
         });
 
         //CLICK EN EL LAYOUT PARA DETALLES
-        layout.setOnLongClickListener(view -> {
-            PopupMenu popupMenu = new PopupMenu(micontexto,layout);
-            popupMenu.getMenuInflater().inflate(R.menu.menucontextualdetallesingygas,popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(menuItem -> {
-                if (menuItem.getItemId() == R.id.accionconfig) {
-                    Navigation.findNavController(view).navigate(R.id.AdminDetallesIngyGas);
-                }
-                return true;
-            });
-            popupMenu.show();
-            return true;
+        layout.setOnClickListener(view -> {
+            Navigation.findNavController(view).navigate(R.id.AdminDetallesIngyGas);
         });
 
         return root;

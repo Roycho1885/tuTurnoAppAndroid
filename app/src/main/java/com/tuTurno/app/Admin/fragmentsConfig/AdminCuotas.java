@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
@@ -54,18 +55,25 @@ public class AdminCuotas extends Fragment {
     Context micontexto;
     cliente cli;
     Calendar micalendario, micalendario1;
-    String mess, anioo, fechavenc, nombreyapellido, emailcliente, disci1;
+    String mess, anioo, fechavenc, nombreyapellido, emailcliente, disci1, idcuot, diasporsem, montocuota, dia;
     boolean bandera, bandera1, bandera3, menueli;
+    boolean menucuotabool = false;
     Date fechaactual, fechavence, fechaultipago, fechaelegida;
     private ArrayList<String> arraydisci;
+    private ArrayList<String> arraycuotas;
+    private ArrayList<String> dias;
+    private ArrayList<String> montos;
     private ArrayAdapter miadapter;
+    private ArrayAdapter miadaptercuotas;
     private TextView registros;
+    private SwipeRefreshLayout swipeContainer;
 
 
     //para el listview
     private final ArrayList<cliente> listaclientes = new ArrayList<>();
     private ListView milistacuotasadmin;
     private ListViewAdaptadorCuotasAdmin adaptador;
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -79,6 +87,7 @@ public class AdminCuotas extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.admincuotas, container, false);
         final AutoCompleteTextView menudisci = root.findViewById(R.id.botondisciplina);
+        final AutoCompleteTextView menucuota = root.findViewById(R.id.botoncuotasdisci);
 
 
         //para los diferentes gimnasios
@@ -96,8 +105,13 @@ public class AdminCuotas extends Fragment {
         iniciarFirebase();
 
         menudisci.post(() -> menudisci.getText().clear());
+        menucuota.post(() -> menucuota.getText().clear());
 
+        //INICIALIZO LOS ARRAYS DISCIPLINA Y CUOTAS
         arraydisci = new ArrayList<>();
+        arraycuotas = new ArrayList<>();
+        dias = new ArrayList<>();
+        montos = new ArrayList<>();
 
         otroscroll.setOnTouchListener((v, event) -> {
             milistacuotasadmin.getParent()
@@ -130,9 +144,61 @@ public class AdminCuotas extends Fragment {
 
         });
 
+        //CARGO LAS CUOTAS CUANDO PRESIONE DISCIPLINA
         menudisci.setOnItemClickListener((adapterView, view, i, l) -> {
             menueli = true;
             disci1 = adapterView.getAdapter().getItem(i).toString().trim();
+            menucuota.post(() -> menucuota.getText().clear());
+            arraycuotas.clear();
+            dias.clear();
+            montos.clear();
+            //REFERENCIA PARA BUSCAR DISCIPLINA E ID DE CUOTA Y DISCIPLINA ELEGIDA
+            databaseReference.child(gimnasio.getText().toString()).child("ConfigCuota").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot shot : snapshot.getChildren()) {
+                        String diciplina = shot.child("disciplina").getValue(String.class);
+                        assert diciplina != null;
+                        if (diciplina.equals(disci1)) {
+                            idcuot = shot.child("id").getValue(String.class);
+
+                            //CARGO EL MENU DE CUOTAS CON REFERENCIA HACIA LAS CUOTAS
+                            databaseReference.child(gimnasio.getText().toString()).child("ConfigCuota").child(idcuot).child("configuracioncuotas").orderByChild("diasporsemana").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (DataSnapshot shot : snapshot.getChildren()) {
+                                        CuotaConfig cuota = shot.getValue(CuotaConfig.class);
+                                        arraycuotas.add(cuota.getDiasporsemana() + " dias " + "$ " + cuota.getMonto());
+                                        dias.add(cuota.getDiasporsemana());
+                                        montos.add(cuota.getMonto());
+                                    }
+                                    miadaptercuotas = new ArrayAdapter<>(micontexto, android.R.layout.simple_list_item_1, arraycuotas);
+                                    menucuota.setAdapter(miadaptercuotas);
+                                    menucuota.setInputType(InputType.TYPE_NULL);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        });
+
+        //BOTON CUOTAS
+        menucuota.setOnItemClickListener((parent, view, i, id) -> {
+            diasporsem = parent.getAdapter().getItem(i).toString();
+            dia = dias.get(i);
+            montocuota = montos.get(i);
+            menucuotabool = true;
         });
 
         //CARGO LISTVIEW CON CLIENTES
@@ -168,7 +234,7 @@ public class AdminCuotas extends Fragment {
                             } else {
                                 cli.setEstadopago(R.drawable.ic_baseline_cancel_24);
                                 cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                        cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), cli.getUltimopago(), cli.getFechavencimiento(), cli.getEstadopago(), "Debe", cli.getDisciplinaelegida());
+                                        cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), cli.getUltimopago(), cli.getFechavencimiento(), cli.getEstadopago(), "Debe", cli.getDisciplinaelegida(), cli.getDiasporsemana());
                                 databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
                             }
                         }
@@ -228,113 +294,117 @@ public class AdminCuotas extends Fragment {
             emailcliente = cli.getEmail();
         });
 
+
         //CLICK EN BOTON AGREGAR PAGO
         agregarpago.setOnClickListener(view -> {
             bandera3 = false;
             if (!menueli) {
                 Snackbar.make(view, "Seleccione una disciplina", Snackbar.LENGTH_SHORT).show();
             } else {
-                if (!bandera1) {
-                    Snackbar.make(view, "Seleccione una fecha", Snackbar.LENGTH_SHORT).show();
+                if (!menucuotabool) {
+                    Snackbar.make(view, "Seleccione una cuota", Snackbar.LENGTH_SHORT).show();
                 } else {
-                    if (!bandera) {
-                        Snackbar.make(view, "Seleccione un cliente", Snackbar.LENGTH_SHORT).show();
+                    if (!bandera1) {
+                        Snackbar.make(view, "Seleccione una fecha", Snackbar.LENGTH_SHORT).show();
                     } else {
-                        //CONTROLO QUE EL CLIENTE YA TENGA EL PAGO EFECTUADO
-                        databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot shot : snapshot.getChildren()) {
-                                    cuotas cu = shot.getValue(cuotas.class);
-                                    assert cu != null;
-                                    if (cu.getEmailcliente().equals(emailcliente)) {
-                                        if (cu.getMespago().equals(mess)) {
-                                            bandera3 = true;
+                        if (!bandera) {
+                            Snackbar.make(view, "Seleccione un cliente", Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            //CONTROLO QUE EL CLIENTE YA TENGA EL PAGO EFECTUADO
+                            databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (DataSnapshot shot : snapshot.getChildren()) {
+                                        cuotas cu = shot.getValue(cuotas.class);
+                                        assert cu != null;
+                                        if (cu.getEmailcliente().equals(emailcliente)) {
+                                            if (cu.getMespago().equals(mess)) {
+                                                bandera3 = true;
+                                            }
                                         }
                                     }
-                                }
-                                if (bandera3) {
-                                    Snackbar.make(view, "Para este mes y cliente ya existe un pago registrado.", Snackbar.LENGTH_SHORT).show();
-                                } else {
-                                    //--------------------------------------------------------------------------------------------------
-                                    databaseReference.child(gimnasio.getText().toString()).child("ConfigCuota").addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            for (DataSnapshot shot : snapshot.getChildren()) {
-                                                CuotaConfig cuconf = shot.getValue(CuotaConfig.class);
+                                    if (bandera3) {
+                                        Snackbar.make(view, "Para este mes y cliente ya existe un pago registrado.", Snackbar.LENGTH_SHORT).show();
+                                    } else {
+                                        //--------------------------------------------------------------------------------------------------
+                                        databaseReference.child(gimnasio.getText().toString()).child("ConfigCuota").addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                for (DataSnapshot shot : snapshot.getChildren()) {
+                                                    String diciplina = shot.child("disciplina").getValue(String.class);
 
-                                                assert cuconf != null;
-                                                //SEGUIR PROBANDO, AL PARECER FUNCIONA-------------------------------------------------------------------------
-                                                if (cuconf.getDisciplina().equals(disci1)) {
-                                                    //----------------------------
-                                                    if (!cli.getDisciplinaelegida().equals("0")) {
-                                                        if (!cli.getDisciplinaelegida().equals(disci1)) {
-                                                            androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
-                                                            mensaje.setTitle("Atención!");
-                                                            mensaje.setIcon(R.drawable.ic_baseline_warning_24);
-                                                            mensaje.setMessage("¿Cambiar disciplina del cliente?");
-                                                            mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
+                                                    //SEGUIR PROBANDO, AL PARECER FUNCIONA-------------------------------------------------------------------------
+                                                    if (diciplina.equals(disci1)) {
+                                                        //----------------------------
+                                                        if (!cli.getDisciplinaelegida().equals("0")) {
+                                                            if (!cli.getDisciplinaelegida().equals(disci1)) {
+                                                                androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
+                                                                mensaje.setTitle("Atención!");
+                                                                mensaje.setIcon(R.drawable.ic_baseline_warning_24);
+                                                                mensaje.setMessage("¿Cambiar disciplina del cliente?");
+                                                                mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
+                                                                    if (cli.getUltimopago().equals("Nunca")) {
+                                                                        cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
+                                                                                cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia);
+                                                                        databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
+                                                                    } else {
+                                                                        if (!fechaelegida.before(fechaultipago)) {
+                                                                            cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
+                                                                                    cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia);
+                                                                            databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
+                                                                        }
+                                                                    }
+                                                                    cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, montocuota);
+                                                                    databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
+                                                                    Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
+
+                                                                });
+                                                                mensaje.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss());
+                                                                AlertDialog dialog = mensaje.create();
+                                                                dialog.show();
+                                                            } else {
                                                                 if (cli.getUltimopago().equals("Nunca")) {
                                                                     cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                                                            cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
+                                                                            cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia);
                                                                     databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
                                                                 } else {
                                                                     if (!fechaelegida.before(fechaultipago)) {
                                                                         cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                                                                cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
+                                                                                cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia);
                                                                         databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
                                                                     }
                                                                 }
-                                                                cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, cuconf.getMonto());
+                                                                cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, montocuota);
                                                                 databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
                                                                 Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
-
-                                                            });
-                                                            mensaje.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss());
-                                                            AlertDialog dialog = mensaje.create();
-                                                            dialog.show();
-                                                        } else {
-                                                            if (cli.getUltimopago().equals("Nunca")) {
-                                                                cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                                                        cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
-                                                                databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
-                                                            } else {
-                                                                if (!fechaelegida.before(fechaultipago)) {
-                                                                    cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                                                            cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
-                                                                    databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
-                                                                }
                                                             }
-                                                            cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, cuconf.getMonto());
+                                                        } else {
+                                                            cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
+                                                                    cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia);
+                                                            databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
+                                                            cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, montocuota);
                                                             databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
                                                             Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
                                                         }
-                                                    } else {
-                                                        cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                                                cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1);
-                                                        databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
-                                                        cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, cuconf.getMonto());
-                                                        databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
-                                                        Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
+                                                        //---------------------------
                                                     }
-                                                    //---------------------------
                                                 }
                                             }
-                                        }
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
 
-                                        }
-                                    });
+                                            }
+                                        });
 
+                                    }
                                 }
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                            }
-                        });
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
+                        }
                     }
                 }
             }

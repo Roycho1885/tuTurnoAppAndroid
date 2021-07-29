@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -83,6 +84,8 @@ public class HomeCliente extends Fragment {
     private String apellido;
     private String direccion;
     private String urldire;
+    private String diasporsemana;
+    private String idcliente;
     private String DNI;
     private DatosTurno datosturno = new DatosTurno();
     private String user;
@@ -178,18 +181,19 @@ public class HomeCliente extends Fragment {
 
 
         cal = Calendar.getInstance();
-        /*if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
             //botondisci.setEnabled(false);
             fab.setVisibility(View.GONE);
             ;
             setdisciplina.setVisibility(View.GONE);
             layoutfondo.setBackgroundResource(R.drawable.descanso);
+            layoutfondo.setMaxHeight(500);
+            layoutfondo.setMaxWidth(600);
             finde = true;
             Snackbar.make(container, "El fin de semana no se asignan turnos", Snackbar.LENGTH_SHORT).show();
         } else {
             setearfecha(cal);
-        }*/
-        setearfecha(cal);
+        }
         final String horaactual = sdf.format(cal.getTime());
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);
@@ -270,6 +274,8 @@ public class HomeCliente extends Fragment {
                         apellido = c.getApellido();
                         direccion = c.getDireccion();
                         DNI = c.getDni();
+                        diasporsemana = c.getDiasporsemana();
+                        idcliente = c.getId();
                         cliente.setText(getString(R.string.cliente) + " " + c.getNombre());
                         tool.setTitle(c.getGym());
 
@@ -368,28 +374,37 @@ public class HomeCliente extends Fragment {
 
                             //CARGO TURNO SI ESTA DENTRO DEL HORARIO Y REVISO SI EL CLIENTE YA TIENE UN TURNO
                             assert horaactual1 != null;
-                            if (band) {
-                                Snackbar.make(container, "Usted ya posee un turno para este día", Snackbar.LENGTH_SHORT).show();
+                            if (Integer.parseInt(diasporsemana) == 0) {
+                                Snackbar.make(container, "Ya ocupo todos sus dias", Snackbar.LENGTH_SHORT).show();
                             } else {
-                                if (cupo <= 0) {
-                                    Snackbar.make(container, "Ya no hay cupo en este turno", Snackbar.LENGTH_SHORT).show();
+                                if (band) {
+                                    Snackbar.make(container, "Usted ya posee un turno para este día", Snackbar.LENGTH_SHORT).show();
                                 } else {
-                                    if (horaactual1.compareTo(horaactual3) <= 0) {
-                                        assert user != null;
-                                        agregardatos(user, turnoselecc.getDisciplina(), turnoselecc.getHoracomienzo(), turnoselecc.getId());
-                                        databaseReference.child(textologo.getText().toString()).child("Datos Turnos").child(datosturno.getIdTurno()).setValue(datosturno);
-                                        tur.setDisciplina(turnoselecc.getDisciplina());
-                                        tur.setHoracomienzo(turnoselecc.getHoracomienzo());
-                                        tur.setDias(turnoselecc.getDias());
-                                        cupo--;
-                                        tur.setCupo(String.valueOf(cupo));
-                                        tur.setCupoalmacenado(turnoselecc.getCupoalmacenado());
-                                        databaseReference.child(textologo.getText().toString()).child("Disciplinas").child(tur.getDisciplina()).child(tur.getId()).setValue(tur);
-                                        assert container != null;
-                                        Snackbar.make(container, "Turno registrado correctamente", Snackbar.LENGTH_SHORT).show();
-                                        band = true;
+                                    if (cupo <= 0) {
+                                        Snackbar.make(container, "Ya no hay cupo en este turno", Snackbar.LENGTH_SHORT).show();
                                     } else {
-                                        Snackbar.make(container, "Ya no se puede registrar este turno", Snackbar.LENGTH_SHORT).show();
+                                        if (horaactual1.compareTo(horaactual3) <= 0) {
+                                            assert user != null;
+                                            agregardatos(user, turnoselecc.getDisciplina(), turnoselecc.getHoracomienzo(), turnoselecc.getId());
+                                            databaseReference.child(textologo.getText().toString()).child("Datos Turnos").child(datosturno.getIdTurno()).setValue(datosturno);
+                                            tur.setDisciplina(turnoselecc.getDisciplina());
+                                            tur.setHoracomienzo(turnoselecc.getHoracomienzo());
+                                            tur.setDias(turnoselecc.getDias());
+                                            cupo--;
+                                            //VERIFICO SI TIENE DIAS EN 5
+                                            if(!diasporsemana.equals("5")){
+                                                diasporsemana = String.valueOf(Integer.parseInt(diasporsemana)-1);
+                                                actualizardiaporsemana(idcliente,diasporsemana);
+                                            }
+                                            tur.setCupo(String.valueOf(cupo));
+                                            tur.setCupoalmacenado(turnoselecc.getCupoalmacenado());
+                                            databaseReference.child(textologo.getText().toString()).child("Disciplinas").child(tur.getDisciplina()).child(tur.getId()).setValue(tur);
+                                            assert container != null;
+                                            Snackbar.make(container, "Turno registrado correctamente", Snackbar.LENGTH_SHORT).show();
+                                            band = true;
+                                        } else {
+                                            Snackbar.make(container, "Ya no se puede registrar este turno", Snackbar.LENGTH_SHORT).show();
+                                        }
                                     }
                                 }
                             }
@@ -405,6 +420,14 @@ public class HomeCliente extends Fragment {
         return root;
     }
 
+    private void actualizardiaporsemana(String id, String diaporsemana){
+        HashMap hashMap = new HashMap();
+        hashMap.put("diasporsemana",diaporsemana);
+        databaseReference.child("Clientes").child(id).updateChildren(hashMap).addOnSuccessListener(o -> {
+        });
+    }
+
+
     private void guardartoken(String token, cliente c, final View container) {
         String nombre = c.getNombre();
         String apellido = c.getApellido();
@@ -419,7 +442,7 @@ public class HomeCliente extends Fragment {
         int estpago = c.getEstadopago();
         String disciplinaelegida = c.getDisciplinaelegida();
 
-        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, c.getEstadodeuda(), disciplinaelegida);
+        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, c.getEstadodeuda(), disciplinaelegida, c.getDiasporsemana());
 
         databaseReference.child("Clientes").child(id).setValue(cli);
 
@@ -438,8 +461,9 @@ public class HomeCliente extends Fragment {
         String fechavence = c.getFechavencimiento();
         int estpago = c.getEstadopago();
         String disciplinaelegida = c.getDisciplinaelegida();
+        String diasporsemana = c.getDiasporsemana();
 
-        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, "Debe", disciplinaelegida);
+        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, "Debe", disciplinaelegida, diasporsemana);
 
         databaseReference.child("Clientes").child(id).setValue(cli);
 

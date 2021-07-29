@@ -82,7 +82,7 @@ public class AdminDatosClientes extends Fragment {
         iniciarFirebase();
 
 
-        databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("Clientes").orderByChild("apellido").addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -133,7 +133,6 @@ public class AdminDatosClientes extends Fragment {
                 }
                 return true;
             });
-
             popupMenu.show();
             return true;
         });

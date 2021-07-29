@@ -9,7 +9,9 @@
     <string name="dnihomeregistro">Ingrese DNI</string>
     <string name="tituloregistroasist">Registrar Asistencia</string>
     <string name="tituloverasist">Ver Asistencias</string>
-    <string name="tituloconfigcuota">Configurar Cuota</string>
+    <string name="tituloconfigcuota">Configurar Cuotas</string>
+    <string name="titulomodicuota">Modificar Cuotas</string>
+    <string name="tituloingresecuota">Seleccione una Cuota</string>
     <string name="direccion">Dirección</string>
     <string name="gym">Selecciona Gimnasio</string>
     <string name="correo">Email</string>
@@ -68,6 +70,7 @@
     <string name="menu_config">Configuración</string>
     <string name="menu_home">Home</string>
     <string name="hintdis">Seleccionar Disciplina</string>
+    <string name="hintdiascuota">Seleccionar días por semana</string>
     <string name="hinttur">Seleccionar Turno</string>
     <string name="hincli">Seleccionar Cliente</string>
     <string name="titucupo">Cupos</string>
@@ -104,10 +107,11 @@
     <string name="botondisci">Agregar</string>
     <string name="horaturno">Ingrese hora de turno</string>
     <string name="diasturno">Seleccione dias</string>
+    <string name="cantdias">Días por semana</string>
     <string name="cupoturno">Ingrese cupo</string>
     <string name="botoneliminar">Eliminar Turno</string>
     <string name="botondejarsuscri">Suscripción</string>
-    <string name="aclaracioneliminar">Recuerda que al eliminar todos los turnos la disciplina tambien se elimina.</string>
+    <string name="aclaracioneliminar">Recuerda que al eliminar todos los turnos la disciplina y las cuotas tambien se eliminan.</string>
     <string name="aclaracionnotifi">Recuerda que al desinstalar la app automáticamente se cancelan tus suscripciones.</string>
 
     <string name="txtnotificacionescli">Agregar grupo para recibir notificaciones</string>
@@ -120,7 +124,7 @@
     <string name="botonregistrarpago">Registrar Pago</string>
     <string name="tituloverpagos">Ver Pagos</string>
     <string name="tituloveringygas">Panel Ingresos y Gastos</string>
-    <string name="tituloverdetallesingygas">Panel Ingresos y Gastos Extras</string>
+    <string name="tituloverdetallesingygas">Ver Ingresos y Gastos Extras</string>
     <string name="titulobtnveringygas">Mostrar</string>
     <string name="mespago">Seleccione mes correspondiente</string>
     <string name="selemes">Seleccione mes</string>
@@ -133,11 +137,12 @@
     <string name="btnguardar">Guardar Tarea</string>
     <string name="btneliminar">Eliminar Tarea</string>
     <string name="btnregingreso">Ingreso y Gasto</string>
-    <string name="tituloingresotot">Ingreso Total:</string>
-    <string name="titulogastotot">Gasto Total:</string>
+    <string name="tituloingresotot">Ingreso Anual Total:</string>
+    <string name="titulogastotot">Gasto Anual Total:</string>
     <string name="tituloregistroingresoygasto">Agregar Ingreso o Gasto</string>
     <string name="titulodescrip">Ingrese descripción</string>
     <string name="titulotipo">Ingrese tipo</string>
+    <string name="titulobotondetalles">Detalles</string>
 
 
 </resources>

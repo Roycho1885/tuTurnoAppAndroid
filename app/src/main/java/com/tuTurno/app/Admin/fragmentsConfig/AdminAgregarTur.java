@@ -10,7 +10,6 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -22,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
@@ -51,7 +51,7 @@ public class AdminAgregarTur extends Fragment {
     String disci1;
     boolean band2;
     private final turno infoturno = new turno();
-    private final CuotaConfig monto = new CuotaConfig();
+    private final CuotaConfig configcuotasdici = new CuotaConfig();
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -62,7 +62,6 @@ public class AdminAgregarTur extends Fragment {
 
     EditText txtdias;
     EditText txtdias1;
-    EditText txtmonto;
     final ArrayList<Integer> list = new ArrayList<>();
     final ArrayList<String> turnoslista = new ArrayList<>();
     String dias = "";
@@ -82,7 +81,6 @@ public class AdminAgregarTur extends Fragment {
         final EditText txthoraturno = root.findViewById(R.id.txthoraturno);
         txtdias = root.findViewById(R.id.txtdias);
         txtdias1 = root.findViewById(R.id.txtdias1);
-        txtmonto = root.findViewById(R.id.txtmonto);
         final EditText txthoraturno1 = root.findViewById(R.id.txthoraturno1);
         final EditText txtdisciplina = root.findViewById(R.id.txtDisciplina);
         final EditText txtcupo = root.findViewById(R.id.txtcupo);
@@ -123,46 +121,37 @@ public class AdminAgregarTur extends Fragment {
             }
         });
 
-        txtdias.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mostrarAlertDialog();
-            }
-        });
+        txtdias.setOnClickListener(view -> mostrarAlertDialog());
 
-        txtdias1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mostrarAlertDialog1();
-            }
-        });
+        txtdias1.setOnClickListener(view -> mostrarAlertDialog1());
 
 
-        botonagregarturno.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                disci = txtdisciplina.getText().toString().trim();
-                if(txthoraturno.getText().toString().equals("") || disci.equals("") || txtcupo.getText().toString().equals("")
-                        || txtdias.getText().toString().equals("") || txtmonto.getText().toString().equals("")){
-                    Snackbar.make(view,"Complete todo los campos",Snackbar.LENGTH_SHORT).show();
+        botonagregarturno.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            disci = txtdisciplina.getText().toString().trim();
+            if(txthoraturno.getText().toString().equals("") || disci.equals("") || txtcupo.getText().toString().equals("")
+                    || txtdias.getText().toString().equals("")){
+                Snackbar.make(view,"Complete todo los campos",Snackbar.LENGTH_SHORT).show();
+            }else{
+                if(arraydisci.contains(disci)){
+                    Snackbar.make(view,"Disciplina ya existente",Snackbar.LENGTH_SHORT).show();
                 }else{
-                    if(arraydisci.contains(disci)){
-                        Snackbar.make(view,"Disciplina ya existente",Snackbar.LENGTH_SHORT).show();
-                    }else{
-                        agregarturno(disci, txthoraturno.getText().toString().trim(),txtdias.getText().toString().trim(),txtcupo.getText().toString().trim());
-                        agregarmonto(disci,txtmonto.getText().toString().trim());
-                        databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(disci).child(infoturno.getId()).setValue(infoturno);
-                        databaseReference.child(gimnasio.getText().toString()).child("ConfigCuota").child(monto.getId()).setValue(monto);
-                        Snackbar.make(view,"Disciplina y Turno agregado correctamente",Snackbar.LENGTH_SHORT).show();
-                    }
-                    txtdisciplina.setText("");
-                    txtdias.setText("");
-                    txthoraturno.setText("");
-                    txtcupo.setText("");
-                    txtmonto.setText("");
+                    agregarturno(disci, txthoraturno.getText().toString().trim(),txtdias.getText().toString().trim(),txtcupo.getText().toString().trim());
+                    agregarmonto(disci);
+                    databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(disci).child(infoturno.getId()).setValue(infoturno);
+                    databaseReference.child(gimnasio.getText().toString()).child("ConfigCuota").child(configcuotasdici.getId()).setValue(configcuotasdici);
+                    Snackbar.make(view,"Disciplina y Turno agregado correctamente",Snackbar.LENGTH_SHORT).show();
                 }
-
+                txtdisciplina.setText("");
+                txtdias.setText("");
+                txthoraturno.setText("");
+                txtcupo.setText("");
+                arraydisci.clear();
+                bundle.putString("disciplina",disci);
+                bundle.putString("keycuota",configcuotasdici.getId());
+                Navigation.findNavController(view).navigate(R.id.AdminConfigCuota,bundle);
             }
+
         });
 
         databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -180,79 +169,66 @@ public class AdminAgregarTur extends Fragment {
             }
         });
 
-        menutur.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                disci1 = adapterView.getAdapter().getItem(i).toString();
-                if(adapterView.isClickable()){
-                    band2 = true;
-                }
-
+        menutur.setOnItemClickListener((adapterView, view, i, l) -> {
+            disci1 = adapterView.getAdapter().getItem(i).toString();
+            if(adapterView.isClickable()){
+                band2 = true;
             }
+
         });
 
-        txthoraturno1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                calendar = Calendar.getInstance();
-                horaactual = calendar.get(Calendar.HOUR_OF_DAY);
-                minactual = calendar.get(Calendar.MINUTE);
+        txthoraturno1.setOnClickListener(view -> {
+            calendar = Calendar.getInstance();
+            horaactual = calendar.get(Calendar.HOUR_OF_DAY);
+            minactual = calendar.get(Calendar.MINUTE);
 
-                timedialog = new TimePickerDialog(micontexto, new TimePickerDialog.OnTimeSetListener() {
-                    @SuppressLint({"SetTextI18n", "DefaultLocale"})
+            timedialog = new TimePickerDialog(micontexto, new TimePickerDialog.OnTimeSetListener() {
+                @SuppressLint({"SetTextI18n", "DefaultLocale"})
+                @Override
+                public void onTimeSet(TimePicker timePicker, int hora, int min) {
+
+                    txthoraturno1.setText(String.format("%02d:%02d", hora , min));
+
+                }
+            }, horaactual , minactual , true);
+
+            timedialog.show();
+        });
+
+        botonagregarturno1.setOnClickListener(view -> {
+            turnoslista.clear();
+            arraydisci.clear();
+            if(!band2 || txthoraturno1.getText().toString().equals("") || txtcupo1.getText().toString().equals("") || txtdias1.getText().toString().equals("")){
+                Snackbar.make(view,"Complete todo los campos",Snackbar.LENGTH_SHORT).show();
+            }else{
+                databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(disci1).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onTimeSet(TimePicker timePicker, int hora, int min) {
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot shot : snapshot.getChildren()){
+                            turnoslista.add(Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString());
+                        }
 
-                        txthoraturno1.setText(String.format("%02d:%02d", hora , min));
+                            if(turnoslista.contains(txthoraturno1.getText().toString())){
+                                Snackbar.make(view,"Turno ya existente",Snackbar.LENGTH_SHORT).show();
+                            }else{
+                                agregarturno(disci1, txthoraturno1.getText().toString().trim(),txtdias1.getText().toString().trim(),txtcupo1.getText().toString().trim());
+                                databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(disci1).child(infoturno.getId()).setValue(infoturno);
+                                Snackbar.make(view,"Turno agregado correctamente",Snackbar.LENGTH_SHORT).show();
+
+                                menutur.post(() -> menutur.getText().clear());
+
+                            }
+                        txthoraturno1.setText("");
+                        txtcupo1.setText("");
+                        txtdias1.setText("");
 
                     }
-                }, horaactual , minactual , true);
-
-                timedialog.show();
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
             }
-        });
 
-        botonagregarturno1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                turnoslista.clear();
-                if(!band2 || txthoraturno1.getText().toString().equals("") || txtcupo1.getText().toString().equals("") || txtdias1.getText().toString().equals("")){
-                    Snackbar.make(view,"Complete todo los campos",Snackbar.LENGTH_SHORT).show();
-                }else{
-                    databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(disci1).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for(DataSnapshot shot : snapshot.getChildren()){
-                                turnoslista.add(Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString());
-                            }
-
-                                if(turnoslista.contains(txthoraturno1.getText().toString())){
-                                    Snackbar.make(view,"Turno ya existente",Snackbar.LENGTH_SHORT).show();
-                                }else{
-                                    agregarturno(disci1, txthoraturno1.getText().toString().trim(),txtdias1.getText().toString().trim(),txtcupo1.getText().toString().trim());
-                                    databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(disci1).child(infoturno.getId()).setValue(infoturno);
-                                    Snackbar.make(view,"Turno agregado correctamente",Snackbar.LENGTH_SHORT).show();
-
-                                    menutur.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            menutur.getText().clear();
-                                        }
-                                    });
-
-                                }
-                            txthoraturno1.setText("");
-                            txtcupo1.setText("");
-                            txtdias1.setText("");
-
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    });
-                }
-
-            }
         });
 
         return root;
@@ -298,26 +274,18 @@ public class AdminAgregarTur extends Fragment {
             }
 
         });
-        alertDialog.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dias = "";
-                for(int t=0; t< list.size();t++){
-                    dias = dias.concat(items[list.get(t)]);
-                    if(t!=list.size()-1){
-                        dias = dias.concat(", ");
-                    }
+        alertDialog.setPositiveButton("Aceptar", (dialogInterface, i) -> {
+            dias = "";
+            for(int t=0; t< list.size();t++){
+                dias = dias.concat(items[list.get(t)]);
+                if(t!=list.size()-1){
+                    dias = dias.concat(", ");
                 }
-                txtdias.setText(dias);
             }
+            txtdias.setText(dias);
         });
 
-        alertDialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
+        alertDialog.setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.cancel());
         AlertDialog alert = alertDialog.create();
         alert.setCanceledOnTouchOutside(false);
         alert.show();
@@ -397,10 +365,9 @@ public class AdminAgregarTur extends Fragment {
         infoturno.setCupoalmacenado(cupo);
     }
 
-    private void agregarmonto(String disciplina, String txtingmonto) {
-        monto.setId(UUID.randomUUID().toString());
-        monto.setDisciplina(disciplina);
-        monto.setMonto(txtingmonto);
+    private void agregarmonto(String disciplina) {
+        configcuotasdici.setId(UUID.randomUUID().toString());
+        configcuotasdici.setDisciplina(disciplina);
     }
 
     private void  iniciarFirebase(){

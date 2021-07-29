@@ -34,10 +34,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 import models.DatosTurno;
+import models.cliente;
 import models.turno;
 
 public class ListTurnos extends Fragment {
@@ -336,6 +338,7 @@ public class ListTurnos extends Fragment {
                             milistadatosturnos.setAdapter(null);
                             modi.setEnabled(false);
                             elimi.setEnabled(false);
+                            actualizardiasemana();
                             Snackbar.make(v,"Su turno fue eliminado correctamente",Snackbar.LENGTH_SHORT).show();
 
                         }
@@ -397,6 +400,30 @@ public class ListTurnos extends Fragment {
         databaseReference = firebaseDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference.keepSynced(true);
+    }
+
+    private void actualizardiasemana(){
+        databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot shot: snapshot.getChildren()){
+                    assert user != null;
+                    cliente cli = shot.getValue(cliente.class);
+                    if(user.equals(shot.child("email").getValue())){
+                        String diasporsemana = String.valueOf(Integer.parseInt(cli.getDiasporsemana())+1);
+                        HashMap hashMap = new HashMap();
+                        hashMap.put("diasporsemana",diasporsemana);
+                        databaseReference.child("Clientes").child(cli.getId()).updateChildren(hashMap).addOnSuccessListener(o -> {
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 }

@@ -16,9 +16,10 @@ public class cliente {
     public int estadopago;
     public String estadodeuda;
     public String disciplinaelegida;
+    public String diasporsemana;
 
     public cliente(String id, String nombre, String apellido, String dni, String direccion, String email, String gym,
-                   String admin,String token, String ultimopago,String fechavencimiento, int estadopago, String estadodeuda, String disciplinaelegida) {
+                   String admin,String token, String ultimopago,String fechavencimiento, int estadopago, String estadodeuda, String disciplinaelegida, String diasporsemana) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -33,6 +34,7 @@ public class cliente {
         this.estadopago = estadopago;
         this.estadodeuda = estadodeuda;
         this.disciplinaelegida = disciplinaelegida;
+        this.diasporsemana = diasporsemana;
     }
 
     public cliente() {
@@ -58,10 +60,18 @@ public class cliente {
         this.estadodeuda = estadodeuda;
     }
 
+
     public cliente(String email){
         this.email = email;
     }
 
+    public String getDiasporsemana() {
+        return diasporsemana;
+    }
+
+    public void setDiasporsemana(String diasporsemana) {
+        this.diasporsemana = diasporsemana;
+    }
 
     public String getDisciplinaelegida() {
         return disciplinaelegida;
