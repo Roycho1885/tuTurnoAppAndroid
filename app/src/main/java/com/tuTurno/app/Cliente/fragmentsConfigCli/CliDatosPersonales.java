@@ -87,14 +87,14 @@ public class CliDatosPersonales extends Fragment {
                     clin.setDni(txtdni.getText().toString().trim());
                     clin.setDireccion(txtdireccion.getText().toString().trim());
                     clin.setEmail(txtEmail.getText().toString().trim());
-                    clin.setGym(clin.getGym());
+                    /*clin.setGym(clin.getGym());
                     clin.setAdmin(clin.getAdmin());
                     clin.setToken(clin.getToken());
                     cli.setUltimopago(clin.getUltimopago());
                     cli.setFechavencimiento(clin.getFechavencimiento());
                     cli.setEstadopago(clin.getEstadopago());
                     cli.setEstadodeuda(clin.getEstadodeuda());
-                    cli.setDisciplinaelegida(clin.getDisciplinaelegida());
+                    cli.setDisciplinaelegida(clin.getDisciplinaelegida());*/
                     databaseReference.child("Clientes").child(clin.getId()).setValue(clin);
                     Snackbar.make(view,"Datos Actualizados Correctamente",Snackbar.LENGTH_SHORT).show();
                 }else {

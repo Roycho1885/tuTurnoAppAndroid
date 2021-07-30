@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -31,8 +30,6 @@ public class MiAlarma extends BroadcastReceiver {
     @SuppressLint("UnsafeProtectedBroadcastReceiver")
     @Override
     public void onReceive(Context context, Intent intent) {
-
-            Toast.makeText(context,"Los cambios se realizaron correctamente", Toast.LENGTH_LONG).show();
 
             iniciarFirebase(context);
 

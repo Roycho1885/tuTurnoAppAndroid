@@ -234,7 +234,7 @@ public class AdminCuotas extends Fragment {
                             } else {
                                 cli.setEstadopago(R.drawable.ic_baseline_cancel_24);
                                 cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                        cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), cli.getUltimopago(), cli.getFechavencimiento(), cli.getEstadopago(), "Debe", cli.getDisciplinaelegida(), cli.getDiasporsemana());
+                                        cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), cli.getUltimopago(), cli.getFechavencimiento(), cli.getEstadopago(), "Debe", cli.getDisciplinaelegida(), cli.getDiasporsemana(),cli.getDiasporsemanaresg());
                                 databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
                             }
                         }
@@ -345,12 +345,12 @@ public class AdminCuotas extends Fragment {
                                                                 mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
                                                                     if (cli.getUltimopago().equals("Nunca")) {
                                                                         cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                                                                cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia);
+                                                                                cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia,dia);
                                                                         databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
                                                                     } else {
                                                                         if (!fechaelegida.before(fechaultipago)) {
                                                                             cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                                                                    cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia);
+                                                                                    cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia,dia);
                                                                             databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
                                                                         }
                                                                     }
@@ -365,12 +365,12 @@ public class AdminCuotas extends Fragment {
                                                             } else {
                                                                 if (cli.getUltimopago().equals("Nunca")) {
                                                                     cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                                                            cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia);
+                                                                            cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia,dia);
                                                                     databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
                                                                 } else {
                                                                     if (!fechaelegida.before(fechaultipago)) {
                                                                         cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                                                                cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia);
+                                                                                cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia,dia);
                                                                         databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
                                                                     }
                                                                 }
@@ -380,7 +380,7 @@ public class AdminCuotas extends Fragment {
                                                             }
                                                         } else {
                                                             cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
-                                                                    cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia);
+                                                                    cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia,dia);
                                                             databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
                                                             cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, montocuota);
                                                             databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);

@@ -141,6 +141,7 @@ public class RegistroActivity extends AppCompatActivity {
     cli.setEstadodeuda("0");
     cli.setDisciplinaelegida("0");
     cli.setDiasporsemana("0");
+    cli.setDiasporsemanaresg("0");
 
         cargando.setTitle("Registrando...");
         cargando.setMessage("Espere por favor...");

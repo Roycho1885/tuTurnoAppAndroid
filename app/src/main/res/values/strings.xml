@@ -144,5 +144,8 @@
     <string name="titulotipo">Ingrese tipo</string>
     <string name="titulobotondetalles">Detalles</string>
 
+    <string name="tituloalarmacupos">Alarma Cupos</string>
+    <string name="tituloalarmadias">Alarma dias</string>
+
 
 </resources>

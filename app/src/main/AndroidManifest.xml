@@ -74,6 +74,13 @@
             android:permission="TODO"
             tools:ignore="ExportedReceiver">
         </receiver>
+        <receiver
+            android:name=".MiAlarmaDias"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="TODO"
+            tools:ignore="ExportedReceiver">
+        </receiver>
     </application>
 
 </manifest>

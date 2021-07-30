@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+
+
+    <TextView
+        android:id="@+id/txttituloalarma"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        android:text="@string/tituloalarmacupos"/>
 
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingConstraints">
+        android:layout_below="@+id/txttituloalarma">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/txthoratarea"
@@ -30,15 +43,12 @@
         android:id="@+id/botonguardar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:layout_centerInParent="true"
         android:textSize="12sp"
-        android:layout_gravity="center"
+        android:layout_below="@+id/textInputLayout2"
         android:drawableStart="@drawable/ic_baseline_check_circle_24"
-        app:layout_constraintStart_toStartOf="parent"
-
         android:background="@drawable/diseboton"
         android:textColor="@drawable/seleccionboton"
         android:text="@string/btnguardar"
@@ -48,17 +58,79 @@
         android:id="@+id/botoneliminar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/botonguardar"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
         android:textSize="12sp"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/botonguardar"
         android:layout_marginBottom="10dp"
         android:drawableStart="@drawable/ic_baseline_cancel_24"
-        android:layout_gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
         android:background="@drawable/diseboton"
         android:textColor="@drawable/seleccionboton"
         android:text="@string/btneliminar"
         tools:ignore="ButtonStyle" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <View style="@style/Divider"
+        android:id="@+id/divider"
+        android:layout_margin="20dp"
+        android:layout_below="@+id/botoneliminar"/>
+
+    <TextView
+        android:id="@+id/txttituloalarmadias"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/divider"
+        android:text="@string/tituloalarmadias"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputhora"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txttituloalarmadias">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txtinputhora"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:autofillHints="@string/codigo"
+            android:drawableStart="@drawable/ic_baseline_watch_later_24"
+            android:ems="10"
+            android:focusableInTouchMode="false"
+            android:hint="@string/horatarea" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/botonguardardias"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_centerInParent="true"
+        android:textSize="12sp"
+        android:layout_below="@+id/inputhora"
+        android:drawableStart="@drawable/ic_baseline_check_circle_24"
+        android:background="@drawable/diseboton"
+        android:textColor="@drawable/seleccionboton"
+        android:text="@string/btnguardar"
+        tools:ignore="ButtonStyle" />
+
+    <Button
+        android:id="@+id/botoneliminardias"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="12sp"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/botonguardardias"
+        android:layout_marginBottom="10dp"
+        android:drawableStart="@drawable/ic_baseline_cancel_24"
+        android:background="@drawable/diseboton"
+        android:textColor="@drawable/seleccionboton"
+        android:text="@string/btneliminar"
+        tools:ignore="ButtonStyle" />
+    </RelativeLayout>
+
+</ScrollView>

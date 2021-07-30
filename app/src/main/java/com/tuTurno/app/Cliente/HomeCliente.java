@@ -278,7 +278,6 @@ public class HomeCliente extends Fragment {
                         idcliente = c.getId();
                         cliente.setText(getString(R.string.cliente) + " " + c.getNombre());
                         tool.setTitle(c.getGym());
-
                         textologo.setText(c.getGym());
                     }
                 }
@@ -442,7 +441,7 @@ public class HomeCliente extends Fragment {
         int estpago = c.getEstadopago();
         String disciplinaelegida = c.getDisciplinaelegida();
 
-        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, c.getEstadodeuda(), disciplinaelegida, c.getDiasporsemana());
+        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, c.getEstadodeuda(), disciplinaelegida, c.getDiasporsemana(),c.getDiasporsemanaresg());
 
         databaseReference.child("Clientes").child(id).setValue(cli);
 
@@ -462,8 +461,9 @@ public class HomeCliente extends Fragment {
         int estpago = c.getEstadopago();
         String disciplinaelegida = c.getDisciplinaelegida();
         String diasporsemana = c.getDiasporsemana();
+        String diasporsemanaresg = c.getDiasporsemanaresg();
 
-        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, "Debe", disciplinaelegida, diasporsemana);
+        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, "Debe", disciplinaelegida, diasporsemana, diasporsemanaresg);
 
         databaseReference.child("Clientes").child(id).setValue(cli);
 
