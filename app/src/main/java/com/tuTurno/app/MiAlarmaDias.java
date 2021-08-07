@@ -10,6 +10,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -67,6 +69,9 @@ public class MiAlarmaDias extends BroadcastReceiver {
 
     private void iniciarFirebase(Context context) {
         FirebaseApp.initializeApp(context);
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        firebaseAppCheck.installAppCheckProviderFactory(
+                SafetyNetAppCheckProviderFactory.getInstance());
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();

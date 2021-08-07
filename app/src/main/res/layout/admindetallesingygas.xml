@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
-    android:id="@+id/scro"
+    android:id="@+id/scr"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
@@ -26,26 +26,6 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="MissingConstraints" />
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            tools:ignore="MissingConstraints">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtfechaingygas"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusableInTouchMode="false"
-                android:layout_margin="10dp"
-                android:focusable="false"
-                android:editable="false"
-                android:drawableStart="@drawable/ic_baseline_today_24"
-                android:ems="10"
-                android:hint="@string/fechatarea"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
         <Button
             android:id="@+id/botonvdetalles"
             android:layout_width="wrap_content"
@@ -57,9 +37,9 @@
 
 
         <ListView
-            android:id="@+id/listaingresosyegresos"
+            android:id="@+id/listadetallesingresosyegresos"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="390dp"
             android:choiceMode="singleChoice"
             android:layout_marginBottom="20dp"
             tools:ignore="NestedScrolling" />

@@ -27,6 +27,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -78,6 +80,10 @@ public class HomeAdmin extends Fragment {
     Date fechavencimiento, fechaact;
     Calendar micalendario, micalendario1, micalendario2;
     int numeromes, numeroactmes, noticontador;
+    TextView textologo;
+
+    //CREO UN EVENTLISTENER
+    private ValueEventListener milistener;
 
     //LISTAS PARA LAS NOTIFICACIONES
     private ArrayList<String> tokensdeudadebe;
@@ -86,6 +92,7 @@ public class HomeAdmin extends Fragment {
     //para el listview
     private ListView milistaturnoscliente;
     private ListViewAdaptadorLA adaptador;
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -124,7 +131,7 @@ public class HomeAdmin extends Fragment {
         View head = navi.getHeaderView(0);
         final ImageView fondo = head.findViewById(R.id.fondo);
         final ImageView logo = head.findViewById(R.id.imageViewlogo);
-        final TextView textologo = head.findViewById(R.id.textologo);
+        textologo = head.findViewById(R.id.textologo);
         final TextView txtdirecli = head.findViewById(R.id.textodire);
 
         iniciarFirebase();
@@ -136,7 +143,6 @@ public class HomeAdmin extends Fragment {
 
 
         //user = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
-
 
         Calendar cal = Calendar.getInstance();
         micalendario = Calendar.getInstance();
@@ -304,7 +310,7 @@ public class HomeAdmin extends Fragment {
             final String diass = fechaactual.substring(0, posi);
 
             //CARGO LOS TURNOS
-            databaseReference.child(textologo.getText().toString()).child("Disciplinas").child(disci1).orderByChild("horacomienzo").addValueEventListener(new ValueEventListener() {
+            databaseReference.child(textologo.getText().toString()).child("Disciplinas").child(disci1).orderByChild("horacomienzo").addListenerForSingleValueEvent(new ValueEventListener() {
                 @SuppressLint("Assert")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -346,7 +352,7 @@ public class HomeAdmin extends Fragment {
                 Snackbar.make(v, "Seleccione Disciplina y Turno", Snackbar.LENGTH_SHORT).show();
             } else {
                 band = false;
-                databaseReference.child(textologo.getText().toString()).child("Datos Turnos").addListenerForSingleValueEvent(new ValueEventListener() {
+                milistener = new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         listturnos.clear();
@@ -354,6 +360,11 @@ public class HomeAdmin extends Fragment {
                             t = shot.getValue(DatosTurno.class);
                             assert t != null;
                             if (Objects.equals(shot.child("disciplina").getValue(), disci1) && (Objects.equals(shot.child("turno").getValue(), horaturno)) && (Objects.equals(shot.child("fecha").getValue(), fechaactual))) {
+                                if(t.getAsistencia().equals("Si")){
+                                    t.setIcono(R.drawable.ic_baseline_check_circle_24);
+                                }else {
+                                    t.setIcono(R.drawable.ic_baseline_cancel_24);
+                                }
                                 listturnos.add(t);
                                 adaptador = new ListViewAdaptadorLA(micontexto, listturnos);
                                 milistaturnoscliente.setAdapter(adaptador);
@@ -378,10 +389,19 @@ public class HomeAdmin extends Fragment {
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
-                });
+                };
+                databaseReference.child(textologo.getText().toString()).child("Datos Turnos").addValueEventListener(milistener);
             }
         });
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(milistener != null){
+            databaseReference.child(textologo.getText().toString()).child("Datos Turnos").removeEventListener(milistener);
+        }
     }
 
     private void setearfecha(@NotNull Calendar calendar) {
@@ -391,6 +411,9 @@ public class HomeAdmin extends Fragment {
 
     private void iniciarFirebase() {
         FirebaseApp.initializeApp(requireActivity());
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        firebaseAppCheck.installAppCheckProviderFactory(
+                SafetyNetAppCheckProviderFactory.getInstance());
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();

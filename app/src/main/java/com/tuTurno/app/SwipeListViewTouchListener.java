@@ -132,6 +132,7 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
 
         switch (motionEvent.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
+                view.getParent().requestDisallowInterceptTouchEvent(true);
                 if (mPaused) {
                     return false;
                 }
@@ -165,6 +166,7 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
             }
 
             case MotionEvent.ACTION_UP: {
+                view.getParent().requestDisallowInterceptTouchEvent(false);
                 if (mVelocityTracker == null) {
                     break;
                 }

@@ -25,6 +25,8 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -99,26 +101,23 @@ public class AdminAgregarTur extends Fragment {
         arraydisci = new ArrayList<>();
 
         //TODO LO QUE TENGA QUE VER PARA AGREGAR DISCIPLINA Y TURNOS
-        txthoraturno.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                calendar = Calendar.getInstance();
-                horaactual = calendar.get(Calendar.HOUR_OF_DAY);
-                minactual = calendar.get(Calendar.MINUTE);
+        txthoraturno.setOnClickListener(view -> {
+            calendar = Calendar.getInstance();
+            horaactual = calendar.get(Calendar.HOUR_OF_DAY);
+            minactual = calendar.get(Calendar.MINUTE);
 
 
-                timedialog = new TimePickerDialog(micontexto, new TimePickerDialog.OnTimeSetListener() {
-                    @SuppressLint({"SetTextI18n", "DefaultLocale"})
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hora, int min) {
+            timedialog = new TimePickerDialog(micontexto, new TimePickerDialog.OnTimeSetListener() {
+                @SuppressLint({"SetTextI18n", "DefaultLocale"})
+                @Override
+                public void onTimeSet(TimePicker timePicker, int hora, int min) {
 
-                        txthoraturno.setText(String.format("%02d:%02d", hora , min));
+                    txthoraturno.setText(String.format("%02d:%02d", hora , min));
 
-                    }
-                }, horaactual , minactual , true);
+                }
+            }, horaactual , minactual , true);
 
-                timedialog.show();
-            }
+            timedialog.show();
         });
 
         txtdias.setOnClickListener(view -> mostrarAlertDialog());
@@ -372,6 +371,9 @@ public class AdminAgregarTur extends Fragment {
 
     private void  iniciarFirebase(){
         FirebaseApp.initializeApp(requireActivity());
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        firebaseAppCheck.installAppCheckProviderFactory(
+                SafetyNetAppCheckProviderFactory.getInstance());
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();

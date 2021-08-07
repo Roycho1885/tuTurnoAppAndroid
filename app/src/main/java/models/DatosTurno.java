@@ -12,6 +12,24 @@ public class DatosTurno {
     public String turno;
     public String disciplina;
     public String idturnoseleccionado;
+    public String asistencia;
+    public int icono;
+
+    public int getIcono() {
+        return icono;
+    }
+
+    public void setIcono(int icono) {
+        this.icono = icono;
+    }
+
+    public String getAsistencia() {
+        return asistencia;
+    }
+
+    public void setAsistencia(String asistencia) {
+        this.asistencia = asistencia;
+    }
 
     public String getIdturnoseleccionado() {
         return idturnoseleccionado;

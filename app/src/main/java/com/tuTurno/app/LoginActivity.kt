@@ -22,6 +22,10 @@ import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.firebase.FirebaseApp
+import com.google.firebase.appcheck.FirebaseAppCheck
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -205,6 +209,11 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun iniciarFirebase() {
+        FirebaseApp.initializeApp(this)
+        val firebaseAppCheck = FirebaseAppCheck.getInstance()
+        firebaseAppCheck.installAppCheckProviderFactory(
+            DebugAppCheckProviderFactory.getInstance()
+        )
         firebaseDatabase = FirebaseDatabase.getInstance()
         databaseReference = firebaseDatabase.getReference()
         auth = FirebaseAuth.getInstance()

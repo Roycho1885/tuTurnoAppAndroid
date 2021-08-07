@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class ListViewAdaptadorLA extends BaseAdapter {
         TextView disciplina = view.findViewById(R.id.txt_disciplinacli);
         TextView diaturno = view.findViewById(R.id.txt_diaturnocli);
         TextView horacom = view.findViewById(R.id.txt_horaturnocli);
+        ImageView imgasis  = view.findViewById(R.id.imgasis);
 
         nombre.setText(items.getApellido() +" "+ items.getNombre());
         direccion.setText(items.getDireccionturno());
@@ -55,6 +57,7 @@ public class ListViewAdaptadorLA extends BaseAdapter {
         disciplina.setText(items.getDisciplina());
         diaturno.setText(items.getFecha());
         horacom.setText(items.getTurno());
+        imgasis.setImageResource(items.getIcono());
 
         return view;
     }

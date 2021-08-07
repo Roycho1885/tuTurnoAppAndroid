@@ -45,6 +45,8 @@ public class ListViewAdaptadorDetallesIngyGas extends BaseAdapter {
         ingresosextras items = (ingresosextras) getItem(i);
         view = LayoutInflater.from(contexto).inflate(R.layout.list_item_detalles_ingygas, null);
         TextView descripcion = view.findViewById(R.id.txt_detalledescripcion);
+        TextView descripcionmes = view.findViewById(R.id.txt_detallemes);
+        TextView descripcionano = view.findViewById(R.id.txt_detalleano);
         TextView monto = view.findViewById(R.id.txt_detallemonto);
         descripcion.setText(items.getDescripcion());
         if(items.getTipo().equals("ingreso")){
@@ -52,6 +54,8 @@ public class ListViewAdaptadorDetallesIngyGas extends BaseAdapter {
         }else{
             monto.setTextColor(Color.parseColor("#ff0006"));
         }
+        descripcionmes.setText(items.getMes());
+        descripcionano.setText(items.getAno());
         monto.setText(items.getMontoingreso());
 
         return view;

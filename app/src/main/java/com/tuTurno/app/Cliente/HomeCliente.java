@@ -18,7 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.ads.AdRequest;
@@ -29,6 +29,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -94,6 +96,10 @@ public class HomeCliente extends Fragment {
     MisFunciones cargarNav = new MisFunciones();
     Calendar cal, micalendario;
     Date fechaactual, fechavence;
+    TextView textologo;
+
+    //CREO UN EVENTLISTENER
+    private ValueEventListener milistener;
 
 
     //para el listview
@@ -117,8 +123,8 @@ public class HomeCliente extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              final ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_principal, container, false);
-        ConstraintLayout layoutfondo = root.findViewById(R.id.layoutfondo);
         setdisciplina = root.findViewById(R.id.setdisciplina);
+        CardView car = root.findViewById(R.id.cardview);
         otroscroll = root.findViewById(R.id.otroscroll);
 
         //ESTO ES PARA EL LISTVIEW
@@ -128,6 +134,7 @@ public class HomeCliente extends Fragment {
         fab.setImageResource(R.drawable.ic_add_black_24dp);
         fab.setEnabled(true);
         fab.setVisibility(View.VISIBLE);
+        car.setVisibility(View.VISIBLE);
 
         //PUBLICIDAD
         MobileAds.initialize(micontexto, initializationStatus -> {
@@ -143,7 +150,7 @@ public class HomeCliente extends Fragment {
         View head = navi.getHeaderView(0);
         final ImageView fondo = head.findViewById(R.id.fondo);
         final ImageView logo = head.findViewById(R.id.imageViewlogo);
-        final TextView textologo = head.findViewById(R.id.textologo);
+        textologo = head.findViewById(R.id.textologo);
         final TextView txtdirecli = head.findViewById(R.id.textodire);
 
 
@@ -182,18 +189,15 @@ public class HomeCliente extends Fragment {
 
         cal = Calendar.getInstance();
         if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-            //botondisci.setEnabled(false);
             fab.setVisibility(View.GONE);
-            ;
-            setdisciplina.setVisibility(View.GONE);
-            layoutfondo.setBackgroundResource(R.drawable.descanso);
-            layoutfondo.setMaxHeight(500);
-            layoutfondo.setMaxWidth(600);
+            car.setVisibility(View.GONE);
+            milistaturnos.setBackgroundResource(R.drawable.descanso);
             finde = true;
             Snackbar.make(container, "El fin de semana no se asignan turnos", Snackbar.LENGTH_SHORT).show();
         } else {
             setearfecha(cal);
         }
+
         final String horaactual = sdf.format(cal.getTime());
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);
@@ -225,7 +229,7 @@ public class HomeCliente extends Fragment {
                         assert cli != null;
                         fecha_vence = cli.getFechavencimiento();
                         disci1 = cli.getDisciplinaelegida();
-                        setdisciplina.setText("Turnos: " + cli.getDisciplinaelegida());
+                        setdisciplina.setText(cli.getDisciplinaelegida());
 
                         try {
                             fechaactual = sdff.parse(fecha_actual);
@@ -391,9 +395,9 @@ public class HomeCliente extends Fragment {
                                             tur.setDias(turnoselecc.getDias());
                                             cupo--;
                                             //VERIFICO SI TIENE DIAS EN 5
-                                            if(!diasporsemana.equals("5")){
-                                                diasporsemana = String.valueOf(Integer.parseInt(diasporsemana)-1);
-                                                actualizardiaporsemana(idcliente,diasporsemana);
+                                            if (!diasporsemana.equals("5")) {
+                                                diasporsemana = String.valueOf(Integer.parseInt(diasporsemana) - 1);
+                                                actualizardiaporsemana(idcliente, diasporsemana);
                                             }
                                             tur.setCupo(String.valueOf(cupo));
                                             tur.setCupoalmacenado(turnoselecc.getCupoalmacenado());
@@ -419,9 +423,10 @@ public class HomeCliente extends Fragment {
         return root;
     }
 
-    private void actualizardiaporsemana(String id, String diaporsemana){
+
+    private void actualizardiaporsemana(String id, String diaporsemana) {
         HashMap hashMap = new HashMap();
-        hashMap.put("diasporsemana",diaporsemana);
+        hashMap.put("diasporsemana", diaporsemana);
         databaseReference.child("Clientes").child(id).updateChildren(hashMap).addOnSuccessListener(o -> {
         });
     }
@@ -441,7 +446,7 @@ public class HomeCliente extends Fragment {
         int estpago = c.getEstadopago();
         String disciplinaelegida = c.getDisciplinaelegida();
 
-        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, c.getEstadodeuda(), disciplinaelegida, c.getDiasporsemana(),c.getDiasporsemanaresg());
+        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, c.getEstadodeuda(), disciplinaelegida, c.getDiasporsemana(), c.getDiasporsemanaresg());
 
         databaseReference.child("Clientes").child(id).setValue(cli);
 
@@ -475,8 +480,8 @@ public class HomeCliente extends Fragment {
         final String horaactual = sdf.format(calendar.getTime());
         int posi = fecha.indexOf(",");
         final String diass = fecha.substring(0, posi);
-        databaseReference.child(txtlogo.getText().toString()).child("Disciplinas").child(dis).orderByChild("horacomienzo").addValueEventListener(new ValueEventListener() {
-            @SuppressLint("Assert")
+
+        milistener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 listturnos.clear();
@@ -523,15 +528,25 @@ public class HomeCliente extends Fragment {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        };
+        databaseReference.child(txtlogo.getText().toString()).child("Disciplinas").child(dis).orderByChild("horacomienzo").addValueEventListener(milistener);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        databaseReference.child(textologo.getText().toString()).child("Disciplinas").child(disci1).orderByChild("horacomienzo").removeEventListener(milistener);
     }
 
 
     private void iniciarFirebase() {
         FirebaseApp.initializeApp(requireActivity());
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        firebaseAppCheck.installAppCheckProviderFactory(
+                SafetyNetAppCheckProviderFactory.getInstance());
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -555,5 +570,6 @@ public class HomeCliente extends Fragment {
         datosturno.setTurno(tur);
         datosturno.setDisciplina(dis);
         datosturno.setIdturnoseleccionado(turselecc);
+        datosturno.setAsistencia("No");
     }
 }
