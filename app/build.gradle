@@ -58,6 +58,4 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta02'
     implementation 'com.google.firebase:firebase-appcheck-debug:16.0.0-beta02'
-
-
 }

@@ -197,7 +197,6 @@ public class HomeCliente extends Fragment {
         } else {
             setearfecha(cal);
         }
-
         final String horaactual = sdf.format(cal.getTime());
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);
@@ -538,7 +537,10 @@ public class HomeCliente extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        databaseReference.child(textologo.getText().toString()).child("Disciplinas").child(disci1).orderByChild("horacomienzo").removeEventListener(milistener);
+        if (milistener != null) {
+            databaseReference.child(textologo.getText().toString()).child("Disciplinas").child(disci1).orderByChild("horacomienzo").removeEventListener(milistener);
+        }
+
     }
 
 
