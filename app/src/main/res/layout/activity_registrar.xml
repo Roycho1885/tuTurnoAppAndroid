@@ -58,7 +58,6 @@
                 android:maxLength="8"
                 android:autofillHints="@string/dni"
                 android:drawableStart="@drawable/ic_person_black_24dp"
-
                 android:ems="10"
                 android:hint="@string/dni"
                 android:inputType="number" />
@@ -75,11 +74,22 @@
                 android:layout_margin="10dp"
                 android:autofillHints="@string/direccion"
                 android:drawableStart="@drawable/ic_person_black_24dp"
-
                 android:ems="10"
                 android:hint="@string/direccion"
                 android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.santalu.maskara.widget.MaskEditText
+            android:id="@+id/txttelefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="@string/telefono"
+            android:drawableStart="@drawable/ic_person_black_24dp"
+            android:inputType="number"
+            app:mask="+52(____)___-____"
+            app:maskCharacter="_"
+            app:maskStyle="completable" />
 
 
     <com.google.android.material.textfield.TextInputLayout

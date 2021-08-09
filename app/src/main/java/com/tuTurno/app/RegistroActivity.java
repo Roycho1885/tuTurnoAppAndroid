@@ -3,6 +3,7 @@ package com.tuTurno.app;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import com.santalu.maskara.widget.MaskEditText;
 import android.text.Html;
 import android.text.InputType;
 import android.text.method.LinkMovementMethod;
@@ -46,6 +47,7 @@ public class RegistroActivity extends AppCompatActivity {
     private EditText txtEmail;
     private EditText txtContrasena;
     private EditText txtCodigo;
+    private MaskEditText txttelefono;
     private AutoCompleteTextView txtgym;
     private CheckBox check;
     private DatabaseReference databaseReference;
@@ -58,17 +60,18 @@ public class RegistroActivity extends AppCompatActivity {
     private ArrayList<String> arraygimnasios;
     private ArrayAdapter myadapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrar);
 
 
+
         txtNombre = findViewById(R.id.txtNombre);
         txtApellido = findViewById(R.id.txtApellido);
         txtdni = findViewById(R.id.txtdni);
         txtdireccion = findViewById(R.id.txtdireccion);
+        txttelefono = findViewById(R.id.txttelefono);
         txtgym = findViewById(R.id.txtgym);
         txtEmail = findViewById(R.id.txtEmail);
         txtContrasena = findViewById(R.id.txtContrasena);
@@ -122,6 +125,7 @@ public class RegistroActivity extends AppCompatActivity {
     final String apellido = txtApellido.getText().toString().trim();
     final String dni = txtdni.getText().toString().trim();
     final String direccion = txtdireccion.getText().toString().trim();
+    final String telefono = txttelefono.getText().toString().trim();
     final String gym = txtgym.getText().toString().trim();
     final String email = txtEmail.getText().toString().trim();
     final String contrasena = txtContrasena.getText().toString().trim();
@@ -144,6 +148,7 @@ public class RegistroActivity extends AppCompatActivity {
     cli.setDisciplinaelegida("0");
     cli.setDiasporsemana("0");
     cli.setDiasporsemanaresg("0");
+    cli.setTelefono(telefono);
 
         cargando.setTitle("Registrando...");
         cargando.setMessage("Espere por favor...");
@@ -161,7 +166,7 @@ public class RegistroActivity extends AppCompatActivity {
                     }
                 }
 
-                if(!nombre.equals("") && !apellido.equals("") && !email.equals("") && !dni.equals("") && !direccion.equals("") && !contrasena.equals("") && !gym.equals("")&& !codigo.equals("")){
+                if(!nombre.equals("") && !apellido.equals("") && !email.equals("") && !dni.equals("") && !direccion.equals("") && !telefono.equals("") && (txttelefono.isDone()) && !contrasena.equals("") && !gym.equals("")&& !codigo.equals("")){
                     if(codigo.equals(codigoacceso)){
 
                         firebaseAuth.createUserWithEmailAndPassword(email,contrasena).addOnCompleteListener(RegistroActivity.this, new OnCompleteListener<AuthResult>() {
@@ -217,6 +222,13 @@ public class RegistroActivity extends AppCompatActivity {
                     }
                     if(direccion.equals("")){
                         txtdireccion.setError("Ingrese Dirección");
+                    }
+                    if(telefono.equals("")){
+                        txttelefono.setError("Ingrese Teléfono");
+                    }else{
+                        if(!(txttelefono.isDone())){
+                            txttelefono.setError("Complete los 11 números");
+                        }
                     }
                     if(email.equals("")){
                         txtEmail.setError("Ingrese Email");

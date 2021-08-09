@@ -13,6 +13,7 @@
     <string name="titulomodicuota">Modificar Cuotas</string>
     <string name="tituloingresecuota">Seleccione una Cuota</string>
     <string name="direccion">Dirección</string>
+    <string name="telefono">Teléfono</string>
     <string name="gym">Selecciona Gimnasio</string>
     <string name="correo">Email</string>
     <string name="disciplina">Disciplina: </string>

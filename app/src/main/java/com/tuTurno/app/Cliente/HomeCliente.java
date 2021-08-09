@@ -445,7 +445,7 @@ public class HomeCliente extends Fragment {
         int estpago = c.getEstadopago();
         String disciplinaelegida = c.getDisciplinaelegida();
 
-        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, c.getEstadodeuda(), disciplinaelegida, c.getDiasporsemana(), c.getDiasporsemanaresg());
+        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, c.getEstadodeuda(), disciplinaelegida, c.getDiasporsemana(), c.getDiasporsemanaresg(),c.getTelefono());
 
         databaseReference.child("Clientes").child(id).setValue(cli);
 
@@ -466,8 +466,9 @@ public class HomeCliente extends Fragment {
         String disciplinaelegida = c.getDisciplinaelegida();
         String diasporsemana = c.getDiasporsemana();
         String diasporsemanaresg = c.getDiasporsemanaresg();
+        String telefono = c.getTelefono();
 
-        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, "Debe", disciplinaelegida, diasporsemana, diasporsemanaresg);
+        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, "Debe", disciplinaelegida, diasporsemana, diasporsemanaresg, telefono);
 
         databaseReference.child("Clientes").child(id).setValue(cli);
 

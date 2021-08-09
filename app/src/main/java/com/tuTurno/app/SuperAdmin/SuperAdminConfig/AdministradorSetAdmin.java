@@ -168,6 +168,7 @@ public class AdministradorSetAdmin extends Fragment {
                         cliente.setDisciplinaelegida(cli.getDisciplinaelegida());
                         cliente.setDiasporsemana(cli.getDiasporsemana());
                         cliente.setDiasporsemanaresg(cli.getDiasporsemanaresg());
+                        cliente.setTelefono(cli.getTelefono());
 
                         databaseReference.child("Clientes").child(cli.getId()).setValue(cliente);
                         Toast.makeText(micontexto,"Los cambios se realizaron correctamente", Toast.LENGTH_SHORT).show();
@@ -200,6 +201,7 @@ public class AdministradorSetAdmin extends Fragment {
                         cliente.setDisciplinaelegida(cli.getDisciplinaelegida());
                         cliente.setDiasporsemana(cli.getDiasporsemana());
                         cliente.setDiasporsemanaresg(cli.getDiasporsemanaresg());
+                        cliente.setTelefono(cli.getTelefono());
                         databaseReference.child("Clientes").child(cli.getId()).setValue(cliente);
                         Toast.makeText(micontexto,"Los cambios se realizaron correctamente", Toast.LENGTH_SHORT).show();
                     }
