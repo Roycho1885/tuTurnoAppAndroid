@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -73,11 +74,22 @@
                 android:layout_margin="10dp"
                 android:autofillHints="@string/direccion"
                 android:drawableStart="@drawable/ic_person_black_24dp"
-
                 android:ems="10"
                 android:hint="@string/direccion"
                 android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.santalu.maskara.widget.MaskEditText
+            android:id="@+id/txttelefonocli"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="@string/telefono"
+            android:drawableStart="@drawable/ic_person_black_24dp"
+            android:inputType="number"
+            app:mask="+52(____)___-____"
+            app:maskCharacter="_"
+            app:maskStyle="completable" />
 
 
         <com.google.android.material.textfield.TextInputLayout

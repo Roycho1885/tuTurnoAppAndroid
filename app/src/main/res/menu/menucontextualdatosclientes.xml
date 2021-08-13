@@ -5,5 +5,10 @@
         android:title="Modificar"
         android:icon="@drawable/ic_baseline_mode_24">
     </item>
+    <item
+        android:id="@+id/accionnoti"
+        android:title="Enviar Notificación"
+        android:icon="@drawable/ic_baseline_notifications_active_24">
+    </item>
 
 </menu>

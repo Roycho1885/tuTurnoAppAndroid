@@ -1,6 +1,8 @@
 package com.tuTurno.app.Admin.fragmentsConfig;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.santalu.maskara.widget.MaskEditText;
 import com.tuTurno.app.R;
 
 import models.cliente;
@@ -45,6 +48,7 @@ public class AdminDatosPersonales extends Fragment {
         txtdni = root.findViewById(R.id.txtdni);
         txtdireccion = root.findViewById(R.id.txtdireccion);
         btnactualizar = root.findViewById(R.id.btnactualizar);
+        MaskEditText txttelefonoadmin = root.findViewById(R.id.txttelefonoadmin);
         txtEmail = root.findViewById(R.id.txtEmail);
         txtEmail.setEnabled(false);
 
@@ -65,6 +69,7 @@ public class AdminDatosPersonales extends Fragment {
                         txtApellido.setText(clin.getApellido());
                         txtdni.setText(clin.getDni());
                         txtdireccion.setText(clin.getDireccion());
+                        txttelefonoadmin.setText(clin.getTelefono());
                         txtEmail.setText(clin.getEmail());
                     }
                 }
@@ -76,22 +81,23 @@ public class AdminDatosPersonales extends Fragment {
             }
         });
 
+        txttelefonoadmin.setOnLongClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:" + clin.getTelefono().substring(5,17)));
+            startActivity(intent);
+            return false;
+        });
+
         btnactualizar.setOnClickListener(view -> {
-            if(!txtNombre.getText().toString().equals("") && !txtApellido.getText().toString().equals("") && !txtdni.getText().toString().equals("") && !txtdireccion.getText().toString().equals("")){
+            if(!txtNombre.getText().toString().equals("") && !txtApellido.getText().toString().equals("") && !txtdni.getText().toString().equals("") && !txtdireccion.getText().toString().equals("") && !txttelefonoadmin.getText().toString().equals("") && (txttelefonoadmin.isDone())){
                 clin.setId(clin.getId());
                 clin.setNombre(txtNombre.getText().toString().trim());
                 clin.setApellido(txtApellido.getText().toString().trim());
                 clin.setDni(txtdni.getText().toString().trim());
                 clin.setDireccion(txtdireccion.getText().toString().trim());
+                clin.setTelefono(txttelefonoadmin.getText().toString().trim());
                 clin.setEmail(txtEmail.getText().toString().trim());
-                /*clin.setGym(clin.getGym());
-                clin.setAdmin(clin.getAdmin());
-                clin.setToken(clin.getToken());
-                cli.setUltimopago(clin.getUltimopago());
-                cli.setFechavencimiento(clin.getFechavencimiento());
-                cli.setEstadopago(clin.getEstadopago());
-                cli.setDiasporsemana(clin.getDiasporsemana());
-                cli.setDiasporsemanaresg(clin.getDiasporsemanaresg());*/
+
                 databaseReference.child("Clientes").child(clin.getId()).setValue(clin);
                 Snackbar.make(view,"Datos Actualizados Correctamente",Snackbar.LENGTH_SHORT).show();
             }else {
@@ -106,6 +112,13 @@ public class AdminDatosPersonales extends Fragment {
                 }
                 if(txtdireccion.getText().toString().equals("")){
                     txtdireccion.setError("Ingrese Dirección");
+                }
+                if(txttelefonoadmin.getText().toString().equals("")){
+                    txttelefonoadmin.setError("Ingrese Teléfono");
+                }else{
+                    if(!(txttelefonoadmin.isDone())){
+                        txttelefonoadmin.setError("Complete los 11 números");
+                    }
                 }
             }
         });

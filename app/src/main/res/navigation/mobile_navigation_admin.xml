@@ -51,6 +51,9 @@
         <action
             android:id="@+id/action_AdminDatosClientes_to_AdminDatosPersonales"
             app:destination="@id/AdminDatosPersonales" />
+        <action
+            android:id="@+id/action_AdminDatosClientes_to_AdminNotiPer"
+            app:destination="@id/AdminNotiPer" />
     </fragment>
 
     <fragment
@@ -111,6 +114,16 @@
         android:name="com.tuTurno.app.Admin.fragmentsConfig.AdminModificarCuota"
         android:label="@string/app_name"
         tools:layout="@layout/adminmodificarcuota" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/AdminNotiPer"
+        android:name="com.tuTurno.app.Admin.fragmentsConfig.AdminNotificacionPersonal"
+        android:label="@string/app_name"
+        tools:layout="@layout/adminnotificapersonal" >
+        <action
+            android:id="@+id/action_AdminNotiPer_to_AdminDatosClientes"
+            app:destination="@id/AdminDatosClientes" />
     </fragment>
 
 </navigation>

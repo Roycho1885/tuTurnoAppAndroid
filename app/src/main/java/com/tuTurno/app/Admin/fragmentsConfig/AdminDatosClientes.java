@@ -133,6 +133,12 @@ public class AdminDatosClientes extends Fragment {
                     bundle.putString("idcliente",idcliente.getId());
                     Navigation.findNavController(view).navigate(R.id.AdminDatosPersonales,bundle);
                 }
+
+                if (menuItem.getItemId() == R.id.accionnoti) {
+                    idcliente = listadatoscliente.get(i);
+                    bundle.putString("tokencliente",idcliente.getToken());
+                    Navigation.findNavController(view).navigate(R.id.AdminNotiPer,bundle);
+                }
                 return true;
             });
             popupMenu.show();
