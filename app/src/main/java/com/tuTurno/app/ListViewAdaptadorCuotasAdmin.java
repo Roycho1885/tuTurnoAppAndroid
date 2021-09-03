@@ -58,12 +58,14 @@ public class ListViewAdaptadorCuotasAdmin extends BaseAdapter implements Filtera
         TextView ultimopago = view.findViewById(R.id.txtultimopago);
         TextView fechavence = view.findViewById(R.id.txtfechavenc);
         TextView disciplina = view.findViewById(R.id.txtdiscielegida);
+        TextView diasxsemana = view.findViewById(R.id.txtdiasxsemana);
         ImageView estadopago = view.findViewById(R.id.imgestado);
 
         nombre.setText(items.getApellido() +" "+ items.getNombre());
         ultimopago.setText(items.getUltimopago());
         fechavence.setText(items.getFechavencimiento());
         disciplina.setText(items.getDisciplinaelegida());
+        diasxsemana.setText(items.getDiasporsemana());
         estadopago.setImageResource(items.getEstadopago());
 
         return view;

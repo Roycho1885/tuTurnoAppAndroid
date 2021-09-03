@@ -54,12 +54,14 @@ public class ListViewAdaptadorVerPagosAdmin extends BaseAdapter implements Filte
         TextView fechapago = view.findViewById(R.id.txtfechadepago);
         TextView fechavenc = view.findViewById(R.id.txtfechavenc);
         TextView montocuota = view.findViewById(R.id.txtmontocuota);
+        TextView diasxsemana = view.findViewById(R.id.txtdiasxsemana);
         TextView disciplina = view.findViewById(R.id.txtdisciele);
 
         nombrecliente.setText(items.getClientenombre());
         fechapago.setText(items.getFechapago());
         fechavenc.setText(items.getFechavenc());
         montocuota.setText(items.getMonto());
+        diasxsemana.setText(items.getDiasxsemana());
         disciplina.setText(items.getDisciplinaele());
 
         return view;

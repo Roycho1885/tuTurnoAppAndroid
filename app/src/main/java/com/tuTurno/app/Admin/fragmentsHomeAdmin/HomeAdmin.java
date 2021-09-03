@@ -104,8 +104,8 @@ public class HomeAdmin extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         noticontador = 0;
-
     }
+
 
     @Nullable
     @Override
@@ -199,7 +199,7 @@ public class HomeAdmin extends Fragment {
 
                 //CARGO DISCIPLINA
                 arraydisci = new ArrayList<>();
-                databaseReference.child(textologo.getText().toString()).child("Disciplinas").addValueEventListener(new ValueEventListener() {
+                databaseReference.child(textologo.getText().toString()).child("Disciplinas").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot shot : snapshot.getChildren()) {
@@ -349,7 +349,7 @@ public class HomeAdmin extends Fragment {
 
         fab.setOnClickListener(v -> {
             if (!menudisci || !menuturno) {
-                Snackbar.make(v, "Seleccione Disciplina y Turno", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(container, "Seleccione Disciplina y Turno", Snackbar.LENGTH_SHORT).show();
             } else {
                 band = false;
                 milistener = new ValueEventListener() {
@@ -360,9 +360,9 @@ public class HomeAdmin extends Fragment {
                             t = shot.getValue(DatosTurno.class);
                             assert t != null;
                             if (Objects.equals(shot.child("disciplina").getValue(), disci1) && (Objects.equals(shot.child("turno").getValue(), horaturno)) && (Objects.equals(shot.child("fecha").getValue(), fechaactual))) {
-                                if(t.getAsistencia().equals("Si")){
+                                if (t.getAsistencia().equals("Si")) {
                                     t.setIcono(R.drawable.ic_baseline_check_circle_24);
-                                }else {
+                                } else {
                                     t.setIcono(R.drawable.ic_baseline_cancel_24);
                                 }
                                 listturnos.add(t);
@@ -374,11 +374,15 @@ public class HomeAdmin extends Fragment {
 
                         if (!band) {
                             milistaturnoscliente.setAdapter(null);
-                            Snackbar.make(v, "Por el momento no existen turnos por motrar", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(container, "Por el momento no existen turnos por motrar", Snackbar.LENGTH_SHORT).show();
+                            menudis.post(() -> menudis.getText().clear());
+                            menutur.post(() -> menutur.getText().clear());
 //                                arrayAdapterTurnos.notifyDataSetChanged();
                         } else {
                             if (adaptador == null) {
-                                Snackbar.make(v, "Por el momento no existen turnos por motrar", Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(container, "Por el momento no existen turnos por motrar", Snackbar.LENGTH_SHORT).show();
+                                menudis.post(() -> menudis.getText().clear());
+                                menutur.post(() -> menutur.getText().clear());
                             } else {
                                 adaptador.notifyDataSetChanged();
                             }
@@ -399,7 +403,7 @@ public class HomeAdmin extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(milistener != null){
+        if (milistener != null) {
             databaseReference.child(textologo.getText().toString()).child("Datos Turnos").removeEventListener(milistener);
         }
     }

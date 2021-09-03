@@ -9,6 +9,7 @@
     tools:context=".Admin.fragmentsHomeAdmin.HomeAdmin">
 
     <RelativeLayout
+        android:id="@+id/milayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 

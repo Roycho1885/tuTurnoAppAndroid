@@ -49,7 +49,6 @@ public class AdminVerCuotas extends Fragment {
     private EditText buscar;
     private Button verpagos;
     private ScrollView scroll;
-    private ArrayAdapter miadaptador;
     String meses,anioo, anoseleccionado;
     Context micontexto;
     boolean banderames, banderaano;
@@ -234,13 +233,6 @@ public class AdminVerCuotas extends Fragment {
         databaseReference = firebaseDatabase.getReference();
         databaseReference.keepSynced(true);
 
-    }
-
-    private void formatearfecha(){
-        @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
-        String fechaactualmodi = sdf.format(micalendario.getTime());
-        int index1 = fechaactualmodi.indexOf("-",3);
-        //anioo = fechaactualmodi.substring(index1+1);
     }
 
 }

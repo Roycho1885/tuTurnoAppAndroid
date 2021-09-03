@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_fragment_admin_to_AdminConfigCuota"
             app:destination="@id/AdminConfigCuota" />
+        <action
+            android:id="@+id/action_fragment_admin_to_AdminPedirturno"
+            app:destination="@id/AdminPedirturno" />
     </fragment>
 
     <fragment
@@ -124,6 +127,16 @@
         <action
             android:id="@+id/action_AdminNotiPer_to_AdminDatosClientes"
             app:destination="@id/AdminDatosClientes" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/AdminPedirturno"
+        android:name="com.tuTurno.app.Admin.fragmentsHomeAdmin.ClienteTurnoAdmin"
+        android:label="@string/app_name"
+        tools:layout="@layout/clienteturnoadmin" >
+        <action
+            android:id="@+id/action_AdminPedirturno_to_fragment_admin"
+            app:destination="@id/fragment_admin" />
     </fragment>
 
 </navigation>

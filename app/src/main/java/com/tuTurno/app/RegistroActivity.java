@@ -3,6 +3,8 @@ package com.tuTurno.app;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
 import com.santalu.maskara.widget.MaskEditText;
 import android.text.Html;
 import android.text.InputType;
@@ -145,7 +147,7 @@ public class RegistroActivity extends AppCompatActivity {
     cli.setFechavencimiento("Nunca");
     cli.setEstadopago(0);
     cli.setEstadodeuda("0");
-    cli.setDisciplinaelegida("0");
+    cli.setDisciplinaelegida("-");
     cli.setDiasporsemana("0");
     cli.setDiasporsemanaresg("0");
     cli.setTelefono(telefono);
@@ -275,7 +277,7 @@ public class RegistroActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
         firebaseAppCheck.installAppCheckProviderFactory(
-                SafetyNetAppCheckProviderFactory.getInstance());
+                DebugAppCheckProviderFactory.getInstance());
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();

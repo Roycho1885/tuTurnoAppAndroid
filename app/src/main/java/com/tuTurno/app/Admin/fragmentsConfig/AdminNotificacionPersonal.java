@@ -1,5 +1,6 @@
 package com.tuTurno.app.Admin.fragmentsConfig;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -30,8 +31,7 @@ public class AdminNotificacionPersonal extends Fragment {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-    private TextView txttitulonotiper;
-    private TextView txtdetallenotiper;
+    private TextView txtenviara, txttitulonotiper, txtdetallenotiper;
     Context micontexto;
     ProgressDialog cargando;
     MisFunciones enviarnoper = new MisFunciones();
@@ -42,6 +42,7 @@ public class AdminNotificacionPersonal extends Fragment {
         micontexto = context;
     }
 
+    @SuppressLint("SetTextI18n")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +52,10 @@ public class AdminNotificacionPersonal extends Fragment {
         final Button enviarnotiper = root.findViewById(R.id.botonenviarnotiadminper);
         txttitulonotiper = root.findViewById(R.id.txtTituloNotiper);
         txtdetallenotiper = root.findViewById(R.id.txtDetalleNotiper);
+        txtenviara = root.findViewById(R.id.txtenviara);
+
+        assert getArguments() != null;
+        txtenviara.setText("Enviar Notificación a: " + getArguments().getString("nombrecli"));
 
         iniciarFirebase();
         cargando = new ProgressDialog(micontexto);

@@ -133,6 +133,7 @@
     <string name="txtfechapago">Fecha de Pago: </string>
     <string name="txtfechavenc">Vencimiento: </string>
     <string name="txtultimopago">Ultimo Pago: </string>
+    <string name="txtdiasxsemana">Días por semana: </string>
     <string name="txtestado">Estado: </string>
     <string name="horatarea">Ingrese hora</string>
     <string name="btnguardar">Guardar Tarea</string>
@@ -147,6 +148,10 @@
 
     <string name="tituloalarmacupos">Alarma Cupos</string>
     <string name="tituloalarmadias">Alarma dias</string>
+
+
+    <string name="time_title">dsds</string>
+    <string name="pedturno">Reservar</string>
 
 
 </resources>

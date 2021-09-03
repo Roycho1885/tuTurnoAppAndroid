@@ -136,6 +136,7 @@ public class AdminDatosClientes extends Fragment {
 
                 if (menuItem.getItemId() == R.id.accionnoti) {
                     idcliente = listadatoscliente.get(i);
+                    bundle.putString("nombrecli", idcliente.getNombre());
                     bundle.putString("tokencliente",idcliente.getToken());
                     Navigation.findNavController(view).navigate(R.id.AdminNotiPer,bundle);
                 }

@@ -44,7 +44,6 @@ public class AdminConfigCuota extends Fragment {
     private EditText txtmonto, txtdisciplinacuota, txtcantdias;
 
     private NavigationView navi;
-    String disci1, discimodi;
     private CuotaConfig c = new CuotaConfig();
     boolean diass, controlcuotaexis, bundleexiste;
     String diasele;

@@ -81,7 +81,7 @@ public class ListViewAdaptadorDatosClientes extends BaseAdapter implements Filte
                 ArrayList<cliente> filters = new ArrayList<cliente>();
                 for(int i=0;i<listafitro.size();i++){
                     if(listafitro.get(i).getApellido().toUpperCase().contains(charSequence)){
-                        cliente c = new cliente(listafitro.get(i).getApellido(),listafitro.get(i).getNombre(), listafitro.get(i).getDisciplinaelegida());
+                        cliente c = new cliente(listafitro.get(i).getApellido(),listafitro.get(i).getNombre());
                         filters.add(c);
                     }
                 }

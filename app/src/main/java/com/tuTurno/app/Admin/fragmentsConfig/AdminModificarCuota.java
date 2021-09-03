@@ -210,7 +210,7 @@ public class AdminModificarCuota extends Fragment {
         milistamonto.setOnItemLongClickListener((adapterView, view, i, l) -> {
             Bundle bundle = new Bundle();
             PopupMenu popupMenu = new PopupMenu(micontexto, milistamonto);
-            popupMenu.getMenuInflater().inflate(R.menu.menucontextualdatosclientes, popupMenu.getMenu());
+            popupMenu.getMenuInflater().inflate(R.menu.menucontextualconfigcuota, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(menuItem -> {
                 if (menuItem.getItemId() == R.id.accionconfig) {
                     idcuota = listmontos.get(i);

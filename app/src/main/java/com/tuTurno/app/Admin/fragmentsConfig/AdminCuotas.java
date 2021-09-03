@@ -170,6 +170,7 @@ public class AdminCuotas extends Fragment {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     for (DataSnapshot shot : snapshot.getChildren()) {
                                         CuotaConfig cuota = shot.getValue(CuotaConfig.class);
+                                        assert cuota != null;
                                         arraycuotas.add(cuota.getDiasporsemana() + " dias " + "$ " + cuota.getMonto());
                                         dias.add(cuota.getDiasporsemana());
                                         montos.add(cuota.getMonto());
@@ -328,17 +329,15 @@ public class AdminCuotas extends Fragment {
                                     if (bandera3) {
                                         Snackbar.make(view, "Para este mes y cliente ya existe un pago registrado.", Snackbar.LENGTH_SHORT).show();
                                     } else {
-                                        //--------------------------------------------------------------------------------------------------
                                         databaseReference.child(gimnasio.getText().toString()).child("ConfigCuota").addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                 for (DataSnapshot shot : snapshot.getChildren()) {
                                                     String diciplina = shot.child("disciplina").getValue(String.class);
 
-                                                    //SEGUIR PROBANDO, AL PARECER FUNCIONA-------------------------------------------------------------------------
+                                                    assert diciplina != null;
                                                     if (diciplina.equals(disci1)) {
-                                                        //----------------------------
-                                                        if (!cli.getDisciplinaelegida().equals("0")) {
+                                                        if (!cli.getDisciplinaelegida().equals("-")) {
                                                             if (!cli.getDisciplinaelegida().equals(disci1)) {
                                                                 androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
                                                                 mensaje.setTitle("Atención!");
@@ -356,7 +355,7 @@ public class AdminCuotas extends Fragment {
                                                                             databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
                                                                         }
                                                                     }
-                                                                    cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, montocuota);
+                                                                    cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, montocuota,dia);
                                                                     databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
                                                                     Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
 
@@ -376,7 +375,7 @@ public class AdminCuotas extends Fragment {
                                                                         databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
                                                                     }
                                                                 }
-                                                                cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, montocuota);
+                                                                cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, montocuota, dia);
                                                                 databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
                                                                 Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
                                                             }
@@ -384,11 +383,10 @@ public class AdminCuotas extends Fragment {
                                                             cliente clien = new cliente(cli.getId(), cli.getNombre(), cli.getApellido(), cli.getDni(), cli.getDireccion(),
                                                                     cli.getEmail(), cli.getGym(), cli.getAdmin(), cli.getToken(), fechapago.getText().toString(), fechavenc, cli.getEstadopago(), "OK", disci1, dia,dia,cli.getTelefono());
                                                             databaseReference.child("Clientes").child(cli.getId()).setValue(clien);
-                                                            cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, montocuota);
+                                                            cuotas = new cuotas(nombreyapellido, cli.getEmail(), fechapago.getText().toString(), fechavenc, mess, disci1, montocuota, dia);
                                                             databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo.trim()).child(mess.trim()).push().setValue(cuotas);
                                                             Snackbar.make(view, "Pago registrado correctamente", Snackbar.LENGTH_SHORT).show();
                                                         }
-                                                        //---------------------------
                                                     }
                                                 }
                                             }

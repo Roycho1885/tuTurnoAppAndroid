@@ -416,7 +416,7 @@ public class ListTurnos extends Fragment {
                         assert cli != null;
                         if (!cli.getDiasporsemana().equals("5")) {
                             String diasporsemana = String.valueOf(Integer.parseInt(cli.getDiasporsemana()) + 1);
-                            HashMap hashMap = new HashMap();
+                            HashMap<String, Object> hashMap = new HashMap<String, Object>();
                             hashMap.put("diasporsemana", diasporsemana);
                             databaseReference.child("Clientes").child(cli.getId()).updateChildren(hashMap).addOnSuccessListener(o -> {
                             });
