@@ -96,7 +96,7 @@ public class ListViewAdaptadorCuotasAdmin extends BaseAdapter implements Filtera
                 for(int i=0;i<listafitro.size();i++){
                     if(listafitro.get(i).getApellido().toUpperCase().contains(charSequence)){
                         cliente c = new cliente(listafitro.get(i).getApellido(),listafitro.get(i).getNombre(),listafitro.get(i).getUltimopago(),
-                                listafitro.get(i).getFechavencimiento(),listafitro.get(i).getEstadopago(),listafitro.get(i).getDisciplinaelegida());
+                                listafitro.get(i).getFechavencimiento(),listafitro.get(i).getEstadopago(),listafitro.get(i).getDisciplinaelegida(), listafitro.get(i).getDiasporsemana());
                         filters.add(c);
                     }
                 }

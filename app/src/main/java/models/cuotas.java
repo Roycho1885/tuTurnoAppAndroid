@@ -25,12 +25,14 @@ public class cuotas {
     }
 
 
-    public cuotas(String clientenombre, String fechapago,String fechavenc,String mespago, String disciplinaele){
+    public cuotas(String clientenombre, String fechapago,String fechavenc,String mespago, String monto, String diasxsemana, String disciplinaele){
         this.clientenombre = clientenombre;
         this.fechapago = fechapago;
         this.fechavenc = fechavenc;
         this.mespago = mespago;
         this.disciplinaele = disciplinaele;
+        this.monto = monto;
+        this.diasxsemana = diasxsemana;
     }
 
     public String getDiasxsemana() {

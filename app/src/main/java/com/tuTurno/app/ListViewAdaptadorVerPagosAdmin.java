@@ -90,7 +90,7 @@ public class ListViewAdaptadorVerPagosAdmin extends BaseAdapter implements Filte
                 for(int i=0;i<listafitro.size();i++){
                     if(listafitro.get(i).getClientenombre().toUpperCase().contains(charSequence)){
                         cuotas c = new cuotas(listafitro.get(i).getClientenombre(),
-                                listafitro.get(i).getFechapago(),listafitro.get(i).getFechavenc(),listafitro.get(i).getMespago(),listafitro.get(i).getDisciplinaele());
+                                listafitro.get(i).getFechapago(),listafitro.get(i).getFechavenc(),listafitro.get(i).getMespago(), listafitro.get(i).getMonto(), listafitro.get(i).getDiasxsemana(),listafitro.get(i).getDisciplinaele());
                         filters.add(c);
                     }
                 }

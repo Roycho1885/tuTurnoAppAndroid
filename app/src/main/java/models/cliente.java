@@ -50,13 +50,14 @@ public class cliente {
         this.disciplinaelegida = disciplinaelegida;
     }
 
-    public cliente(String apellido,String nombre, String ultimopago,String fechavencimiento, int estadopago, String disciplinaelegida){
+    public cliente(String apellido,String nombre, String ultimopago,String fechavencimiento, int estadopago, String disciplinaelegida, String diasporsemana){
         this.apellido = apellido;
         this.nombre = nombre;
         this.ultimopago = ultimopago;
         this.fechavencimiento = fechavencimiento;
         this.estadopago = estadopago;
         this.disciplinaelegida = disciplinaelegida;
+        this.diasporsemana = diasporsemana;
     }
 
     public cliente(String id,String estadodeuda){
