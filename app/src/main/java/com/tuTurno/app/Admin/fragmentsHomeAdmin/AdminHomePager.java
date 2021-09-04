@@ -60,12 +60,14 @@ public class AdminHomePager extends Fragment {
         SlidePagerAdapter adapter = new SlidePagerAdapter(getChildFragmentManager());
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_baseline_app_registration_24));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_baseline_groups_24));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_baseline_person_search_24));
 
 
 
         // add your fragments
         adapter.addFrag(new HomeRegistroAdmin());
         adapter.addFrag(new HomeAdmin());
+        adapter.addFrag(new HomeAdminAsistencias());
 
         // set adapter on viewpager
         viewPager.setAdapter(adapter);

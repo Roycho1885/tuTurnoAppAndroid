@@ -8,7 +8,8 @@
     <string name="clientes">Clientes</string>
     <string name="dnihomeregistro">Ingrese DNI</string>
     <string name="tituloregistroasist">Registrar Asistencia</string>
-    <string name="tituloverasist">Ver Asistencias</string>
+    <string name="tituloverasist">Asistencias Diarias</string>
+    <string name="tituloverasisttotal">Registro de Asistencias</string>
     <string name="tituloconfigcuota">Configurar Cuotas</string>
     <string name="titulomodicuota">Modificar Cuotas</string>
     <string name="tituloingresecuota">Seleccione una Cuota</string>
