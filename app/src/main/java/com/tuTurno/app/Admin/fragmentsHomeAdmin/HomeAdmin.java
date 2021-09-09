@@ -1,6 +1,7 @@
 package com.tuTurno.app.Admin.fragmentsHomeAdmin;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,8 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -62,22 +66,25 @@ public class HomeAdmin extends Fragment {
     private TextView cliente_admin, setFecha;
     private CollapsingToolbarLayout tool;
     private NavigationView navi;
-    private String user, fechaactual, nombre, apellido, urldire, fecha_venc;
+    private String fechaactual, urldire, fecha_venc, anioo,mess, apellido,nombre;
     private cliente c, cli = new cliente();
     private DatosTurno t = new DatosTurno();
+    private ScrollView scroolasis;
 
     private ArrayList<DatosTurno> listturnos = new ArrayList<>();
 
     private ArrayList<String> arraydisci, arrayturnos;
     private ArrayAdapter<String> miadapter, miadapter2;
+    EditText fechapago;
     String disci1, horaturno;
     boolean menudisci = false;
     boolean menuturno = false;
     boolean band = false;
+    boolean bandera1;
     MisFunciones cargarNav = new MisFunciones();
     MisFunciones enviarno = new MisFunciones();
     ProgressDialog cargando;
-    Date fechavencimiento, fechaact;
+    Date fechavencimiento, fechaact, fechaelegida;
     Calendar micalendario, micalendario1, micalendario2;
     int numeromes, numeroactmes, noticontador;
     TextView textologo;
@@ -107,6 +114,7 @@ public class HomeAdmin extends Fragment {
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -114,6 +122,8 @@ public class HomeAdmin extends Fragment {
         final FloatingActionButton fab = requireActivity().findViewById(R.id.fab_admin);
         final AutoCompleteTextView menutur = root.findViewById(R.id.dropdown_texto);
         final AutoCompleteTextView menudis = root.findViewById(R.id.dropdown_text);
+        scroolasis = root.findViewById(R.id.scroolasis);
+        fechapago = root.findViewById(R.id.txtfecha);
         setFecha = root.findViewById(R.id.setfecha);
         cliente_admin = requireActivity().findViewById(R.id.versianda);
         fab.setImageResource(R.drawable.lista_admin);
@@ -140,6 +150,17 @@ public class HomeAdmin extends Fragment {
         menudis.post(() -> menudis.getText().clear());
 
         menutur.post(() -> menutur.getText().clear());
+
+        scroolasis.setOnTouchListener((v, event) -> {
+            milistaturnoscliente.getParent()
+                    .requestDisallowInterceptTouchEvent(false);
+            return false;
+        });
+
+        milistaturnoscliente.setOnTouchListener((v, event) -> {
+            v.getParent().requestDisallowInterceptTouchEvent(true);
+            return false;
+        });
 
 
         //user = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
@@ -336,6 +357,20 @@ public class HomeAdmin extends Fragment {
 
         });
 
+        //LO QUE TIENE QUE VER PARA EL BOTON FECHA
+        final DatePickerDialog.OnDateSetListener date = (view, ano, mes, diames) -> {
+            micalendario.set(Calendar.YEAR, ano);
+            micalendario.set(Calendar.MONTH, mes);
+            micalendario.set(Calendar.DAY_OF_MONTH, diames);
+            actualizarformatofecha();
+        };
+
+        fechapago.setOnClickListener(view -> new DatePickerDialog(micontexto, date, micalendario
+                .get(Calendar.YEAR), micalendario.get(Calendar.MONTH),
+                micalendario.get(Calendar.DAY_OF_MONTH)).show());
+
+
+
         menutur.setOnItemClickListener((parent, view, i, id) -> {
             horaturno = parent.getAdapter().getItem(i).toString();
             menuturno = true;
@@ -359,17 +394,34 @@ public class HomeAdmin extends Fragment {
                         for (DataSnapshot shot : snapshot.getChildren()) {
                             t = shot.getValue(DatosTurno.class);
                             assert t != null;
-                            if (Objects.equals(shot.child("disciplina").getValue(), disci1) && (Objects.equals(shot.child("turno").getValue(), horaturno)) && (Objects.equals(shot.child("fecha").getValue(), fechaactual))) {
-                                if (t.getAsistencia().equals("Si")) {
-                                    t.setIcono(R.drawable.ic_baseline_check_circle_24);
-                                } else {
-                                    t.setIcono(R.drawable.ic_baseline_cancel_24);
+                            if(!fechapago.getText().toString().equals("")){
+                                if (Objects.equals(shot.child("disciplina").getValue(), disci1) && (Objects.equals(shot.child("turno").getValue(), horaturno))
+                                        && (Objects.equals(shot.child("fecha").getValue(), fechapago.getText().toString()))) {
+                                   if (t.getAsistencia().equals("Si")) {
+                                        t.setIcono(R.drawable.ic_baseline_check_circle_24);
+                                    } else {
+                                        t.setIcono(R.drawable.ic_baseline_cancel_24);
+                                    }
+                                    listturnos.add(t);
+                                    adaptador = new ListViewAdaptadorLA(micontexto, listturnos);
+                                    milistaturnoscliente.setAdapter(adaptador);
+                                    band = true;
                                 }
-                                listturnos.add(t);
-                                adaptador = new ListViewAdaptadorLA(micontexto, listturnos);
-                                milistaturnoscliente.setAdapter(adaptador);
-                                band = true;
+                            }else{
+                                if (Objects.equals(shot.child("disciplina").getValue(), disci1) && (Objects.equals(shot.child("turno").getValue(), horaturno))
+                                        && (Objects.equals(shot.child("fecha").getValue(), fechaactual))){
+                                    if (t.getAsistencia().equals("Si")) {
+                                        t.setIcono(R.drawable.ic_baseline_check_circle_24);
+                                    } else {
+                                        t.setIcono(R.drawable.ic_baseline_cancel_24);
+                                    }
+                                    listturnos.add(t);
+                                    adaptador = new ListViewAdaptadorLA(micontexto, listturnos);
+                                    milistaturnoscliente.setAdapter(adaptador);
+                                    band = true;
+                                }
                             }
+
                         }
 
                         if (!band) {
@@ -377,12 +429,14 @@ public class HomeAdmin extends Fragment {
                             Snackbar.make(container, "Por el momento no existen turnos por motrar", Snackbar.LENGTH_SHORT).show();
                             menudis.post(() -> menudis.getText().clear());
                             menutur.post(() -> menutur.getText().clear());
+                            fechapago.setText("");
 //                                arrayAdapterTurnos.notifyDataSetChanged();
                         } else {
                             if (adaptador == null) {
                                 Snackbar.make(container, "Por el momento no existen turnos por motrar", Snackbar.LENGTH_SHORT).show();
                                 menudis.post(() -> menudis.getText().clear());
                                 menutur.post(() -> menutur.getText().clear());
+                                fechapago.setText("");
                             } else {
                                 adaptador.notifyDataSetChanged();
                             }
@@ -422,6 +476,12 @@ public class HomeAdmin extends Fragment {
         databaseReference = firebaseDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference.keepSynced(true);
+    }
+
+    private void actualizarformatofecha() {
+        DateFormat formato = DateFormat.getDateInstance(DateFormat.FULL);
+        fechapago.setText(formato.format(micalendario.getTime()));
+        bandera1 = true;
     }
 
 }

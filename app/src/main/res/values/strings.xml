@@ -8,8 +8,8 @@
     <string name="clientes">Clientes</string>
     <string name="dnihomeregistro">Ingrese DNI</string>
     <string name="tituloregistroasist">Registrar Asistencia</string>
-    <string name="tituloverasist">Asistencias Diarias</string>
-    <string name="tituloverasisttotal">Registro de Asistencias</string>
+    <string name="tituloverasist">Asistencias</string>
+    <string name="infofecha">Dejar campo fecha en blanco para listar asistencias del día actual</string>
     <string name="tituloconfigcuota">Configurar Cuotas</string>
     <string name="titulomodicuota">Modificar Cuotas</string>
     <string name="tituloingresecuota">Seleccione una Cuota</string>
@@ -62,7 +62,6 @@
     <string name="botondesmarcaradmin">Admin</string>
 
 
-
     <string name="abrir">Abrir</string>
     <string name="cerrar">Cerrar</string>
 
@@ -98,6 +97,7 @@
     <string name="acercade3">Acerca de</string>
     <string name="acercade4">Síguenos</string>
 
+    <string name="checkboxrestringir">Restringir</string>
     <string name="checkboxcoach">Guardar Sesión</string>
     <string name="checkboxpolitica"><u>Acepta nuestras Políticas de Privacidad</u></string>
     <string name="alertdialog">Ingrese código de verificación</string>
@@ -123,6 +123,7 @@
 
     <string name="fechatarea">Ingrese fecha</string>
     <string name="fechapago">Ingrese fecha de pago</string>
+    <string name="fechaasistencias">Ingrese fecha</string>
     <string name="botonregistrarpago">Registrar Pago</string>
     <string name="tituloverpagos">Ver Pagos</string>
     <string name="tituloveringygas">Panel Ingresos y Gastos</string>

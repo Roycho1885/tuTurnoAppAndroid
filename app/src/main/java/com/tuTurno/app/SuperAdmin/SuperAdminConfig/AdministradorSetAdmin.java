@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -38,9 +39,8 @@ import models.cliente;
 public class AdministradorSetAdmin extends Fragment {
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-    private Button botoncargar;
-    private Button botonaceptar;
-    private Button botoncancelar;
+    private Button botoncargar, botonaceptar, botoncancelar;
+    private CheckBox checkboxres;
     private ListView lista;
     private AutoCompleteTextView dropdowntxt;
     private TextInputLayout botongym;
@@ -71,6 +71,7 @@ public class AdministradorSetAdmin extends Fragment {
         botoncargar = root.findViewById(R.id.botoncargar);
         botonaceptar = root.findViewById(R.id.botonaceptar);
         botoncancelar = root.findViewById(R.id.botoncancelar);
+        checkboxres = root.findViewById(R.id.checkBoxRes);
         lista = root.findViewById(R.id.lista);
         miscroll = root.findViewById(R.id.misroll);
 
@@ -150,6 +151,11 @@ public class AdministradorSetAdmin extends Fragment {
                 comprueba = false;
                 for(int i=0 ; i< lista.getCount();i++){
                     if(lista.isItemChecked(i)){
+                        if(checkboxres.isChecked()){
+                            cliente.setAdmin("Restringido");
+                        }else{
+                            cliente.setAdmin("Si");
+                        }
                         comprueba = true;
                         cli = (cliente) lista.getItemAtPosition(i);
                         cliente.setApellido(cli.getApellido());
@@ -160,7 +166,6 @@ public class AdministradorSetAdmin extends Fragment {
                         cliente.setDni(cli.getDni());
                         cliente.setDireccion(cli.getDireccion());
                         cliente.setToken(cli.getToken());
-                        cliente.setAdmin("Si");
                         cliente.setUltimopago(cli.getUltimopago());
                         cliente.setFechavencimiento(cli.getFechavencimiento());
                         cliente.setEstadopago(cli.getEstadopago());

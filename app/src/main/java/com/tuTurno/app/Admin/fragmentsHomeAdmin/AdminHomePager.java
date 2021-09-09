@@ -12,14 +12,33 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.tuTurno.app.R;
 import com.tuTurno.app.SlidePagerAdapter;
 
+import java.util.Objects;
+
+import models.cliente;
+
 public class AdminHomePager extends Fragment {
+    private DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase firebaseDatabase;
+    private cliente c, cli = new cliente();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.homeadminpager, container, false);
+
+        iniciarFirebase();
 
 
         new SlidePagerAdapter(getChildFragmentManager());
@@ -60,19 +79,53 @@ public class AdminHomePager extends Fragment {
         SlidePagerAdapter adapter = new SlidePagerAdapter(getChildFragmentManager());
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_baseline_app_registration_24));
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_baseline_groups_24));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_baseline_person_search_24));
 
 
 
         // add your fragments
         adapter.addFrag(new HomeRegistroAdmin());
         adapter.addFrag(new HomeAdmin());
-        adapter.addFrag(new HomeAdminAsistencias());
 
         // set adapter on viewpager
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
+        databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot shot : snapshot.getChildren()) {
+
+                    c = shot.getValue(cliente.class);
+                    assert c != null;
+
+                    if (c.getEmail().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail())) {
+                        cli = shot.getValue(cliente.class);
+                        if(cli.getAdmin().equals("Restringido")){
+                            tabLayout.removeTabAt(1);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
+    }
+
+    private void iniciarFirebase() {
+        FirebaseApp.initializeApp(requireActivity());
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        firebaseAppCheck.installAppCheckProviderFactory(
+                SafetyNetAppCheckProviderFactory.getInstance());
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference.keepSynced(true);
     }
 }

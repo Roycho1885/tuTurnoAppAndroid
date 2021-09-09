@@ -199,7 +199,7 @@ class LoginActivity : AppCompatActivity() {
         if(user=="roygenoff@gmail.com"){
             startActivity(Intent(this, ActividadSuperAdmin::class.java))
         }else{
-                if (admin == "Si") {
+                if (admin == "Si" || admin == "Restringido") {
                     startActivity(Intent(this, ActividadAdmin::class.java))
                 }else{
                     startActivity(Intent(this, ActividadCliente::class.java))

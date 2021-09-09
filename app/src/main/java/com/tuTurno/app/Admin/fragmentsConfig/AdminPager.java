@@ -32,21 +32,20 @@ import models.cliente;
 
 public class AdminPager extends Fragment {
 
-    private FirebaseDatabase firebaseDatabase;
+   /* private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-    cliente cli;
+    cliente cli;*/
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.adminpager, container, false);
 
-        //para los diferentes gimnasios
+       /* //para los diferentes gimnasios
         final TextView gimnasio = requireActivity().findViewById(R.id.textologo);
 
-        iniciarFirebase();
-
+        iniciarFirebase();*/
 
 
         new SlidePagerAdapter(getChildFragmentManager());
@@ -91,7 +90,7 @@ public class AdminPager extends Fragment {
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
-        databaseReference.child("Clientes").orderByChild("apellido").addListenerForSingleValueEvent(new ValueEventListener() {
+        /*databaseReference.child("Clientes").orderByChild("apellido").addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -109,12 +108,12 @@ public class AdminPager extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
 
     }
 
 
-    private void iniciarFirebase() {
+   /* private void iniciarFirebase() {
         FirebaseApp.initializeApp(requireActivity());
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
         firebaseAppCheck.installAppCheckProviderFactory(
@@ -123,5 +122,5 @@ public class AdminPager extends Fragment {
         databaseReference = firebaseDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference.keepSynced(true);
-    }
+    }*/
 }
