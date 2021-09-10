@@ -111,6 +111,7 @@
     <string name="diasturno">Seleccione dias</string>
     <string name="cantdias">Días por semana</string>
     <string name="cupoturno">Ingrese cupo</string>
+    <string name="coachturno">Ingrese entrenador</string>
     <string name="botoneliminar">Eliminar Turno</string>
     <string name="botondejarsuscri">Suscripción</string>
     <string name="aclaracioneliminar">Recuerda que al eliminar todos los turnos la disciplina y las cuotas tambien se eliminan.</string>

@@ -87,6 +87,8 @@ public class AdminAgregarTur extends Fragment {
         final EditText txtdisciplina = root.findViewById(R.id.txtDisciplina);
         final EditText txtcupo = root.findViewById(R.id.txtcupo);
         final EditText txtcupo1 = root.findViewById(R.id.txtcupo1);
+        final EditText txtcoach = root.findViewById(R.id.txtcoach);
+        final EditText txtcoach1 = root.findViewById(R.id.txtcoach1);
         final Button botonagregarturno = root.findViewById(R.id.botonagregaturno);
         final Button botonagregarturno1 = root.findViewById(R.id.botonagregaturno1);
         //final TextInputLayout botontur = root.findViewById(R.id.botondisciexis);
@@ -129,13 +131,13 @@ public class AdminAgregarTur extends Fragment {
             Bundle bundle = new Bundle();
             disci = txtdisciplina.getText().toString().trim();
             if(txthoraturno.getText().toString().equals("") || disci.equals("") || txtcupo.getText().toString().equals("")
-                    || txtdias.getText().toString().equals("")){
+                    || txtdias.getText().toString().equals("") || txtcoach.getText().toString().equals("")){
                 Snackbar.make(view,"Complete todo los campos",Snackbar.LENGTH_SHORT).show();
             }else{
                 if(arraydisci.contains(disci)){
                     Snackbar.make(view,"Disciplina ya existente",Snackbar.LENGTH_SHORT).show();
                 }else{
-                    agregarturno(disci, txthoraturno.getText().toString().trim(),txtdias.getText().toString().trim(),txtcupo.getText().toString().trim());
+                    agregarturno(disci, txthoraturno.getText().toString().trim(),txtdias.getText().toString().trim(),txtcupo.getText().toString().trim(), txtcoach.getText().toString().trim());
                     agregarmonto(disci);
                     databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(disci).child(infoturno.getId()).setValue(infoturno);
                     databaseReference.child(gimnasio.getText().toString()).child("ConfigCuota").child(configcuotasdici.getId()).setValue(configcuotasdici);
@@ -145,6 +147,7 @@ public class AdminAgregarTur extends Fragment {
                 txtdias.setText("");
                 txthoraturno.setText("");
                 txtcupo.setText("");
+                txtcoach.setText("");
                 arraydisci.clear();
                 bundle.putString("disciplina",disci);
                 bundle.putString("keycuota",configcuotasdici.getId());
@@ -210,7 +213,7 @@ public class AdminAgregarTur extends Fragment {
                             if(turnoslista.contains(txthoraturno1.getText().toString())){
                                 Snackbar.make(view,"Turno ya existente",Snackbar.LENGTH_SHORT).show();
                             }else{
-                                agregarturno(disci1, txthoraturno1.getText().toString().trim(),txtdias1.getText().toString().trim(),txtcupo1.getText().toString().trim());
+                                agregarturno(disci1, txthoraturno1.getText().toString().trim(),txtdias1.getText().toString().trim(),txtcupo1.getText().toString().trim(),txtcoach1.getText().toString().trim());
                                 databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(disci1).child(infoturno.getId()).setValue(infoturno);
                                 Snackbar.make(view,"Turno agregado correctamente",Snackbar.LENGTH_SHORT).show();
 
@@ -220,6 +223,7 @@ public class AdminAgregarTur extends Fragment {
                         txthoraturno1.setText("");
                         txtcupo1.setText("");
                         txtdias1.setText("");
+                        txtcoach1.setText("");
 
                     }
                     @Override
@@ -355,13 +359,14 @@ public class AdminAgregarTur extends Fragment {
         alert.show();
     }
 
-    private void agregarturno(String disci , String hora, String dias , String cupo) {
+    private void agregarturno(String disci , String hora, String dias , String cupo, String coach) {
         infoturno.setId(UUID.randomUUID().toString());
         infoturno.setDisciplina(disci);
         infoturno.setHoracomienzo(hora);
         infoturno.setDias(dias);
         infoturno.setCupo(cupo);
         infoturno.setCupoalmacenado(cupo);
+        infoturno.setCoach(coach);
     }
 
     private void agregarmonto(String disciplina) {

@@ -12,6 +12,7 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
@@ -50,11 +51,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 
 import models.DatosTurno;
 import models.MisFunciones;
 import models.cliente;
+import models.cuotas;
 import models.gimnasios;
 import models.turno;
 
@@ -68,7 +71,7 @@ public class HomeAdmin extends Fragment {
     private NavigationView navi;
     private String fechaactual, urldire, fecha_venc, anioo,mess, apellido,nombre;
     private cliente c, cli = new cliente();
-    private DatosTurno t = new DatosTurno();
+    private DatosTurno t, listadeturnos = new DatosTurno();
     private ScrollView scroolasis;
 
     private ArrayList<DatosTurno> listturnos = new ArrayList<>();
@@ -423,6 +426,9 @@ public class HomeAdmin extends Fragment {
                             }
 
                         }
+                        fechapago.setText("");
+                        menudis.post(() -> menudis.getText().clear());
+                        menutur.post(() -> menutur.getText().clear());
 
                         if (!band) {
                             milistaturnoscliente.setAdapter(null);
@@ -450,6 +456,28 @@ public class HomeAdmin extends Fragment {
                 };
                 databaseReference.child(textologo.getText().toString()).child("Datos Turnos").addValueEventListener(milistener);
             }
+        });
+
+        //CLICK LARGO EN LA LISTA PARA REGISTRAR
+        milistaturnoscliente.setOnItemLongClickListener((adapterView, view, i, l) -> {
+            listadeturnos = listturnos.get(i);
+
+            androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
+            mensaje.setTitle("Atención!");
+            mensaje.setIcon(R.drawable.ic_baseline_warning_24);
+            mensaje.setMessage("¿Registrar turno de cliente?");
+            mensaje.setPositiveButton("Si", (dialogInterface, t) -> {
+                HashMap<String, Object> hashMap = new HashMap<String, Object>();
+                hashMap.put("asistencia", "Si");
+                databaseReference.child(textologo.getText().toString()).child("Datos Turnos").child(listadeturnos.getIdTurno()).updateChildren(hashMap).addOnSuccessListener(o -> {
+                });
+                Snackbar.make(view, "Turno registrado", Snackbar.LENGTH_SHORT).show();
+            });
+            mensaje.setNegativeButton("No", (dialogInterface, t) -> dialogInterface.dismiss());
+            AlertDialog dialog = mensaje.create();
+            dialog.show();
+
+            return false;
         });
         return root;
     }

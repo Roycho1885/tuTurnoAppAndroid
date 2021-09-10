@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import models.DatosTurno;
@@ -44,10 +46,12 @@ public class ListViewAdaptadorAdEliTur extends BaseAdapter {
         turno items = (turno) getItem(i);
         view = LayoutInflater.from(contexto).inflate(R.layout.listtureliminar_item,null);
 
+        TextView coach = view.findViewById(R.id.txt_coach);
         TextView hora = view.findViewById(R.id.txt_horaeli);
         TextView cupo = view.findViewById(R.id.txt_cupoeli);
         TextView dias = view.findViewById(R.id.txt_diaseli);
 
+        coach.setText(items.getCoach());
         hora.setText(items.getHoracomienzo());
         cupo.setText(items.getCupo());
         dias.setText(items.getDias());

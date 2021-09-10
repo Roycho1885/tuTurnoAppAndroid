@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -99,6 +100,24 @@
             android:hint="@string/cupoturno"
             android:inputType="time" />
     </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtcoach"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:autofillHints="@string/codigo"
+                android:drawableStart="@drawable/ic_baseline_wc_24"
+                android:ems="10"
+                android:hint="@string/coachturno"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/botonagregaturno"
@@ -202,6 +221,24 @@
                 android:ems="10"
                 android:hint="@string/cupoturno"
                 android:inputType="time" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtcoach1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:autofillHints="@string/codigo"
+                android:drawableStart="@drawable/ic_baseline_wc_24"
+                android:ems="10"
+                android:hint="@string/coachturno"
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button

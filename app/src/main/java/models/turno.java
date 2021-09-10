@@ -9,17 +9,27 @@ public class turno {
     public String cupoalmacenado;
     public String dias;
     public int foto;
+    public String coach;
 
     public turno() {
     }
 
-    public turno(String id, String horacomienzo, String disciplina, String cupo, String cupoalmacenado, String dias) {
+    public turno(String id, String horacomienzo, String disciplina, String cupo, String cupoalmacenado, String dias, String coach) {
         this.id = id;
         this.horacomienzo = horacomienzo;
         this.disciplina = disciplina;
         this.cupo = cupo;
         this.cupoalmacenado = cupoalmacenado;
         this.dias = dias;
+        this.coach = coach;
+    }
+
+    public String getCoach() {
+        return coach;
+    }
+
+    public void setCoach(String coach) {
+        this.coach = coach;
     }
 
     public int getFoto() {

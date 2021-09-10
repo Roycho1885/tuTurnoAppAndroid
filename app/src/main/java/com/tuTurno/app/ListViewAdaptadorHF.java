@@ -42,11 +42,14 @@ public class ListViewAdaptadorHF extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         turno items = (turno) getItem(i);
         view = LayoutInflater.from(contexto).inflate(R.layout.lisdeturnositems,null);
+
+        TextView coach = view.findViewById(R.id.txt_coach);
         TextView hora = view.findViewById(R.id.txt_hora);
         TextView cupo = view.findViewById(R.id.txt_cupo);
         TextView dias = view.findViewById(R.id.txt_dias);
         ImageView checkcupo = view.findViewById(R.id.imagencupo);
 
+        coach.setText(items.getCoach());
         hora.setText(items.getHoracomienzo());
         cupo.setText(items.getCupo());
         dias.setText(items.getDias());

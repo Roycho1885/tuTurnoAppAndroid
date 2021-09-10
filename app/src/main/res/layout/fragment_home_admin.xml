@@ -116,7 +116,7 @@
             android:listSelector="@drawable/lista_selector"
             android:layout_marginTop="10dp"
             android:layout_below="@+id/infofecha"
-            android:choiceMode="multipleChoice"
+            android:choiceMode="singleChoice"
             tools:ignore="NestedScrolling" />
     </RelativeLayout>
 
