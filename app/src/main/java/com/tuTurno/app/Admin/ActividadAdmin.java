@@ -1,18 +1,27 @@
 package com.tuTurno.app.Admin;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -20,12 +29,33 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.tuTurno.app.Admin.fragmentsConfig.AdminCodigo;
 import com.tuTurno.app.LoginActivity;
 import com.tuTurno.app.R;
 import com.tuTurno.app.SlidePagerAdapter;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
+import models.cliente;
+import models.gimnasios;
+
 public class ActividadAdmin  extends AppCompatActivity {
+
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
+    private cliente c, cli = new cliente();
+
 
     private static final int INTERVALO = 2000;
     private long tiempoPrimerClick;
@@ -34,6 +64,7 @@ public class ActividadAdmin  extends AppCompatActivity {
 
     String themeName;
     SharedPreferences sharedPreferences;
+
 
 
     @Override
@@ -61,7 +92,8 @@ public class ActividadAdmin  extends AppCompatActivity {
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout_admin);
         NavigationView navigationView = findViewById(R.id.nav_view_admin);
-        
+
+
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.fragment_admin)
@@ -70,6 +102,35 @@ public class ActividadAdmin  extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_admin);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+
+
+        iniciarFirebase();
+
+        //LECTURA DEL CLIENTE
+        databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Menu menuView = navigationView.getMenu();
+                for (DataSnapshot shot : snapshot.getChildren()) {
+
+                    c = shot.getValue(cliente.class);
+                    assert c != null;
+
+                    if (c.getEmail().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail())) {
+                        cli = shot.getValue(cliente.class);
+                        assert cli != null;
+                        //menuView.getItem(1).setEnabled(!cli.getAdmin().equals("Restringido"));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
 
     }
 
@@ -124,4 +185,14 @@ public class ActividadAdmin  extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void iniciarFirebase() {
+        FirebaseApp.initializeApp(this);
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        firebaseAppCheck.installAppCheckProviderFactory(
+                SafetyNetAppCheckProviderFactory.getInstance());
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference.keepSynced(true);
+    }
 }

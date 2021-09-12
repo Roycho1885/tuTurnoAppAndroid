@@ -77,7 +77,7 @@ public class ListTurnos extends Fragment {
     private String idturnocambiado;
     private String horaturnocambiado;
     private String cupoalmacenado;
-    private String dias;
+    private String dias,coach;
 
     //para el listview
     private ListView milistadatosturnos;
@@ -211,6 +211,7 @@ public class ListTurnos extends Fragment {
                                         horaturnocambiado = Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString();
                                         cupoalmacenado = Objects.requireNonNull(shot.child("cupoalmacenado").getValue()).toString();
                                         dias = Objects.requireNonNull(shot.child("dias").getValue().toString());
+                                        coach = Objects.requireNonNull(shot.child("coach").getValue().toString());
                                     }
                                     String hora = Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString();
                                     int cupo = Integer.parseInt(Objects.requireNonNull(shot.child("cupo").getValue()).toString());
@@ -263,6 +264,7 @@ public class ListTurnos extends Fragment {
                                     claseturno.setId(turnosid.get(i));
                                     claseturno.setCupoalmacenado(cuposalmacenado.get(i).toString());
                                     claseturno.setDias(diaslista.get(i));
+                                    claseturno.setCoach(coach);
                                     databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(turnosele.getDisciplina()).child(turnosid.get(i)).setValue(claseturno);
 
                                     //CARGO LOS DATOS PARA EL TURNO QUE SE DESECHA
@@ -271,6 +273,7 @@ public class ListTurnos extends Fragment {
                                     claseturno.setHoracomienzo(horaturnocambiado);
                                     claseturno.setCupoalmacenado(cupoalmacenado);
                                     claseturno.setDias(dias);
+                                    claseturno.setCoach(coach);
                                     databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(turnosele.getDisciplina()).child(idturnocambiado).setValue(claseturno);
                                 });
                                 elegirturnos.setNeutralButton("Cancelar", (dialog, which) -> {
@@ -318,6 +321,7 @@ public class ListTurnos extends Fragment {
                                     horaturnocambiado = Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString();
                                     cupoalmacenado = Objects.requireNonNull(shot.child("cupoalmacenado").getValue()).toString();
                                     dias = Objects.requireNonNull(shot.child("dias").getValue()).toString();
+                                    coach = Objects.requireNonNull(shot.child("coach").getValue().toString());
                                 }
                             }
 
@@ -329,6 +333,7 @@ public class ListTurnos extends Fragment {
                             claseturno.setDisciplina(turnosele.getDisciplina());
                             claseturno.setCupoalmacenado(cupoalmacenado);
                             claseturno.setDias(dias);
+                            claseturno.setCoach(coach);
                             databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(turnosele.getDisciplina()).child(idturnocambiado).setValue(claseturno);
 
                             //ELIMINO EL TURNO SELECCIONADO

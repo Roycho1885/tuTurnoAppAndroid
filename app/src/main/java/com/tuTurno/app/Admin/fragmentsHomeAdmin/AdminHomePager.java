@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,16 +30,11 @@ import java.util.Objects;
 import models.cliente;
 
 public class AdminHomePager extends Fragment {
-    private DatabaseReference databaseReference;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseDatabase firebaseDatabase;
-    private cliente c, cli = new cliente();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.homeadminpager, container, false);
-
-        iniciarFirebase();
 
 
         new SlidePagerAdapter(getChildFragmentManager());
@@ -81,7 +77,6 @@ public class AdminHomePager extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_baseline_groups_24));
 
 
-
         // add your fragments
         adapter.addFrag(new HomeRegistroAdmin());
         adapter.addFrag(new HomeAdmin());
@@ -89,43 +84,6 @@ public class AdminHomePager extends Fragment {
         // set adapter on viewpager
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-
-        databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot shot : snapshot.getChildren()) {
-
-                    c = shot.getValue(cliente.class);
-                    assert c != null;
-
-                    if (c.getEmail().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail())) {
-                        cli = shot.getValue(cliente.class);
-                        if(cli.getAdmin().equals("Restringido")){
-                            tabLayout.removeTabAt(1);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-
-    }
-
-    private void iniciarFirebase() {
-        FirebaseApp.initializeApp(requireActivity());
-        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
-        firebaseAppCheck.installAppCheckProviderFactory(
-                SafetyNetAppCheckProviderFactory.getInstance());
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-        firebaseAuth = FirebaseAuth.getInstance();
-        databaseReference.keepSynced(true);
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
     }
 }

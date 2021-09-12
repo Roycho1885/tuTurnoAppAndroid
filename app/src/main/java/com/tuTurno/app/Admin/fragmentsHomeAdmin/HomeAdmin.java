@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -165,7 +166,6 @@ public class HomeAdmin extends Fragment {
             return false;
         });
 
-
         //user = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
 
         Calendar cal = Calendar.getInstance();
@@ -180,6 +180,7 @@ public class HomeAdmin extends Fragment {
 
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
         final String fecha_actual = sdf.format(micalendario1.getTime());
+
         //LECTURA DEL CLIENTE
         databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
@@ -198,6 +199,10 @@ public class HomeAdmin extends Fragment {
                         cliente_admin.setText(getString(R.string.cliente) + " " + c.getNombre());
                         tool.setTitle(c.getGym());
                         textologo.setText(c.getGym());
+
+                        if(cli.getAdmin().equals("Restringido")){
+                            fab.setClickable(false);
+                        }
                     }
                 }
 
@@ -245,6 +250,7 @@ public class HomeAdmin extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+
         //ENVIO NOTIFICACIONES LOS LUNES, MIERCOLES Y VIERNES UNICAMENTE
         if (micalendario2.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY || micalendario2.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY
                 || micalendario2.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {

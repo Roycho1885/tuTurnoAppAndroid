@@ -51,18 +51,21 @@ public class AdminCodigo extends Fragment {
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.admincodigo, container, false);
+        assert getArguments() != null;
         FloatingActionButton fab= requireActivity().findViewById(R.id.fab_admin);
         fab.setVisibility(View.GONE);
 
 
         final EditText txtcodigo = root.findViewById(R.id.txtCodigoo);
         final TextView codigoactual = root.findViewById(R.id.codigoctualtext);
-        final Button botonaceptar = root.findViewById(R.id.button2);
+        final Button botonaceptar = root.findViewById(R.id.btncodigo);
 
         //para los diferentes gimnasios
         final TextView gimnasio = requireActivity().findViewById(R.id.textologo);
 
         iniciarFirebase();
+
+
 
         databaseReference.child("Gimnasios").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -89,21 +92,18 @@ public class AdminCodigo extends Fragment {
             }
         });
 
-        botonaceptar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        botonaceptar.setOnClickListener(view -> {
 
 
-                if(txtcodigo.getText().toString().equals("")){
-                    txtcodigo.setError("Ingrese Código");
-                }else{
-                    codigoss = txtcodigo.getText().toString().trim();
-                    gym.setCodigoacceso(codigoss);
-                    databaseReference.child("Gimnasios").child(gimnasio.getText().toString()).setValue(gym);
-                    Snackbar.make(view,"Código modificado correctamente",Snackbar.LENGTH_SHORT).show();
-                    txtcodigo.setText("");
-                    codigoactual.setText(codigoss);
-                }
+            if(txtcodigo.getText().toString().equals("")){
+                txtcodigo.setError("Ingrese Código");
+            }else{
+                codigoss = txtcodigo.getText().toString().trim();
+                gym.setCodigoacceso(codigoss);
+                databaseReference.child("Gimnasios").child(gimnasio.getText().toString()).setValue(gym);
+                Snackbar.make(view,"Código modificado correctamente",Snackbar.LENGTH_SHORT).show();
+                txtcodigo.setText("");
+                codigoactual.setText(codigoss);
             }
         });
 

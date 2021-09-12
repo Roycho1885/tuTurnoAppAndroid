@@ -397,6 +397,7 @@ public class HomeCliente extends Fragment {
                                             }
                                             tur.setCupo(String.valueOf(cupo));
                                             tur.setCupoalmacenado(turnoselecc.getCupoalmacenado());
+                                            tur.setCoach(turnoselecc.getCoach());
                                             databaseReference.child(textologo.getText().toString()).child("Disciplinas").child(tur.getDisciplina()).child(tur.getId()).setValue(tur);
                                             assert container != null;
                                             Snackbar.make(container, "Turno registrado correctamente", Snackbar.LENGTH_SHORT).show();

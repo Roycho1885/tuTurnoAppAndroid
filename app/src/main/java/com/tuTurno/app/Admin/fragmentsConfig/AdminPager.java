@@ -11,6 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -32,20 +35,11 @@ import models.cliente;
 
 public class AdminPager extends Fragment {
 
-   /* private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
-    private FirebaseAuth firebaseAuth;
-    cliente cli;*/
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.adminpager, container, false);
-
-       /* //para los diferentes gimnasios
-        final TextView gimnasio = requireActivity().findViewById(R.id.textologo);
-
-        iniciarFirebase();*/
 
 
         new SlidePagerAdapter(getChildFragmentManager());
@@ -88,39 +82,6 @@ public class AdminPager extends Fragment {
         // set adapter on viewpager
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-
-        /*databaseReference.child("Clientes").orderByChild("apellido").addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot shot : snapshot.getChildren()) {
-                    cli = shot.getValue(cliente.class);
-                    assert cli != null;
-                    //ACA VER EL TEMA DE ELIMINAR VISTAS PARA UN ENTRENADOR
-                    if (cli.getEmail().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail()) && cli.getAdmin().equals("Si")) {
-
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
-
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
     }
-
-
-   /* private void iniciarFirebase() {
-        FirebaseApp.initializeApp(requireActivity());
-        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
-        firebaseAppCheck.installAppCheckProviderFactory(
-                SafetyNetAppCheckProviderFactory.getInstance());
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-        firebaseAuth = FirebaseAuth.getInstance();
-        databaseReference.keepSynced(true);
-    }*/
 }
