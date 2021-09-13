@@ -1,27 +1,18 @@
 package com.tuTurno.app.Admin;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.InputType;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -38,16 +29,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.tuTurno.app.Admin.fragmentsConfig.AdminCodigo;
 import com.tuTurno.app.LoginActivity;
 import com.tuTurno.app.R;
 import com.tuTurno.app.SlidePagerAdapter;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import models.cliente;
-import models.gimnasios;
 
 public class ActividadAdmin  extends AppCompatActivity {
 
@@ -121,7 +109,7 @@ public class ActividadAdmin  extends AppCompatActivity {
                     if (c.getEmail().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail())) {
                         cli = shot.getValue(cliente.class);
                         assert cli != null;
-                        //menuView.getItem(1).setEnabled(!cli.getAdmin().equals("Restringido"));
+                        menuView.getItem(1).setEnabled(!cli.getAdmin().equals("Restringido"));
                     }
                 }
             }
