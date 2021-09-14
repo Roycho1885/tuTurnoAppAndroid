@@ -65,7 +65,7 @@ public class ListViewAdaptadorCuotasAdmin extends BaseAdapter implements Filtera
         ultimopago.setText(items.getUltimopago());
         fechavence.setText(items.getFechavencimiento());
         disciplina.setText(items.getDisciplinaelegida());
-        diasxsemana.setText(items.getDiasporsemana());
+        diasxsemana.setText(items.getDiasporsemanaresg());
         estadopago.setImageResource(items.getEstadopago());
 
         return view;

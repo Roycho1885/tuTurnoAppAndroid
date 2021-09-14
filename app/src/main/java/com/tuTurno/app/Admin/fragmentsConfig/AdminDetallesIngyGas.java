@@ -20,8 +20,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.appcheck.FirebaseAppCheck;
-import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -137,20 +135,9 @@ public class AdminDetallesIngyGas extends Fragment {
 
     private void iniciarFirebase() {
         FirebaseApp.initializeApp(requireActivity());
-        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
-        firebaseAppCheck.installAppCheckProviderFactory(
-                SafetyNetAppCheckProviderFactory.getInstance());
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
         databaseReference.keepSynced(true);
     }
 
-    private void actualizarformatofecha() {
-        @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
-        txtfechadetalle.setText(sdf.format(micalendario.getTime()));
-        int index1 = txtfechadetalle.getText().toString().indexOf("-", 3);
-        mess = txtfechadetalle.getText().toString().substring(3, index1);
-        anioo = txtfechadetalle.getText().toString().substring(index1 + 1);
-        banderafecha = true;
-    }
 }

@@ -10,8 +10,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.appcheck.FirebaseAppCheck;
-import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,7 +49,7 @@ public class MiAlarma extends BroadcastReceiver {
                                         for (DataSnapshot shot : snapshot.getChildren()) {
                                             turno = shot.getValue(models.turno.class);
 
-                                            HashMap hashMap = new HashMap();
+                                            HashMap<String, Object> hashMap = new HashMap<>();
                                             hashMap.put("cupo", turno.getCupoalmacenado());
                                             databaseReference.child(Objects.requireNonNull(shot2.child("nombre").getValue()).toString()).child("Disciplinas").child(shot1.getKey()).child(turno.getId()).updateChildren(hashMap).addOnSuccessListener(o -> {
                                             });
@@ -93,9 +91,6 @@ public class MiAlarma extends BroadcastReceiver {
 
     private void iniciarFirebase(Context context) {
         FirebaseApp.initializeApp(context);
-        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
-        firebaseAppCheck.installAppCheckProviderFactory(
-                SafetyNetAppCheckProviderFactory.getInstance());
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();

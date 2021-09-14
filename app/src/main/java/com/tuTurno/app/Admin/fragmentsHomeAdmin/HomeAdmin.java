@@ -12,11 +12,8 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -33,8 +30,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.appcheck.FirebaseAppCheck;
-import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -58,7 +53,6 @@ import java.util.Objects;
 import models.DatosTurno;
 import models.MisFunciones;
 import models.cliente;
-import models.cuotas;
 import models.gimnasios;
 import models.turno;
 
@@ -80,11 +74,11 @@ public class HomeAdmin extends Fragment {
     private ArrayList<String> arraydisci, arrayturnos;
     private ArrayAdapter<String> miadapter, miadapter2;
     EditText fechapago;
-    String disci1, horaturno;
+    String disci1, horaturno, user;
     boolean menudisci = false;
     boolean menuturno = false;
     boolean band = false;
-    boolean bandera1;
+    boolean bandera1, clienteres;
     MisFunciones cargarNav = new MisFunciones();
     MisFunciones enviarno = new MisFunciones();
     ProgressDialog cargando;
@@ -131,6 +125,7 @@ public class HomeAdmin extends Fragment {
         setFecha = root.findViewById(R.id.setfecha);
         cliente_admin = requireActivity().findViewById(R.id.versianda);
         fab.setImageResource(R.drawable.lista_admin);
+        clienteres = false;
 
 
         //ESTO ES PARA EL LISTVIEW
@@ -166,7 +161,7 @@ public class HomeAdmin extends Fragment {
             return false;
         });
 
-        //user = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
+        user = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
 
         Calendar cal = Calendar.getInstance();
         micalendario = Calendar.getInstance();
@@ -193,6 +188,7 @@ public class HomeAdmin extends Fragment {
 
                     if (c.getEmail().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail())) {
                         cli = shot.getValue(cliente.class);
+                        assert cli != null;
                         //CARGO NOMBRE, GIMNASIO E IMAGEN AL HEADER
                         nombre = c.getNombre();
                         apellido = c.getApellido();
@@ -265,6 +261,10 @@ public class HomeAdmin extends Fragment {
                         for (DataSnapshot shot : snapshot.getChildren()) {
                             c = shot.getValue(cliente.class);
                             assert c != null;
+                            if(c.getEmail().equals(user)){
+                                if(c.getAdmin().equals("Restringido"))
+                                    clienteres = true;
+                            }
                             //COLECTO LOS TOKENS PARA NOTIFICACIONES SEGUN ESTADO DEUDA
                             if (c.getGym().equals(textologo.getText().toString()) && c.getAdmin().equals("No")) {
                                 if (c.getEstadodeuda().equals("Debe") || c.getEstadodeuda().equals("0")) {
@@ -298,7 +298,7 @@ public class HomeAdmin extends Fragment {
                             }
                         }
                         //ENVIAMOS NOTIFICACION SI LA LISTA DE TOKEN DEUDORES NO ESTA VACIA
-                        if (tokensdeudadebe.size() != 0) {
+                        if (tokensdeudadebe.size() != 0 && !clienteres) {
                             androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
                             mensaje.setTitle("Atención!");
                             mensaje.setIcon(R.drawable.ic_baseline_notification_important_24);
@@ -478,6 +478,7 @@ public class HomeAdmin extends Fragment {
                 databaseReference.child(textologo.getText().toString()).child("Datos Turnos").child(listadeturnos.getIdTurno()).updateChildren(hashMap).addOnSuccessListener(o -> {
                 });
                 Snackbar.make(view, "Turno registrado", Snackbar.LENGTH_SHORT).show();
+                adaptador.notifyDataSetChanged();
             });
             mensaje.setNegativeButton("No", (dialogInterface, t) -> dialogInterface.dismiss());
             AlertDialog dialog = mensaje.create();
@@ -503,9 +504,6 @@ public class HomeAdmin extends Fragment {
 
     private void iniciarFirebase() {
         FirebaseApp.initializeApp(requireActivity());
-        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
-        firebaseAppCheck.installAppCheckProviderFactory(
-                SafetyNetAppCheckProviderFactory.getInstance());
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();

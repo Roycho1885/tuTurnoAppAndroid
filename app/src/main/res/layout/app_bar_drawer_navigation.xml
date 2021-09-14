@@ -57,6 +57,7 @@
         android:layout_height="wrap_content"
         app:layout_anchor="@id/CollapsingToolbar"
         app:layout_anchorGravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin" />
+        android:layout_margin="@dimen/fab_margin"
+            android:contentDescription="TODO" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
