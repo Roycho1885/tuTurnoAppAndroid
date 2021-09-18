@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,17 +45,23 @@ import org.jetbrains.annotations.NotNull;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
+import models.DatosNotificaciones;
 import models.DatosTurno;
 import models.MisFunciones;
 import models.cliente;
 import models.gimnasios;
 import models.turno;
+
+import static java.time.temporal.ChronoUnit.*;
 
 public class HomeAdmin extends Fragment {
     private FirebaseDatabase firebaseDatabase;
@@ -64,8 +71,9 @@ public class HomeAdmin extends Fragment {
     private TextView cliente_admin, setFecha;
     private CollapsingToolbarLayout tool;
     private NavigationView navi;
-    private String fechaactual, urldire, fecha_venc, anioo,mess, apellido,nombre;
+    private String fechaactual, urldire, fecha_ulti, anioo,mess, apellido,nombre, fecha_venci;
     private cliente c, cli = new cliente();
+    private DatosNotificaciones datos = new DatosNotificaciones();
     private DatosTurno t, listadeturnos = new DatosTurno();
     private ScrollView scroolasis;
 
@@ -82,9 +90,9 @@ public class HomeAdmin extends Fragment {
     MisFunciones cargarNav = new MisFunciones();
     MisFunciones enviarno = new MisFunciones();
     ProgressDialog cargando;
-    Date fechavencimiento, fechaact, fechaelegida;
+    Date fechaultimopago, fechaact, fechavencimiento;
     Calendar micalendario, micalendario1, micalendario2;
-    int numeromes, numeroactmes, noticontador;
+    int numeromes, numeroactmes, noticontador, numerodias, numerodiasact;
     TextView textologo;
 
     //CREO UN EVENTLISTENER
@@ -92,6 +100,9 @@ public class HomeAdmin extends Fragment {
 
     //LISTAS PARA LAS NOTIFICACIONES
     private ArrayList<String> tokensdeudadebe;
+    private ArrayList<String> token3dias;
+    private ArrayList<String> token2dias;
+    private ArrayList<String> token1dias;
 
 
     //para el listview
@@ -108,7 +119,6 @@ public class HomeAdmin extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        noticontador = 0;
     }
 
 
@@ -132,6 +142,9 @@ public class HomeAdmin extends Fragment {
         milistaturnoscliente = root.findViewById(R.id.listadeturnoscliente);
 
         tokensdeudadebe = new ArrayList<>();
+        token3dias = new ArrayList<>();
+        token2dias = new ArrayList<>();
+        token1dias = new ArrayList<>();
 
 
         tool = requireActivity().findViewById(R.id.CollapsingToolbar);
@@ -247,86 +260,131 @@ public class HomeAdmin extends Fragment {
             }
         });
 
-        //ENVIO NOTIFICACIONES LOS LUNES, MIERCOLES Y VIERNES UNICAMENTE
-        if (micalendario2.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY || micalendario2.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY
-                || micalendario2.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
+        //ENVIO NOTIFICACIONES UNA SOLA VEZ AL DIA
+        databaseReference.child(textologo.getText().toString()).child("DatosNotificaciones").child("FechaEnvio").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String fecha = snapshot.child("fecha").getValue().toString();
+                int control = Integer.parseInt(snapshot.child("control").getValue().toString());
+                Snackbar.make(container, "la fecha es "+ fecha + control, Snackbar.LENGTH_SHORT).show();
 
-            //EL CONTADOR CONTROLA QUE SE HAYA EJECUTADO POR LO MENOS UN ENVIO DE NOTIFICACIONES
-            if (noticontador < 1) {
+                if(fecha.equals(fechaactual)){
+                    Snackbar.make(container, "Ya se enviaron Notificaciones", Snackbar.LENGTH_SHORT).show();
+                }else {
+                    datos.setFecha(fechaactual);
+                    datos.setControl(1);
+                    databaseReference.child(textologo.getText().toString()).child("DatosNotificaciones").child("FechaEnvio").setValue(datos);
 
-                //LECTURA CLIENTES PARA NOTIFICACIONES
-                databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot shot : snapshot.getChildren()) {
-                            c = shot.getValue(cliente.class);
-                            assert c != null;
-                            if(c.getEmail().equals(user)){
-                                if(c.getAdmin().equals("Restringido"))
-                                    clienteres = true;
-                            }
-                            //COLECTO LOS TOKENS PARA NOTIFICACIONES SEGUN ESTADO DEUDA
-                            if (c.getGym().equals(textologo.getText().toString()) && c.getAdmin().equals("No")) {
-                                if (c.getEstadodeuda().equals("Debe") || c.getEstadodeuda().equals("0")) {
-                                    fecha_venc = c.getUltimopago();
+                    //LECTURA CLIENTES PARA NOTIFICACIONES
+                    databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot shot : snapshot.getChildren()) {
+                                c = shot.getValue(cliente.class);
+                                assert c != null;
+                                if(c.getEmail().equals(user)){
+                                    if(c.getAdmin().equals("Restringido"))
+                                        clienteres = true;
+                                }
 
-                                    //CALCULAMOS LOS MESES QUE EL CLIENTE ESTA SIN ACTIVIDAD
+                                if(c.getGym().equals(textologo.getText().toString()) && c.getAdmin().equals("No")
+                                        && c.getEstadodeuda().equals("OK")){
+                                    fecha_venci = c.getFechavencimiento();
+
                                     try {
                                         fechaact = sdf.parse(fecha_actual);
-                                        fechavencimiento = sdf.parse(fecha_venc);
-                                        assert fechavencimiento != null;
-                                        micalendario.setTime(fechavencimiento);
-                                        micalendario1.setTime(fechaact);
-                                        numeromes = micalendario.get(Calendar.MONTH);
-                                        numeroactmes = micalendario1.get(Calendar.MONTH);
-                                    } catch (ParseException e) {
+                                        fechavencimiento = sdf.parse(fecha_venci);
+                                    }catch (ParseException e) {
                                         e.printStackTrace();
                                     }
 
-                                    //PREGUNTAMOS SI LA FECHA DE ULTIMO PAGO PASO 3 MESES PARA ELIMINAR CLIENTE
-                                    //DESPUES DE BORRAR COLOCA EL EMAIL EN BORRARCLIENTES PARA QUITAR CUENTA
-                                    if ((numeroactmes - numeromes) >= 3) {
-                                        cliente cli = new cliente(c.getEmail());
-                                        databaseReference.child("BorrarClientes").child(textologo.getText().toString()).push().setValue(cli);
-                                        databaseReference.child("Clientes").child(c.getId()).removeValue();
-                                    } else {
-                                        if (!c.getEstadodeuda().equals("0")) {
-                                            tokensdeudadebe.add(c.getToken());
+                                    //SACO DIFERENCIA DE DIAS PARA ENVIAR NOTIFICACIONES A LAS CUOTAS PRÓXIMAS A VENCER
+                                    long diff = fechavencimiento.getTime() - fechaact.getTime();
+                                    TimeUnit time = TimeUnit.DAYS;
+                                    long diferencia = time.convert(diff, TimeUnit.MILLISECONDS);
+
+                                    switch ((int) diferencia){
+                                        case 1: token1dias.add(c.getToken());
+                                            break;
+                                        case 2: token2dias.add(c.getToken());
+                                            break;
+                                        case 3: token3dias.add(c.getToken());
+                                            break;
+                                    }
+                                    //notificacionsegunddias((int) diferencia, container);
+                                }
+
+                                //COLECTO LOS TOKENS PARA NOTIFICACIONES SEGUN ESTADO DEUDA
+                                if (c.getGym().equals(textologo.getText().toString()) && c.getAdmin().equals("No")) {
+                                    if (c.getEstadodeuda().equals("Debe") || c.getEstadodeuda().equals("0")) {
+                                        fecha_ulti = c.getUltimopago();
+
+                                        //CALCULAMOS LOS MESES QUE EL CLIENTE ESTA SIN ACTIVIDAD
+                                        try {
+                                            fechaact = sdf.parse(fecha_actual);
+                                            fechaultimopago = sdf.parse(fecha_ulti);
+                                            assert fechaultimopago != null;
+                                            micalendario.setTime(fechaultimopago);
+                                            micalendario1.setTime(fechaact);
+                                            //SACAMOS LOS MESES DE FECHA ACTUAL Y FECHA VENCIMIENTO
+                                            numeromes = micalendario.get(Calendar.MONTH);
+                                            numeroactmes = micalendario1.get(Calendar.MONTH);
+
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        //PREGUNTAMOS SI LA FECHA DE ULTIMO PAGO PASO 3 MESES PARA ELIMINAR CLIENTE
+                                        //DESPUES DE BORRAR COLOCA EL EMAIL EN BORRARCLIENTES PARA QUITAR CUENTA
+                                        if ((numeroactmes - numeromes) >= 3) {
+                                            cliente cli = new cliente(c.getEmail());
+                                            databaseReference.child("BorrarClientes").child(textologo.getText().toString()).push().setValue(cli);
+                                            databaseReference.child("Clientes").child(c.getId()).removeValue();
+                                        } else {
+                                            if (!c.getEstadodeuda().equals("0")) {
+                                                tokensdeudadebe.add(c.getToken());
+                                            }
                                         }
                                     }
                                 }
                             }
+                            //ENVIAMOS NOTIFICACION SI LA LISTA DE TOKEN DEUDORES NO ESTA VACIA
+                            if (tokensdeudadebe.size() != 0 && !clienteres) {
+                                androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
+                                mensaje.setTitle("Atención!");
+                                mensaje.setIcon(R.drawable.ic_baseline_notification_important_24);
+                                mensaje.setMessage("¿Desea enviar notificaciones a los deudores?");
+                                mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
+                                    cargando.setTitle("Enviando...");
+                                    cargando.setMessage("Espere por favor...");
+                                    cargando.show();
+                                    for (int u = 0; u < tokensdeudadebe.size(); u++) {
+                                        enviarno.enviarnotificacionapi(tokensdeudadebe.get(u), "Atención!", "Tu cuota se encuentra vencida, pasa por administración", container, cargando);
+                                    }
+                                });
+
+                                mensaje.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss());
+
+                                AlertDialog dialog = mensaje.create();
+                                dialog.show();
+
+                            }
                         }
-                        //ENVIAMOS NOTIFICACION SI LA LISTA DE TOKEN DEUDORES NO ESTA VACIA
-                        if (tokensdeudadebe.size() != 0 && !clienteres) {
-                            androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
-                            mensaje.setTitle("Atención!");
-                            mensaje.setIcon(R.drawable.ic_baseline_notification_important_24);
-                            mensaje.setMessage("¿Desea enviar notificaciones a los deudores?");
-                            mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
-                                noticontador = noticontador + 1;
-                                cargando.setTitle("Enviando...");
-                                cargando.setMessage("Espere por favor...");
-                                cargando.show();
-                                for (int u = 0; u < tokensdeudadebe.size(); u++) {
-                                    enviarno.enviarnotificacionapi(tokensdeudadebe.get(u), "Atención!", "Tu cuota se encuentra vencida, pasa por administración", container, cargando);
-                                }
-                            });
 
-                            mensaje.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss());
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                            AlertDialog dialog = mensaje.create();
-                            dialog.show();
                         }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                    });
+                }
             }
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
 
         menudis.setOnItemClickListener((parent, v, position, id) -> {
@@ -514,6 +572,40 @@ public class HomeAdmin extends Fragment {
         DateFormat formato = DateFormat.getDateInstance(DateFormat.FULL);
         fechapago.setText(formato.format(micalendario.getTime()));
         bandera1 = true;
+    }
+
+    private void notificacionsegunddias(int dias, View view){
+        androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
+        mensaje.setTitle("Atención!");
+        mensaje.setIcon(R.drawable.ic_baseline_notification_important_24);
+        mensaje.setMessage("¿Desea enviar notificaciones a los clientes con cuotas por vencer?");
+        mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
+            noticontador = noticontador + 1;
+            cargando.setTitle("Enviando...");
+            cargando.setMessage("Espere por favor...");
+            cargando.show();
+
+            switch (dias){
+                case 1:
+                    for (int u = 0; u < token1dias.size(); u++) {
+                        enviarno.enviarnotificacionapi(token1dias.get(u), "Atención!", "Tu cuota vencerá en un día. Renuévala para evitar inconvenientes", view, cargando);
+                    }
+                case 2:
+                    for (int u = 0; u < token2dias.size(); u++) {
+                        enviarno.enviarnotificacionapi(token2dias.get(u), "Atención!", "Tu cuota vencerá en dos días. Renuévala para evitar inconvenientes", view, cargando);
+                    }
+                case 3:
+                    for (int u = 0; u < token3dias.size(); u++) {
+                        enviarno.enviarnotificacionapi(token3dias.get(u), "Atención!", "Tu cuota vencerá en tres días. Renuévala para evitar inconvenientes", view, cargando);
+                    }
+            }
+
+        });
+
+        mensaje.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss());
+
+        AlertDialog dialog = mensaje.create();
+        dialog.show();
     }
 
 }

@@ -265,6 +265,7 @@ public class HomeCliente extends Fragment {
                                     }
                                 });
 
+
                         //CARGO NOMBRE, GIMNASIO E IMAGEN AL HEADER
                         nombre = c.getNombre();
                         apellido = c.getApellido();
@@ -565,5 +566,4 @@ public class HomeCliente extends Fragment {
         datosturno.setIdturnoseleccionado(turselecc);
         datosturno.setAsistencia("No");
     }
-
 }
