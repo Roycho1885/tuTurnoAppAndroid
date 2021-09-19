@@ -2,15 +2,13 @@ package models;
 
 public class DatosNotificaciones {
     String fecha;
-    int control;
 
     public DatosNotificaciones(){
 
     }
 
-    public DatosNotificaciones(String fecha, int control){
+    public DatosNotificaciones(String fecha){
         this.fecha = fecha;
-        this.control = control;
     }
 
     public String getFecha() {
@@ -21,11 +19,4 @@ public class DatosNotificaciones {
         this.fecha = fecha;
     }
 
-    public int getControl() {
-        return control;
-    }
-
-    public void setControl(int control) {
-        this.control = control;
-    }
 }
