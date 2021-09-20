@@ -64,6 +64,7 @@ public class HomeAdmin extends Fragment {
     private FirebaseAuth firebaseAuth;
     private Context micontexto;
     private TextView cliente_admin, setFecha;
+    private ImageView imagenvacia;
     private CollapsingToolbarLayout tool;
     private NavigationView navi;
     private String fechaactual, urldire, fecha_ulti, anioo, mess, apellido, nombre, fecha_venci, fecha;
@@ -128,15 +129,19 @@ public class HomeAdmin extends Fragment {
         final AutoCompleteTextView menutur = root.findViewById(R.id.dropdown_texto);
         final AutoCompleteTextView menudis = root.findViewById(R.id.dropdown_text);
         scroolasis = root.findViewById(R.id.scroolasis);
+        imagenvacia = root.findViewById(R.id.imagenvacia);
         fechapago = root.findViewById(R.id.txtfecha);
         setFecha = root.findViewById(R.id.setfecha);
         cliente_admin = requireActivity().findViewById(R.id.versianda);
         fab.setImageResource(R.drawable.lista_admin);
         clienteres = false;
+        imagenvacia.setVisibility(View.GONE);
+
 
 
         //ESTO ES PARA EL LISTVIEW
         milistaturnoscliente = root.findViewById(R.id.listadeturnoscliente);
+        milistaturnoscliente.setVisibility(View.VISIBLE);
 
         tokensdeudadebe = new ArrayList<>();
         token3dias = new ArrayList<>();
@@ -504,6 +509,9 @@ public class HomeAdmin extends Fragment {
 
                         if (!band) {
                             milistaturnoscliente.setAdapter(null);
+                            milistaturnoscliente.setVisibility(View.GONE);
+                            imagenvacia.setVisibility(View.VISIBLE);
+                            imagenvacia.setImageResource(R.drawable.imgvacia);
                             Snackbar.make(container, "Por el momento no existen turnos por motrar", Snackbar.LENGTH_SHORT).show();
                             menudis.post(() -> menudis.getText().clear());
                             menutur.post(() -> menutur.getText().clear());
@@ -511,6 +519,9 @@ public class HomeAdmin extends Fragment {
 //                                arrayAdapterTurnos.notifyDataSetChanged();
                         } else {
                             if (adaptador == null) {
+                                milistaturnoscliente.setVisibility(View.GONE);
+                                imagenvacia.setVisibility(View.VISIBLE);
+                                imagenvacia.setImageResource(R.drawable.imgvacia);
                                 Snackbar.make(container, "Por el momento no existen turnos por motrar", Snackbar.LENGTH_SHORT).show();
                                 menudis.post(() -> menudis.getText().clear());
                                 menutur.post(() -> menutur.getText().clear());

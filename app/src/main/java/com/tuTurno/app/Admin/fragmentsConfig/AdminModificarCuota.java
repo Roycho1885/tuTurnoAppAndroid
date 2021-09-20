@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ public class AdminModificarCuota extends Fragment {
     private ScrollView scroll;
     private NavigationView navi;
     private String disci1, idcuot;
+    private ImageView imgcuotavacia;
     boolean menudisci, prueba;
     private CuotaConfig objcuota = new CuotaConfig();
     CuotaConfig idcuota;
@@ -77,9 +79,11 @@ public class AdminModificarCuota extends Fragment {
         scroll = root.findViewById(R.id.scroolmonto);
         final AutoCompleteTextView menudis = root.findViewById(R.id.dropdown_text);
         botonflotante = root.findViewById(R.id.btnflotante);
+        imgcuotavacia = root.findViewById(R.id.imgcuotavacia);
         navi = requireActivity().findViewById(R.id.nav_view_admin);
         View head = navi.getHeaderView(0);
         final TextView textologo = head.findViewById(R.id.textologo);
+        imgcuotavacia.setVisibility(View.GONE);
 
         //ESTO ES PARA EL LISTVIEW
         milistamonto = root.findViewById(R.id.listacuota);
@@ -167,6 +171,8 @@ public class AdminModificarCuota extends Fragment {
                 if (!prueba) {
                     milistamonto.setAdapter(null);
                     milistamonto.setVisibility(View.GONE);
+                    imgcuotavacia.setVisibility(View.VISIBLE);
+                    imgcuotavacia.setImageResource(R.drawable.imgvacia);
                     Snackbar.make(botonflotante, "No existen cuotas para esta disciplina", Snackbar.LENGTH_SHORT).show();
                 }
             }

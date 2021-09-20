@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -29,7 +29,6 @@ import com.tuTurno.app.ListViewAdaptadorDetallesIngyGas;
 import com.tuTurno.app.R;
 import com.tuTurno.app.SwipeListViewTouchListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -38,11 +37,10 @@ import models.ingresosextras;
 public class AdminDetallesIngyGas extends Fragment {
     private DatabaseReference databaseReference;
     private Button botondetalles;
+    private ImageView imgvacia;
     Calendar micalendario;
-    boolean banderafecha, bandera1;
-    EditText txtfechadetalle;
+    boolean bandera1;
     Context micontexto;
-    String mess, anioo;
     private ScrollView scr;
     private ingresosextras objing = new ingresosextras();
     private ingresosextras objlista = new ingresosextras();
@@ -67,7 +65,10 @@ public class AdminDetallesIngyGas extends Fragment {
         scr = root.findViewById(R.id.scr);
         milistadetallesingygas = root.findViewById(R.id.listadetallesingresosyegresos);
         botondetalles = root.findViewById(R.id.botonvdetalles);
+        imgvacia = root.findViewById(R.id.imgvacia);
         micalendario = Calendar.getInstance();
+        imgvacia.setVisibility(View.GONE);
+        milistadetallesingygas.setVisibility(View.VISIBLE);
 
         //para los diferentes gimnasios
         final TextView gimnasio = requireActivity().findViewById(R.id.textologo);
@@ -91,8 +92,11 @@ public class AdminDetallesIngyGas extends Fragment {
                         bandera1 = true;
                     }
                     if (!bandera1) {
+                        imgvacia.setVisibility(View.VISIBLE);
+                        imgvacia.setImageResource(R.drawable.imgvacia);
                         Snackbar.make(view, "Por el momento no existen registros", Snackbar.LENGTH_SHORT).show();
                         milistadetallesingygas.setAdapter(null);
+                        milistadetallesingygas.setVisibility(View.GONE);
                     }
                 }
 

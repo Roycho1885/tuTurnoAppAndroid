@@ -7,6 +7,7 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -20,7 +21,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,18 +39,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.UUID;
 
 import models.DatosTurno;
 import models.cliente;
-import models.gimnasios;
 import models.turno;
 
 public class ClienteTurnoAdmin extends Fragment {
     private TextView setFecha;
     private TextView setdisciplina;
     private FloatingActionButton fab;
+    private ImageView imagenfindee;
 
     private ArrayList<turno> listturnos = new ArrayList<>();
     private turno turnoselecc;
@@ -89,9 +88,12 @@ public class ClienteTurnoAdmin extends Fragment {
         setdisciplina = root.findViewById(R.id.setdisciplina);
         otroscroll = root.findViewById(R.id.otroscroll);
         CardView car = root.findViewById(R.id.cardview);
+        imagenfindee = root.findViewById(R.id.imagenfindee);
 
         //ESTO ES PARA EL LISTVIEW
         milistaturnos = root.findViewById(R.id.listaturnos);
+        milistaturnos.setVisibility(View.VISIBLE);
+        imagenfindee.setVisibility(View.GONE);
 
         fab = requireActivity().findViewById(R.id.fab_admin);
         fab.setImageResource(R.drawable.ic_add_black_24dp);
@@ -137,7 +139,9 @@ public class ClienteTurnoAdmin extends Fragment {
         if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
             fab.setVisibility(View.GONE);
             car.setVisibility(View.GONE);
-            milistaturnos.setBackgroundResource(R.drawable.descanso);
+            imagenfindee.setVisibility(View.VISIBLE);
+            imagenfindee.setBackgroundResource(R.drawable.descanso);
+            milistaturnos.setVisibility(View.GONE);
             finde = true;
             assert container != null;
             Snackbar.make(container, "El fin de semana no se asignan turnos", Snackbar.LENGTH_SHORT).show();

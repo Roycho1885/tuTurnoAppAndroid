@@ -46,7 +46,7 @@ public class HomeRegistroAdmin extends Fragment {
     private TextView setFecha;
     private DatosTurno datosTurno = new DatosTurno();
     private NavigationView navi;
-    public EditText txtdni;
+    private static EditText txtdni;
     boolean banderaturno, banderacliente;
     String idturno, horaturn, emailcliente;
     Date horaactualturno, horaactualdia;
@@ -202,6 +202,7 @@ public class HomeRegistroAdmin extends Fragment {
 
         @Override
         public void onClick(View v) {
+            txtdni.setText("");
             nav.navigate(R.id.AdminPedirturno, bun);
         }
     }

@@ -109,6 +109,14 @@
             android:text="@string/infofecha"
             android:textSize="12sp" />
 
+        <ImageView
+            android:id="@+id/imagenvacia"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_below="@+id/infofecha"
+            android:layout_centerHorizontal="true">
+        </ImageView>
+
         <ListView
             android:id="@+id/listadeturnoscliente"
             android:layout_width="match_parent"

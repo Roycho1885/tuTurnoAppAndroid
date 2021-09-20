@@ -35,6 +35,14 @@
             android:layout_marginTop="10dp"
             android:text="@string/titulobtnveringygas" />
 
+        <ImageView
+            android:id="@+id/imgvacia"
+            android:layout_width="200sp"
+            android:layout_height="200sp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center">
+        </ImageView>
+
 
         <ListView
             android:id="@+id/listadetallesingresosyegresos"

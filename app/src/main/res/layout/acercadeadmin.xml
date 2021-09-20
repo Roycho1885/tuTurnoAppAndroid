@@ -31,6 +31,15 @@
             android:textSize="15sp">
         </TextView>
 
+        <TextView
+            android:id="@+id/txtlink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/link"
+            android:textAlignment="center"
+            android:textSize="15sp">
+        </TextView>
+
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="170dp"

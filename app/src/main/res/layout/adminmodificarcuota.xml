@@ -46,6 +46,14 @@
                     tools:ignore="LabelFor" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <ImageView
+                android:id="@+id/imgcuotavacia"
+                android:layout_width="200sp"
+                android:layout_height="200sp"
+                android:layout_below="@+id/botondisci"
+                android:layout_centerHorizontal="true">
+            </ImageView>
+
 
             <ListView
                 android:id="@+id/listacuota"

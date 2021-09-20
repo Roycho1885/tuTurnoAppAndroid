@@ -60,6 +60,7 @@ public class HomeCliente extends Fragment {
 
     private TextView setFecha;
     private TextView cliente, setdisciplina;
+    private ImageView imagenfinde;
     private CollapsingToolbarLayout tool;
     private NavigationView navi;
     private ScrollView otroscroll;
@@ -117,6 +118,7 @@ public class HomeCliente extends Fragment {
         setdisciplina = root.findViewById(R.id.setdisciplina);
         CardView car = root.findViewById(R.id.cardview);
         otroscroll = root.findViewById(R.id.otroscroll);
+        imagenfinde = root.findViewById(R.id.imagenfinde);
 
 
         //ESTO ES PARA EL LISTVIEW
@@ -127,6 +129,8 @@ public class HomeCliente extends Fragment {
         fab.setEnabled(true);
         fab.setVisibility(View.VISIBLE);
         car.setVisibility(View.VISIBLE);
+        milistaturnos.setVisibility(View.VISIBLE);
+        imagenfinde.setVisibility(View.GONE);
 
         //PUBLICIDAD
         MobileAds.initialize(micontexto, initializationStatus -> {
@@ -183,7 +187,9 @@ public class HomeCliente extends Fragment {
         if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
             fab.setVisibility(View.GONE);
             car.setVisibility(View.GONE);
-            milistaturnos.setBackgroundResource(R.drawable.descanso);
+            imagenfinde.setVisibility(View.VISIBLE);
+            imagenfinde.setBackgroundResource(R.drawable.descanso);
+            milistaturnos.setVisibility(View.GONE);
             finde = true;
             Snackbar.make(container, "El fin de semana no se asignan turnos", Snackbar.LENGTH_SHORT).show();
         } else {
