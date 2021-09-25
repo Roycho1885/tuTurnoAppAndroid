@@ -12,6 +12,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -37,8 +38,8 @@ import models.cliente;
 public class AdministradorSetAdmin extends Fragment {
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-    private Button botoncargar, botonaceptar, botoncancelar;
-    private CheckBox checkboxres;
+    private Button botoncargar, botonaceptar;
+    private RadioButton checkboxres, checkboxres1, checkboxadminsi, checkboxadminno;
     private ListView lista;
     private AutoCompleteTextView dropdowntxt;
     private TextInputLayout botongym;
@@ -68,8 +69,10 @@ public class AdministradorSetAdmin extends Fragment {
         botongym = root.findViewById(R.id.botongym);
         botoncargar = root.findViewById(R.id.botoncargar);
         botonaceptar = root.findViewById(R.id.botonaceptar);
-        botoncancelar = root.findViewById(R.id.botoncancelar);
         checkboxres = root.findViewById(R.id.checkBoxRes);
+        checkboxres1 = root.findViewById(R.id.checkBoxRes1);
+        checkboxadminsi = root.findViewById(R.id.checkBoxAdminSi);
+        checkboxadminno = root.findViewById(R.id.checkBoxAdminNo);
         lista = root.findViewById(R.id.lista);
         miscroll = root.findViewById(R.id.misroll);
 
@@ -89,7 +92,7 @@ public class AdministradorSetAdmin extends Fragment {
         databaseReference.child("Gimnasios").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot shot : snapshot.getChildren()){
+                for (DataSnapshot shot : snapshot.getChildren()) {
                     arraygimnasios.add(Objects.requireNonNull(shot.child("nombre").getValue()).toString());
                 }
                 myadapter = new ArrayAdapter<>(micontexto, android.R.layout.simple_list_item_1, arraygimnasios);
@@ -103,7 +106,6 @@ public class AdministradorSetAdmin extends Fragment {
 
             }
         });
-
 
 
         //Controlo el scrollView con el ListView
@@ -123,9 +125,9 @@ public class AdministradorSetAdmin extends Fragment {
         botoncargar.setOnClickListener(v -> {
             listItems.clear();
             gym = dropdowntxt.getText().toString().trim();
-            if(gym.equals("")){
-                Toast.makeText(micontexto,"Selecciona un gimnasio", Toast.LENGTH_SHORT).show();
-            }else{
+            if (gym.equals("")) {
+                Toast.makeText(micontexto, "Selecciona un gimnasio", Toast.LENGTH_SHORT).show();
+            } else {
                 databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -147,12 +149,22 @@ public class AdministradorSetAdmin extends Fragment {
 
             botonaceptar.setOnClickListener(v12 -> {
                 comprueba = false;
-                for(int i=0 ; i< lista.getCount();i++){
-                    if(lista.isItemChecked(i)){
-                        if(checkboxres.isChecked()){
+                for (int i = 0; i < lista.getCount(); i++) {
+                    if (lista.isItemChecked(i)) {
+                        if (checkboxres1.isChecked()) {
                             cliente.setAdmin("Restringido");
-                        }else{
-                            cliente.setAdmin("Si");
+                        } else {
+                            if (checkboxres.isChecked()) {
+                                cliente.setAdmin("AdminRestringido");
+                            } else {
+                                if (checkboxadminsi.isChecked()) {
+                                    cliente.setAdmin("Si");
+                                } else {
+                                    if (checkboxadminno.isChecked()) {
+                                        cliente.setAdmin("No");
+                                    }
+                                }
+                            }
                         }
                         comprueba = true;
                         cli = (cliente) lista.getItemAtPosition(i);
@@ -174,51 +186,18 @@ public class AdministradorSetAdmin extends Fragment {
                         cliente.setTelefono(cli.getTelefono());
 
                         databaseReference.child("Clientes").child(cli.getId()).setValue(cliente);
-                        Toast.makeText(micontexto,"Los cambios se realizaron correctamente", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(micontexto, "Los cambios se realizaron correctamente", Toast.LENGTH_SHORT).show();
                     }
                 }
-                if(!comprueba){
-                    Toast.makeText(micontexto,"Selecciona un cliente", Toast.LENGTH_SHORT).show();
+                if (!comprueba) {
+                    Toast.makeText(micontexto, "Selecciona un cliente", Toast.LENGTH_SHORT).show();
                 }
             });
-
-            botoncancelar.setOnClickListener(v1 -> {
-                comprueba = false;
-                for(int i=0 ; i< lista.getCount();i++){
-                    if(lista.isItemChecked(i)){
-                        comprueba = true;
-                        cli = (cliente) lista.getItemAtPosition(i);
-                        cliente.setApellido(cli.getApellido());
-                        cliente.setNombre(cli.getNombre());
-                        cliente.setEmail(cli.getEmail());
-                        cliente.setGym(cli.getGym());
-                        cliente.setId(cli.getId());
-                        cliente.setDni(cli.getDni());
-                        cliente.setDireccion(cli.getDireccion());
-                        cliente.setToken(cli.getToken());
-                        cliente.setAdmin("No");
-                        cliente.setUltimopago(cli.getUltimopago());
-                        cliente.setFechavencimiento(cli.getFechavencimiento());
-                        cliente.setEstadopago(cli.getEstadopago());
-                        cliente.setEstadodeuda(cli.getEstadodeuda());
-                        cliente.setDisciplinaelegida(cli.getDisciplinaelegida());
-                        cliente.setDiasporsemana(cli.getDiasporsemana());
-                        cliente.setDiasporsemanaresg(cli.getDiasporsemanaresg());
-                        cliente.setTelefono(cli.getTelefono());
-                        databaseReference.child("Clientes").child(cli.getId()).setValue(cliente);
-                        Toast.makeText(micontexto,"Los cambios se realizaron correctamente", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if(!comprueba){
-                    Toast.makeText(micontexto,"Selecciona un cliente", Toast.LENGTH_SHORT).show();
-                }
-            });
-
         });
         return root;
     }
 
-    private void iniciarFirebase(){
+    private void iniciarFirebase() {
         FirebaseApp.initializeApp(requireActivity());
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();

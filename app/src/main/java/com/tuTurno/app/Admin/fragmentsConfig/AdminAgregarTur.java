@@ -332,26 +332,18 @@ public class AdminAgregarTur extends Fragment {
             }
 
         });
-        alertDialog.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dias = "";
-                for(int t=0; t< list.size();t++){
-                    dias = dias.concat(items[list.get(t)]);
-                    if(t!=list.size()-1){
-                        dias = dias.concat(", ");
-                    }
+        alertDialog.setPositiveButton("Aceptar", (dialogInterface, i) -> {
+            dias = "";
+            for(int t=0; t< list.size();t++){
+                dias = dias.concat(items[list.get(t)]);
+                if(t!=list.size()-1){
+                    dias = dias.concat(", ");
                 }
-                txtdias1.setText(dias);
             }
+            txtdias1.setText(dias);
         });
 
-        alertDialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
+        alertDialog.setNegativeButton("Cancelar", (dialogInterface, i) -> dialogInterface.cancel());
         AlertDialog alert = alertDialog.create();
         alert.setCanceledOnTouchOutside(false);
         alert.show();

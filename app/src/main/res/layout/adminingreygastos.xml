@@ -74,13 +74,79 @@
             android:text="@string/titulobtnveringygas" />
 
 
-        <ListView
-            android:id="@+id/listaingresosyegresos"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:choiceMode="singleChoice"
-            android:layout_marginBottom="20dp"
-            tools:ignore="NestedScrolling" />
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            app:cardBackgroundColor="@color/secondaryColor1"
+            app:cardPreventCornerOverlap="true"
+            app:cardCornerRadius="9dp"
+            app:cardElevation="20dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/txt_ingreso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ingreso Cuotas:"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/ingresocuota"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#a5c500"
+                    android:textSize="20sp"
+                    android:layout_toEndOf="@+id/txt_ingreso">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/txt_ingresoextra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ingreso Extras:"
+                    android:layout_below="@+id/txt_ingreso"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ingresoextra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#a5c500"
+                    android:textSize="20sp"
+                    android:layout_below="@+id/ingresocuota"
+                    android:layout_toEndOf="@+id/txt_ingresoextra">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/txt_egreso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gastos Extras:"
+                    android:textColor="#FFFFFF"
+                    android:layout_below="@+id/txt_ingresoextra"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/gastoextra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ff0006"
+                    android:textSize="16sp"
+                    android:layout_below="@+id/ingresoextra"
+                    android:layout_toEndOf="@+id/txt_egreso">
+                </TextView>
+
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
 
 
         <com.google.android.material.card.MaterialCardView
@@ -94,7 +160,8 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
 
             <TextView
                 android:id="@+id/tituloingreso"
@@ -140,6 +207,7 @@
                     android:focusable="true"
                     android:layout_centerHorizontal="true"
                     android:layout_below="@+id/importegasto"
+                    app:strokeColor="@color/material_on_primary_emphasis_medium"
                     app:rippleColor="@color/browser_actions_title_color"
                     android:textColor="#FFFFFF"
                     android:text="@string/titulobotondetalles"
@@ -149,27 +217,14 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="5dp"
-            android:gravity="center">
-
             <Button
                 android:id="@+id/btnreging"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin = "10dp"
+                android:layout_margin = "15dp"
                 android:textSize="12sp"
-                android:drawableStart="@drawable/ic_baseline_check_circle_24"
-                android:drawableEnd="@drawable/ic_baseline_cancel_24"
                 android:text="@string/btnregingreso">
             </Button>
-
-        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

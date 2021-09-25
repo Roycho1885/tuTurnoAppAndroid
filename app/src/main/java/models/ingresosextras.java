@@ -9,6 +9,7 @@ public class ingresosextras {
     private String mes;
     private String ano;
     private String tipo;
+    private String fecha;
 
     public String getMontoingresoextra() {
         return montoingresoextra;
@@ -16,6 +17,14 @@ public class ingresosextras {
 
     public void setMontoingresoextra(String montoingresoextra) {
         this.montoingresoextra = montoingresoextra;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 
     public String getId() {

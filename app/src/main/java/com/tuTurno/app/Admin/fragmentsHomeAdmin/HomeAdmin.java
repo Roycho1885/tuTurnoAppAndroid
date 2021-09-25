@@ -67,12 +67,11 @@ public class HomeAdmin extends Fragment {
     private ImageView imagenvacia;
     private CollapsingToolbarLayout tool;
     private NavigationView navi;
-    private String fechaactual, urldire, fecha_ulti, anioo, mess, apellido, nombre, fecha_venci, fecha;
+    private String fechaactual, urldire, fecha_ulti, apellido, nombre, fecha_venci, fecha;
     private cliente c, cli = new cliente();
     private DatosNotificaciones datos = new DatosNotificaciones();
     private DatosTurno t, listadeturnos = new DatosTurno();
     private ScrollView scroolasis;
-    private int control;
     public long diferencia;
 
     private ArrayList<DatosTurno> listturnos = new ArrayList<>();
@@ -90,7 +89,7 @@ public class HomeAdmin extends Fragment {
     ProgressDialog cargando;
     Date fechaultimopago, fechaact, fechavencimiento;
     Calendar micalendario, micalendario1, micalendario2;
-    int numeromes, numeroactmes, noticontador, numerodias, numerodiasact;
+    int numeromes, numeroactmes;
     TextView textologo;
 
     //CREO UN EVENTLISTENER

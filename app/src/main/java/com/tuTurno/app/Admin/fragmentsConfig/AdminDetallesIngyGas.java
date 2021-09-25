@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,13 +32,17 @@ import com.tuTurno.app.SwipeListViewTouchListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
+import models.cliente;
 import models.ingresosextras;
 
 public class AdminDetallesIngyGas extends Fragment {
     private DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
     private Button botondetalles;
     private ImageView imgvacia;
+    private String perfil, user;
     Calendar micalendario;
     boolean bandera1;
     Context micontexto;
@@ -49,6 +54,10 @@ public class AdminDetallesIngyGas extends Fragment {
     private final ArrayList<ingresosextras> listadetallesingygas = new ArrayList<>();
     private ListView milistadetallesingygas;
     private ListViewAdaptadorDetallesIngyGas adaptador;
+
+    //CREO UN EVENTLISTENER
+    private ValueEventListener milistenercliente;
+    private cliente cli, c = new cliente();
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -75,6 +84,30 @@ public class AdminDetallesIngyGas extends Fragment {
         adaptador = new ListViewAdaptadorDetallesIngyGas(micontexto, listadetallesingygas);
 
         iniciarFirebase();
+        user = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
+
+        //LECTURA DE CLIENTE PARA RESTRINGIR ACCESO
+        milistenercliente = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot shot : snapshot.getChildren()){
+                    cli = shot.getValue(cliente.class);
+                    if(cli.getEmail().equals(user)){
+                        c = shot.getValue(cliente.class);
+                        perfil = c.getAdmin();
+                    }
+                }
+                if(perfil.equals("AdminRestringido")){
+                    milistadetallesingygas.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        databaseReference.child("Clientes").addValueEventListener(milistenercliente);
 
 
         botondetalles.setOnClickListener(view -> {
@@ -106,26 +139,23 @@ public class AdminDetallesIngyGas extends Fragment {
             });
 
             //Deslizar item para borrarlo
-            SwipeListViewTouchListener touchListener = new SwipeListViewTouchListener(milistadetallesingygas, new SwipeListViewTouchListener.OnSwipeCallback() {
-                @Override
-                public void onSwipeLeft(ListView listView, int[] reverseSortedPositions) {
-                    //Aqui ponemos lo que hara el programa cuando deslizamos un item ha la izquierda
-                    objlista = listadetallesingygas.get(reverseSortedPositions[0]);
+            SwipeListViewTouchListener touchListener = new SwipeListViewTouchListener(milistadetallesingygas, (listView, reverseSortedPositions) -> {
+                //Aqui ponemos lo que hara el programa cuando deslizamos un item ha la izquierda
+                objlista = listadetallesingygas.get(reverseSortedPositions[0]);
 
-                    //ALERT DIALOG SI DESEA BORRAR
-                    androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
-                    mensaje.setTitle("Atención!");
-                    mensaje.setIcon(R.drawable.ic_baseline_warning_24);
-                    mensaje.setMessage("¿Desea borrar este registro?");
-                    mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
-                        listadetallesingygas.remove(reverseSortedPositions[0]);
-                        databaseReference.child(gimnasio.getText().toString()).child("IngresosyGastos").child(objlista.getId()).removeValue();
-                        adaptador.notifyDataSetChanged();
-                    });
-                    mensaje.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss());
-                    AlertDialog dialog = mensaje.create();
-                    dialog.show();
-                }
+                //ALERT DIALOG SI DESEA BORRAR
+                AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
+                mensaje.setTitle("Atención!");
+                mensaje.setIcon(R.drawable.ic_baseline_warning_24);
+                mensaje.setMessage("¿Desea borrar este registro?");
+                mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
+                    listadetallesingygas.remove(reverseSortedPositions[0]);
+                    databaseReference.child(gimnasio.getText().toString()).child("IngresosyGastos").child(objlista.getId()).removeValue();
+                    adaptador.notifyDataSetChanged();
+                });
+                mensaje.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss());
+                AlertDialog dialog = mensaje.create();
+                dialog.show();
             }, true, false);
 
             //Escuchadores del listView
@@ -141,7 +171,17 @@ public class AdminDetallesIngyGas extends Fragment {
         FirebaseApp.initializeApp(requireActivity());
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
         databaseReference.keepSynced(true);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (milistenercliente != null) {
+            databaseReference.child("Clientes").removeEventListener(milistenercliente);
+        }
+
     }
 
 }

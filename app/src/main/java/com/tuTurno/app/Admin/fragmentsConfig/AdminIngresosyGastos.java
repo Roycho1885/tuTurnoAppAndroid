@@ -39,18 +39,19 @@ import java.util.Objects;
 import models.cuotas;
 import models.ingresosextras;
 
+import static java.lang.Math.round;
+
 public class AdminIngresosyGastos extends Fragment {
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     Context micontexto;
-    private ScrollView otroscroll;
     private Button vergastos, reginggas;
     private MaterialButton layout;
-    private TextView txtingreso, txtgasto;
+    private TextView txtingreso, txtgasto, ingresocuota, ingresoextra, gastoextra;
     Calendar micalendario;
-    String anioo, anoseleccionado, meses, ingreso;
+    String anioo, anoseleccionado, meses;
     boolean banderames, banderaano;
     cuotas cuotasclass, cuot = new cuotas();
     ingresosextras ingresoextraa = new ingresosextras();
@@ -60,10 +61,6 @@ public class AdminIngresosyGastos extends Fragment {
     private ArrayList<String> arrayano, arraymeses;
     private ArrayAdapter<String> adapterano, adaptermeses;
 
-    //para el listview
-    private final ArrayList<ingresosextras> listaingygas = new ArrayList<>();
-    private ListView milistaingygas;
-    private ListViewAdaptadorIngreyEgre adaptador;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -71,7 +68,7 @@ public class AdminIngresosyGastos extends Fragment {
         micontexto = context;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -80,39 +77,30 @@ public class AdminIngresosyGastos extends Fragment {
         //para los diferentes gimnasios
         final TextView gimnasio = requireActivity().findViewById(R.id.textologo);
         layout = root.findViewById(R.id.layoutingygas);
-        otroscroll = root.findViewById(R.id.scro);
-        milistaingygas = root.findViewById(R.id.listaingresosyegresos);
         txtingreso = root.findViewById(R.id.importeingreso);
         txtgasto = root.findViewById(R.id.importegasto);
+        ingresocuota = root.findViewById(R.id.ingresocuota);
+        ingresoextra = root.findViewById(R.id.ingresoextra);
+        gastoextra = root.findViewById(R.id.gastoextra);
         final AutoCompleteTextView botonanodesple = root.findViewById(R.id.desplegarano);
         final AutoCompleteTextView botonmesdesple = root.findViewById(R.id.desplegarmes);
         vergastos = root.findViewById(R.id.botonvergastos);
         reginggas = root.findViewById(R.id.btnreging);
 
         micalendario = Calendar.getInstance();
-        adaptador = new ListViewAdaptadorIngreyEgre(micontexto, listaingygas);
 
         iniciarFirebase();
 
         acumuloingreso = 0;
         acumulogasto = 0;
-        txtingreso.setText("0");
-        txtgasto.setText("0");
+        ingresocuota.setText(" $0,00");
+        ingresoextra.setText(" $0,00");
+        gastoextra.setText(" $0,00");
 
         botonanodesple.post(() -> botonanodesple.getText().clear());
         botonmesdesple.post(() -> botonmesdesple.getText().clear());
         formatearfecha();
 
-        otroscroll.setOnTouchListener((v, event) -> {
-            milistaingygas.getParent()
-                    .requestDisallowInterceptTouchEvent(false);
-            return false;
-        });
-
-        milistaingygas.setOnTouchListener((v, event) -> {
-            v.getParent().requestDisallowInterceptTouchEvent(true);
-            return false;
-        });
 
         //CARGO BOTON ANO CORRESPONDIENTE
         arrayano = new ArrayList<>();
@@ -159,7 +147,7 @@ public class AdminIngresosyGastos extends Fragment {
             });
         });
 
-        //ACA DEBO SUMAR TODAS LAS CUOTAS Y LOS INGRESOS Y GASTOS TOMANDO EL ARRAYMESES-----------------
+        //ACA DEBO SUMAR TODAS LAS CUOTAS Y LOS INGRESOS Y GASTOS TOMANDO EL ARRAYMESES
         databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -167,6 +155,7 @@ public class AdminIngresosyGastos extends Fragment {
                     acumuloingreso = 0;
                     acumulogasto = 0;
                     databaseReference.child(gimnasio.getText().toString()).child("Cuotas").child(anioo).child(Objects.requireNonNull(shot.getKey())).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @SuppressLint({"SetTextI18n", "DefaultLocale"})
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             for (DataSnapshot shot : snapshot.getChildren()) {
@@ -174,7 +163,7 @@ public class AdminIngresosyGastos extends Fragment {
                                 assert cuot != null;
                                 acumuloingreso = Double.parseDouble(cuot.getMonto()) + acumuloingreso;
                             }
-                            txtingreso.setText(" $" + String.valueOf(acumuloingreso));
+                            txtingreso.setText(" $" + String.format("%.2f",acumuloingreso));
                         }
 
                         @Override
@@ -184,6 +173,7 @@ public class AdminIngresosyGastos extends Fragment {
                     });
                 }
                 databaseReference.child(gimnasio.getText().toString()).child("IngresosyGastos").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @SuppressLint({"SetTextI18n", "DefaultLocale"})
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot shot : snapshot.getChildren()) {
@@ -197,8 +187,8 @@ public class AdminIngresosyGastos extends Fragment {
                                 }
                             }
                         }
-                        txtingreso.setText(" $" + String.valueOf(acumuloingreso));
-                        txtgasto.setText(" $" + String.valueOf(acumulogasto));
+                        txtingreso.setText(" $" + String.format("%.2f",acumuloingreso));
+                        txtgasto.setText(" $" + String.format("%.2f",acumulogasto));
                     }
 
                     @Override
@@ -213,7 +203,6 @@ public class AdminIngresosyGastos extends Fragment {
 
             }
         });
-        //----------------------------------------------------------------------------
 
         //BOTON MES CORRESPONDIENTE
         botonmesdesple.setOnItemClickListener((adapterView, view, i, l) -> {
@@ -226,7 +215,6 @@ public class AdminIngresosyGastos extends Fragment {
             ingresoscuotas = 0;
             acuingreso = 0;
             acugasto = 0;
-            listaingygas.clear();
             if (!banderames || !banderaano) {
                 Snackbar.make(view, "Seleccione año y mes", Snackbar.LENGTH_SHORT).show();
             } else {
@@ -240,6 +228,7 @@ public class AdminIngresosyGastos extends Fragment {
                             ingresoscuotas = Double.parseDouble(cuotasclass.getMonto()) + ingresoscuotas;
                         }
                         databaseReference.child(gimnasio.getText().toString()).child("IngresosyGastos").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @SuppressLint({"DefaultLocale", "SetTextI18n"})
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 for (DataSnapshot shot : snapshot.getChildren()) {
@@ -253,11 +242,10 @@ public class AdminIngresosyGastos extends Fragment {
                                         }
                                     }
                                 }
-                                ingreext.setMontoingreso(ingresoscuotas + " de cuotas");
-                                ingreext.setMontoingresoextra(acuingreso + " de ingresos extras");
-                                ingreext.setMontogasto(acugasto + " de gastos extras");
-                                listaingygas.add(ingreext);
-                                milistaingygas.setAdapter(adaptador);
+
+                                ingresocuota.setText(" $" + String.format("%.2f",ingresoscuotas));
+                                ingresoextra.setText(" $" + String.format("%.2f",acuingreso));
+                                gastoextra.setText(" $" + String.format("%.2f",acugasto));
                             }
 
                             @Override

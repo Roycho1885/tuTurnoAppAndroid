@@ -1,120 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    android:id="@+id/misroll"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/misroll"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:fillViewport="true">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/botongym"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="40dp"
+            android:hint="@string/gym"
+            app:boxBackgroundMode="filled"
+            app:boxStrokeColor="#ff9e40"
+            app:hintTextColor="#ff9e40">
 
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/botongym"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            <AutoCompleteTextView
+                android:id="@+id/txtgim"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="40dp"
-                android:hint="@string/gym"
-                app:boxBackgroundMode="filled"
-                app:boxStrokeColor="#ff9e40"
-                app:hintTextColor="#ff9e40"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:autofillHints="@string/gym"
+                android:backgroundTint="#FAFAFA"
+                android:editable="false"
+                android:ems="10"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <AutoCompleteTextView
-                    android:id="@+id/txtgim"
-                    android:layout_width="match_parent"
+        <Button
+            android:id="@+id/botoncargar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/botongym"
+            android:layout_centerInParent="true"
+            android:background="@drawable/diseboton"
+            android:text="@string/botoncargarlista"
+            android:textColor="@drawable/seleccionboton" />
+
+
+        <RadioGroup
+            android:id="@+id/radiogrupo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/botoncargar"
+            android:layout_centerInParent="true">
+
+
+                <RadioButton
+                    android:id="@+id/checkBoxAdminSi"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:autofillHints="@string/gym"
-                    android:backgroundTint="#FAFAFA"
-                    android:editable="false"
-                    android:ems="10"
-                    tools:ignore="LabelFor" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_margin="10dp"
+                    android:button="?android:attr/listChoiceIndicatorMultiple"
+                    android:text="@string/checkboxrestringir2" />
 
-            <Button
-                android:id="@+id/botoncargar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/botongym"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center"
-                app:layout_constraintStart_toStartOf="parent"
-                android:background="@drawable/diseboton"
-                android:textColor="@drawable/seleccionboton"
-                android:text="@string/botoncargarlista" />
+                <RadioButton
+                    android:id="@+id/checkBoxAdminNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:button="?android:attr/listChoiceIndicatorMultiple"
+                    android:text="@string/checkboxrestringir3" />
 
-            <CheckBox
-                android:id="@+id/checkBoxRes"
-                android:layout_width="200sp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textAlignment="center"
-                android:layout_marginTop="10dp"
-                android:textSize="15sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/botoncargar"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="@string/checkboxrestringir" />
 
-            <ListView
-                android:id="@+id/lista"
-                android:layout_width="match_parent"
-                android:layout_height="250sp"
-                android:choiceMode="singleChoice"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="10sp"
-                app:layout_constraintTop_toBottomOf="@+id/checkBoxRes"
-                tools:ignore="NestedScrolling">
-            </ListView>
+                <RadioButton
+                    android:id="@+id/checkBoxRes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:button="?android:attr/listChoiceIndicatorMultiple"
+                    android:text="@string/checkboxrestringir1" />
+
+                <RadioButton
+                    android:id="@+id/checkBoxRes1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:button="?android:attr/listChoiceIndicatorMultiple"
+                    android:text="@string/checkboxrestringir" />
+
+        </RadioGroup>
+
+
+        <ListView
+            android:id="@+id/lista"
+            android:layout_width="match_parent"
+            android:layout_height="250sp"
+            android:layout_below="@+id/radiogrupo"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10sp"
+            android:choiceMode="singleChoice"
+            tools:ignore="NestedScrolling">
+        </ListView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lista"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
 
             <Button
                 android:id="@+id/botonaceptar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_margin="10dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="15dp"
                 android:background="@drawable/diseboton"
                 android:drawableStart="@drawable/ic_baseline_check_circle_24"
                 android:text="@string/botonmarcaradmin"
                 android:textColor="@drawable/seleccionboton"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toStartOf="@+id/botoncancelar"
-                app:layout_constraintHorizontal_bias="0.22"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lista"
                 tools:ignore="ButtonStyle" />
-
-
-            <Button
-                android:id="@+id/botoncancelar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/diseboton"
-                android:drawableStart="@drawable/ic_baseline_cancel_24"
-                android:text="@string/botondesmarcaradmin"
-                android:textColor="@drawable/seleccionboton"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lista"
-                tools:ignore="ButtonStyle" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
 </ScrollView>

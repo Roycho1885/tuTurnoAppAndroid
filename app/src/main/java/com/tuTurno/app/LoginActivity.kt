@@ -193,7 +193,7 @@ class LoginActivity : AppCompatActivity() {
         if(user=="roygenoff@gmail.com"){
             startActivity(Intent(this, ActividadSuperAdmin::class.java))
         }else{
-                if (admin == "Si" || admin == "Restringido") {
+                if (admin == "Si" || admin == "Restringido" || admin == "AdminRestringido") {
                     startActivity(Intent(this, ActividadAdmin::class.java))
                 }else{
                     startActivity(Intent(this, ActividadCliente::class.java))

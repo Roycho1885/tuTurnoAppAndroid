@@ -49,7 +49,7 @@ public class AdminRegistroIngyGas extends Fragment {
     private ArrayAdapter miadapter;
     Context micontexto;
     boolean menutipo, bolfecha;
-    String textotipo, mess,anioo;
+    String textotipo, mess,anioo, fechacompleta;
     ingresosextras ing = new ingresosextras();
 
 
@@ -116,6 +116,7 @@ public class AdminRegistroIngyGas extends Fragment {
         ing.setAno(anioo);
         ing.setMes(mess);
         ing.setTipo(textotipo);
+        ing.setFecha(fechacompleta);
 
         if(!descrip.equals("") && !monto.equals("") && bolfecha && menutipo){
             databaseReference.child(gimnasio.getText().toString()).child("IngresosyGastos").child(ing.getId()).setValue(ing);
@@ -142,7 +143,7 @@ public class AdminRegistroIngyGas extends Fragment {
     private void actualizarformatofecha() {
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
         txtfechadescrip.setText(sdf.format(micalendario.getTime()));
-        //fechaelegida = micalendario.getTime();
+        fechacompleta = txtfechadescrip.getText().toString();
         int index1 = txtfechadescrip.getText().toString().indexOf("-", 3);
         mess = txtfechadescrip.getText().toString().substring(3, index1);
         anioo = txtfechadescrip.getText().toString().substring(index1 + 1);

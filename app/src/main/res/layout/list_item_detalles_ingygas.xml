@@ -32,27 +32,15 @@
                 app:drawableStartCompat="@drawable/ic_baseline_info_24" />
 
             <TextView
-                android:id="@+id/txt_detallemes"
+                android:id="@+id/txt_detallefecha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mes"
+                android:text="Fecha"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:layout_below="@+id/txt_detalledescripcion"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_baseline_today_24" />
-
-            <TextView
-                android:id="@+id/txt_detalleano"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Año"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:layout_below="@+id/txt_detallemes"
-                android:textStyle="bold"
-                app:drawableStartCompat="@drawable/ic_baseline_today_24" />
-
 
 
             <TextView
@@ -61,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:text="Monto"
                 android:textColor="#ffffff"
-                android:layout_below="@+id/txt_detalleano"
+                android:layout_below="@+id/txt_detallefecha"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_baseline_monto" />

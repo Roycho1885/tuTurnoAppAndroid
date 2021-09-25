@@ -24,18 +24,25 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tuTurno.app.R;
 
+import java.util.Objects;
+
+import models.cliente;
 import models.gimnasios;
 
 
 public class AdminCodigo extends Fragment {
     static String codigoss = null;
+    private String user, perfil;
     Context micontexto;
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
-   // private gimnasios codigoacceso = new gimnasios();
     private gimnasios gyms, gym = new gimnasios();
+    private cliente cli, c = new cliente();
+
+    //CREO UN EVENTLISTENER
+    private ValueEventListener milistener, milistenercliente;
 
 
 
@@ -62,16 +69,40 @@ public class AdminCodigo extends Fragment {
         final TextView gimnasio = requireActivity().findViewById(R.id.textologo);
 
         iniciarFirebase();
+        user = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
 
-
-
-        databaseReference.child("Gimnasios").addListenerForSingleValueEvent(new ValueEventListener() {
+        //LECTURA DE CLIENTE PARA RESTRINGIR ACCESO
+        milistenercliente = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot shot : snapshot.getChildren()){
+                    cli = shot.getValue(cliente.class);
+                    if(cli.getEmail().equals(user)){
+                        c = shot.getValue(cliente.class);
+                        perfil = c.getAdmin();
+                    }
+                }
+                if(perfil.equals("AdminRestringido")){
+                    botonaceptar.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        databaseReference.child("Clientes").addValueEventListener(milistenercliente);
+
+
+
+        milistener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot shot : snapshot.getChildren()) {
                     gyms = shot.getValue(gimnasios.class);
                     assert gyms != null;
-                    if(gimnasio.getText().toString().equals(gyms.getNombre())){
+                    if (gimnasio.getText().toString().equals(gyms.getNombre())) {
                         gym = shot.getValue(gimnasios.class);
                         assert gym != null;
                         codigoactual.setText(gym.codigoacceso);
@@ -88,11 +119,11 @@ public class AdminCodigo extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        };
+        databaseReference.child("Gimnasios").addValueEventListener(milistener);
+
 
         botonaceptar.setOnClickListener(view -> {
-
-
             if(txtcodigo.getText().toString().equals("")){
                 txtcodigo.setError("Ingrese Código");
             }else{
@@ -106,6 +137,19 @@ public class AdminCodigo extends Fragment {
         });
 
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (milistener != null) {
+            databaseReference.child("Gimnasios").removeEventListener(milistener);
+        }else {
+            if(milistenercliente != null){
+                databaseReference.child("Clientes").removeEventListener(milistenercliente);
+            }
+        }
+
     }
 
     private void  iniciarFirebase(){

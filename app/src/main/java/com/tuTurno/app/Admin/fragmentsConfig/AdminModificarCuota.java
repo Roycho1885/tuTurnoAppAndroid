@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import models.CuotaConfig;
+import models.cliente;
 
 public class AdminModificarCuota extends Fragment {
 
@@ -49,12 +50,16 @@ public class AdminModificarCuota extends Fragment {
     private Context micontexto;
     private ScrollView scroll;
     private NavigationView navi;
-    private String disci1, idcuot;
+    private String disci1, idcuot, perfil,user;
     private ImageView imgcuotavacia;
     boolean menudisci, prueba;
     private CuotaConfig objcuota = new CuotaConfig();
     CuotaConfig idcuota;
     FloatingActionButton botonflotante;
+
+    //CREO UN EVENTLISTENER
+    private ValueEventListener milistenercliente;
+    private cliente cli, c = new cliente();
 
     private final ArrayList<CuotaConfig> listmontos = new ArrayList<>();
     private ArrayList<String> arraydisci, arraydimonto;
@@ -90,10 +95,35 @@ public class AdminModificarCuota extends Fragment {
 
         iniciarFirebase();
         botonflotante.setVisibility(View.GONE);
+        user = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
 
         adaptador = new ListViewAdaptadorMonto(micontexto, listmontos);
 
         menudis.post(() -> menudis.getText().clear());
+
+        //LECTURA DE CLIENTE PARA RESTRINGIR ACCESO
+        milistenercliente = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot shot : snapshot.getChildren()){
+                    cli = shot.getValue(cliente.class);
+                    if(cli.getEmail().equals(user)){
+                        c = shot.getValue(cliente.class);
+                        perfil = c.getAdmin();
+                    }
+                }
+                if(perfil.equals("AdminRestringido")){
+                    milistamonto.setEnabled(false);
+                    botonflotante.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        databaseReference.child("Clientes").addValueEventListener(milistenercliente);
 
 
         //CARGO DISCIPLINA
@@ -184,32 +214,28 @@ public class AdminModificarCuota extends Fragment {
         });
 
         //Deslizar item para borrarlo
-        SwipeListViewTouchListener touchListener = new SwipeListViewTouchListener(milistamonto, new SwipeListViewTouchListener.OnSwipeCallback() {
-            @Override
-            public void onSwipeLeft(ListView listView, int[] reverseSortedPositions) {
-                //Aqui ponemos lo que hara el programa cuando deslizamos un item ha la izquierda
-                objcuota = listmontos.get(reverseSortedPositions[0]);
+        SwipeListViewTouchListener touchListener = new SwipeListViewTouchListener(milistamonto, (listView, reverseSortedPositions) -> {
+            //Aqui ponemos lo que hara el programa cuando deslizamos un item ha la izquierda
+            objcuota = listmontos.get(reverseSortedPositions[0]);
 
-                //ALERT DIALOG SI DESEA BORRAR
-                androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
-                mensaje.setTitle("Atención!");
-                mensaje.setIcon(R.drawable.ic_baseline_warning_24);
-                mensaje.setMessage("¿Desea borrar este registro?");
-                mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
-                    listmontos.remove(reverseSortedPositions[0]);
-                    databaseReference.child(textologo.getText().toString()).child("ConfigCuota").child(id).child("configuracioncuotas").child(objcuota.getIdcuotas()).removeValue();
-                    adaptador.notifyDataSetChanged();
-                });
-                mensaje.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss());
-                AlertDialog dialog = mensaje.create();
-                dialog.show();
-            }
+            //ALERT DIALOG SI DESEA BORRAR
+            AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
+            mensaje.setTitle("Atención!");
+            mensaje.setIcon(R.drawable.ic_baseline_warning_24);
+            mensaje.setMessage("¿Desea borrar este registro?");
+            mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
+                listmontos.remove(reverseSortedPositions[0]);
+                databaseReference.child(textologo.getText().toString()).child("ConfigCuota").child(id).child("configuracioncuotas").child(objcuota.getIdcuotas()).removeValue();
+                adaptador.notifyDataSetChanged();
+            });
+            mensaje.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss());
+            AlertDialog dialog = mensaje.create();
+            dialog.show();
         }, true, false);
 
         //Escuchadores del listView
         milistamonto.setOnTouchListener(touchListener);
         milistamonto.setOnScrollListener(touchListener.makeScrollListener());
-
         //CLICK LARGO EN LA LISTA DE CLIENTES Y PASO DATOS CON BUNDLE A ADMINCONFIGCUOTA
         milistamonto.setOnItemLongClickListener((adapterView, view, i, l) -> {
             Bundle bundle = new Bundle();
@@ -230,6 +256,15 @@ public class AdminModificarCuota extends Fragment {
             popupMenu.show();
             return true;
         });
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (milistenercliente != null) {
+            databaseReference.child("Clientes").removeEventListener(milistenercliente);
+        }
 
     }
 

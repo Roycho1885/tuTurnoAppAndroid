@@ -97,7 +97,7 @@ public class HomeCliente extends Fragment {
     TextView textologo;
 
     //CREO UN EVENTLISTENER
-    private ValueEventListener milistener;
+    private ValueEventListener milistener, milistenercliente;
 
 
     //para el listview
@@ -212,7 +212,7 @@ public class HomeCliente extends Fragment {
         //LECTURA DEL CLIENTE
         micalendario = Calendar.getInstance();
         final String fecha_actual = sdff.format(micalendario.getTime());
-        databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
+        milistenercliente = new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -333,7 +333,8 @@ public class HomeCliente extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        };
+        databaseReference.child("Clientes").addValueEventListener(milistenercliente);
 
         //BOTON DIRECCION DEL NAVHEADER
         txtdirecli.setOnClickListener(view -> {
@@ -416,7 +417,6 @@ public class HomeCliente extends Fragment {
                 });
 
             } else {
-                //botondisci.setEnabled(false);
                 Snackbar.make(container, "Ya no se registran turnos, espere hasta las 00hs", Snackbar.LENGTH_SHORT).show();
             }
         }
@@ -541,6 +541,10 @@ public class HomeCliente extends Fragment {
         super.onDestroyView();
         if (milistener != null) {
             databaseReference.child(textologo.getText().toString()).child("Disciplinas").child(disci1).orderByChild("horacomienzo").removeEventListener(milistener);
+        }else {
+            if(milistenercliente != null){
+                databaseReference.child("Clientes").removeEventListener(milistenercliente);
+            }
         }
 
     }
