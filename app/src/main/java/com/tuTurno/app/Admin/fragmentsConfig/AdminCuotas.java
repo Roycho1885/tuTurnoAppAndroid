@@ -208,7 +208,7 @@ public class AdminCuotas extends Fragment {
         //CARGO LISTVIEW CON CLIENTES
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
         micalendario1 = Calendar.getInstance();
-        databaseReference.child("Clientes").orderByChild("apellido").addListenerForSingleValueEvent(new ValueEventListener() {
+        milistener = new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -255,8 +255,8 @@ public class AdminCuotas extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
-
+        };
+        databaseReference.child("Clientes").orderByChild("apellido").addValueEventListener(milistener);
 
         final DatePickerDialog.OnDateSetListener date = (view, ano, mes, diames) -> {
             micalendario.set(Calendar.YEAR, ano);
@@ -422,13 +422,13 @@ public class AdminCuotas extends Fragment {
 
     }
 
-   /* @Override
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (milistener != null) {
-            databaseReference.child("Clientes").orderByChild("apellido").removeEventListener(milistener);
+            databaseReference.child("Clientes").removeEventListener(milistener);
         }
-    }*/
+    }
 
     private void actualizarformatofecha() {
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
