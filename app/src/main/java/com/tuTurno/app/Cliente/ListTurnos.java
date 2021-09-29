@@ -71,6 +71,7 @@ public class ListTurnos extends Fragment {
     private final List<Integer> cupos = new ArrayList<>();
     private final List<Integer> cuposalmacenado = new ArrayList<>();
     private final List<String> diaslista = new ArrayList<>();
+    private final List<String> coachlista = new ArrayList<>();
     private int cupotursele;
     private String idturnocambiado;
     private String horaturnocambiado;
@@ -179,9 +180,9 @@ public class ListTurnos extends Fragment {
         //TAMBIEN SE CONTROLA QUE LA HORA DEL TURNO ACTUAL NO HAYA SUPERADO LA HORA ACTUAL
         //PARA EVITAR MODIFICARLO
         modi.setOnClickListener(new View.OnClickListener() {
-            int posi = fechaactual.indexOf(",");
+            final int posi = fechaactual.indexOf(",");
             final String diass = fechaactual.substring(0, posi);
-            Calendar calendar = Calendar.getInstance();
+            final Calendar calendar = Calendar.getInstance();
             String horaturn1;
 
             @Override
@@ -191,6 +192,7 @@ public class ListTurnos extends Fragment {
                 cuposalmacenado.clear();
                 turnosid.clear();
                 diaslista.clear();
+                coachlista.clear();
                 if (!band1) {
                     Snackbar.make(v, "Seleccione el turno a modificar", Snackbar.LENGTH_SHORT).show();
                 } else {
@@ -214,7 +216,8 @@ public class ListTurnos extends Fragment {
                                     String hora = Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString();
                                     int cupo = Integer.parseInt(Objects.requireNonNull(shot.child("cupo").getValue()).toString());
                                     int cupoalmacenado = Integer.parseInt(Objects.requireNonNull(shot.child("cupoalmacenado").getValue()).toString());
-                                    String listadias = (shot.child("dias").getValue().toString());
+                                    String listadias = (Objects.requireNonNull(shot.child("dias").getValue()).toString());
+                                    String coachlist = Objects.requireNonNull(shot.child("coach").getValue()).toString();
                                     String id = Objects.requireNonNull(shot.child("id").getValue()).toString();
                                     calendar.set(Calendar.HOUR_OF_DAY, (Integer.parseInt(hora.substring(0, 2))));
                                     calendar.set(Calendar.MINUTE, (Integer.parseInt(hora.substring(3, 5))));
@@ -228,12 +231,14 @@ public class ListTurnos extends Fragment {
                                     }
 
                                     if (horadiaactual.compareTo(horaturnolista) <= 0 && (cupo > 0) && (!hora.equals(horaturnocambiado))) {
+                                        assert turhora != null;
                                         if (turhora.getDias().toLowerCase().contains(diass) || turhora.getDias().toLowerCase().contains("todos")) {
                                             turnosdialog.add(hora);
                                             turnosid.add(id);
                                             cupos.add(cupo);
                                             cuposalmacenado.add(cupoalmacenado);
                                             diaslista.add(listadias);
+                                            coachlista.add(coachlist);
                                         }
                                     }
                                 }
@@ -262,7 +267,7 @@ public class ListTurnos extends Fragment {
                                     claseturno.setId(turnosid.get(i));
                                     claseturno.setCupoalmacenado(cuposalmacenado.get(i).toString());
                                     claseturno.setDias(diaslista.get(i));
-                                    claseturno.setCoach(coach);
+                                    claseturno.setCoach(coachlista.get(i));
                                     databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(turnosele.getDisciplina()).child(turnosid.get(i)).setValue(claseturno);
 
                                     //CARGO LOS DATOS PARA EL TURNO QUE SE DESECHA
@@ -414,7 +419,7 @@ public class ListTurnos extends Fragment {
                     cliente cli = shot.getValue(cliente.class);
                     if (user.equals(shot.child("email").getValue())) {
                         assert cli != null;
-                        if (!cli.getDiasporsemana().equals("5")) {
+                        if (!cli.getDiasporsemana().equals("5") && cli.getAdmin().equals("No")) {
                             String diasporsemana = String.valueOf(Integer.parseInt(cli.getDiasporsemana()) + 1);
                             HashMap<String, Object> hashMap = new HashMap<String, Object>();
                             hashMap.put("diasporsemana", diasporsemana);

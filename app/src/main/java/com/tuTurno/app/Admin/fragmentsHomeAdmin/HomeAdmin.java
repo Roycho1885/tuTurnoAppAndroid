@@ -526,6 +526,8 @@ public class HomeAdmin extends Fragment {
                                 menutur.post(() -> menutur.getText().clear());
                                 fechapago.setText("");
                             } else {
+                                milistaturnoscliente.setVisibility(View.VISIBLE);
+                                imagenvacia.setVisibility(View.GONE);
                                 adaptador.notifyDataSetChanged();
                             }
                         }

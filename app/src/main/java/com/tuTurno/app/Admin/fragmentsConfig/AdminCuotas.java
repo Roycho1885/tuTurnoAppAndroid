@@ -68,6 +68,9 @@ public class AdminCuotas extends Fragment {
     private TextView registros;
     private SwipeRefreshLayout swipeContainer;
 
+    //CREO UN EVENTLISTENER
+    private ValueEventListener milistener;
+
 
     //para el listview
     private final ArrayList<cliente> listaclientes = new ArrayList<>();
@@ -205,7 +208,7 @@ public class AdminCuotas extends Fragment {
         //CARGO LISTVIEW CON CLIENTES
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
         micalendario1 = Calendar.getInstance();
-        databaseReference.child("Clientes").orderByChild("apellido").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("Clientes").orderByChild("apellido").addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -418,6 +421,14 @@ public class AdminCuotas extends Fragment {
         databaseReference.keepSynced(true);
 
     }
+
+   /* @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (milistener != null) {
+            databaseReference.child("Clientes").orderByChild("apellido").removeEventListener(milistener);
+        }
+    }*/
 
     private void actualizarformatofecha() {
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");

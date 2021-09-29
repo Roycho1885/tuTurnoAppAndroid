@@ -212,7 +212,7 @@ public class HomeCliente extends Fragment {
         //LECTURA DEL CLIENTE
         micalendario = Calendar.getInstance();
         final String fecha_actual = sdff.format(micalendario.getTime());
-        milistenercliente = new ValueEventListener() {
+        databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -279,7 +279,7 @@ public class HomeCliente extends Fragment {
                         DNI = c.getDni();
                         diasporsemana = c.getDiasporsemana();
                         idcliente = c.getId();
-                        cliente.setText(getString(R.string.cliente) + " " + c.getNombre());
+                        cliente.setText(micontexto.getString(R.string.cliente) + " " + c.getNombre());
                         tool.setTitle(c.getGym());
                         textologo.setText(c.getGym());
                     }
@@ -333,8 +333,8 @@ public class HomeCliente extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        };
-        databaseReference.child("Clientes").addValueEventListener(milistenercliente);
+        });
+
 
         //BOTON DIRECCION DEL NAVHEADER
         txtdirecli.setOnClickListener(view -> {
@@ -446,7 +446,7 @@ public class HomeCliente extends Fragment {
         int estpago = c.getEstadopago();
         String disciplinaelegida = c.getDisciplinaelegida();
 
-        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, c.getEstadodeuda(), disciplinaelegida, c.getDiasporsemana(), c.getDiasporsemanaresg(),c.getTelefono());
+        cliente cli = new cliente(id, nombre, apellido, dni, direccion, email, gym, admin, token, ulpago, fechavence, estpago, c.getEstadodeuda(), disciplinaelegida, c.getDiasporsemana(), c.getDiasporsemanaresg(), c.getTelefono());
 
         databaseReference.child("Clientes").child(id).setValue(cli);
 
@@ -521,7 +521,9 @@ public class HomeCliente extends Fragment {
                     }
                 }
                 if (listturnos.size() == 0) {
-                    milistaturnos.setBackgroundResource(R.drawable.descanso);
+                    imagenfinde.setVisibility(View.VISIBLE);
+                    imagenfinde.setBackgroundResource(R.drawable.descanso);
+                    milistaturnos.setVisibility(View.GONE);
                     fab.setClickable(false);
                     Snackbar.make(container, "Para este día y esta disciplina no existen turnos", Snackbar.LENGTH_SHORT).show();
                     milistaturnos.setAdapter(null);
@@ -541,14 +543,9 @@ public class HomeCliente extends Fragment {
         super.onDestroyView();
         if (milistener != null) {
             databaseReference.child(textologo.getText().toString()).child("Disciplinas").child(disci1).orderByChild("horacomienzo").removeEventListener(milistener);
-        }else {
-            if(milistenercliente != null){
-                databaseReference.child("Clientes").removeEventListener(milistenercliente);
-            }
         }
-
     }
-    
+
     private void iniciarFirebase() {
         FirebaseApp.initializeApp(requireActivity());
         firebaseDatabase = FirebaseDatabase.getInstance();

@@ -35,6 +35,7 @@ public class MiAlarmaDias extends BroadcastReceiver {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (final DataSnapshot shot : snapshot.getChildren()) {
                     clientes = shot.getValue(cliente.class);
+                    assert clientes != null;
                     if (!clientes.getAdmin().equals("Si")) {
                         if (!clientes.getDiasporsemana().equals("5")) {
                             HashMap<String, Object> hashMap = new HashMap<>();

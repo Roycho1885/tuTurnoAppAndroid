@@ -283,12 +283,15 @@ public class ClienteTurnoAdmin extends Fragment {
                             //CARGO TURNO SI ESTA DENTRO DEL HORARIO Y REVISO SI EL CLIENTE YA TIENE UN TURNO
                             assert horaactual1 != null;
                             if (Integer.parseInt(diasporsemana) == 0) {
+                                assert container != null;
                                 Snackbar.make(container, "Ya ocupo todos sus dias", Snackbar.LENGTH_SHORT).show();
                             } else {
                                 if (band) {
+                                    assert container != null;
                                     Snackbar.make(container, "Usted ya posee un turno para este día", Snackbar.LENGTH_SHORT).show();
                                 } else {
                                     if (cupo <= 0) {
+                                        assert container != null;
                                         Snackbar.make(container, "Ya no hay cupo en este turno", Snackbar.LENGTH_SHORT).show();
                                     } else {
                                         if (horaactual1.compareTo(horaactual3) <= 0) {
@@ -312,6 +315,7 @@ public class ClienteTurnoAdmin extends Fragment {
                                             Snackbar.make(container, "Turno registrado correctamente", Snackbar.LENGTH_SHORT).show();
                                             band = true;
                                         } else {
+                                            assert container != null;
                                             Snackbar.make(container, "Ya no se puede registrar este turno", Snackbar.LENGTH_SHORT).show();
                                         }
                                     }
@@ -323,6 +327,7 @@ public class ClienteTurnoAdmin extends Fragment {
 
             } else {
                 //botondisci.setEnabled(false);
+                assert container != null;
                 Snackbar.make(container, "Ya no se registran turnos, espere hasta las 00hs", Snackbar.LENGTH_SHORT).show();
             }
         }
@@ -376,7 +381,9 @@ public class ClienteTurnoAdmin extends Fragment {
                     }
                 }
                 if (listturnos.size() == 0) {
-                    milistaturnos.setBackgroundResource(R.drawable.descanso);
+                    imagenfindee.setVisibility(View.VISIBLE);
+                    imagenfindee.setBackgroundResource(R.drawable.descanso);
+                    milistaturnos.setVisibility(View.GONE);
                     fab.setClickable(false);
                     Snackbar.make(container, "Para este día y esta disciplina no existen turnos", Snackbar.LENGTH_SHORT).show();
                     milistaturnos.setAdapter(null);
