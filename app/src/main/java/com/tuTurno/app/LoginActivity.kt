@@ -16,9 +16,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
+import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -31,23 +33,21 @@ import com.tuTurno.app.SuperAdmin.ActividadSuperAdmin
 import models.cliente
 import java.util.*
 
-private const val UPDATE_REQUEST_CODE = 123
 
 class LoginActivity : AppCompatActivity() {
 
-    private val appUpdateManager: AppUpdateManager by lazy { AppUpdateManagerFactory.create(this) }
     private lateinit var txtUsuario: EditText
     private lateinit var txtContrasena: EditText
-    private lateinit var checkadmin:CheckBox
+    private lateinit var checkadmin: CheckBox
     private lateinit var auth: FirebaseAuth
-    private lateinit var firebaseDatabase:FirebaseDatabase
-    private lateinit var databaseReference:DatabaseReference
+    private lateinit var firebaseDatabase: FirebaseDatabase
+    private lateinit var databaseReference: DatabaseReference
     private lateinit var progressDialog: ProgressDialog
     private val keyusuario = "KEYUSUARIO"
     private val keycontra = "KEYCONTRA"
     private var usuario = ""
     private var contrasena = ""
-    private lateinit var preferencias:SharedPreferences
+    private lateinit var preferencias: SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,30 +57,20 @@ class LoginActivity : AppCompatActivity() {
         //OBTENEMOS EL PREFERENCE MANAGER
         preferencias = PreferenceManager.getDefaultSharedPreferences(this)
 
-        appUpdateManager.appUpdateInfo.addOnSuccessListener {
-            if(it.updateAvailability()==UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)){
-                appUpdateManager.startUpdateFlowForResult(it,AppUpdateType.IMMEDIATE,this,
-                    UPDATE_REQUEST_CODE)
-            }
-        }.addOnFailureListener {
-            Log.e("LoginActivity","Error al verificar actualizaciones: $it")
-        }
-
-
-        txtUsuario=findViewById(R.id.txtUsuario)
-        txtContrasena=findViewById(R.id.txtContraseña)
+        txtUsuario = findViewById(R.id.txtUsuario)
+        txtContrasena = findViewById(R.id.txtContraseña)
         checkadmin = findViewById(R.id.checkBox)
         auth = FirebaseAuth.getInstance()
 
-        usuario = preferencias.getString(keyusuario,"No usuario").toString()
-        contrasena = preferencias.getString(keycontra,"No contrasena").toString()
+        usuario = preferencias.getString(keyusuario, "No usuario").toString()
+        contrasena = preferencias.getString(keycontra, "No contrasena").toString()
 
-        if(usuario != "No usuario" && contrasena != "No contrasena"){
-            txtUsuario.setText(preferencias.getString(keyusuario,"No usuario"))
-            txtContrasena.setText(preferencias.getString(keycontra,"No contrasena"))
+        if (usuario != "No usuario" && contrasena != "No contrasena") {
+            txtUsuario.setText(preferencias.getString(keyusuario, "No usuario"))
+            txtContrasena.setText(preferencias.getString(keycontra, "No contrasena"))
         }
 
-        progressDialog= ProgressDialog(this)
+        progressDialog = ProgressDialog(this)
 
         iniciarFirebase()
 
@@ -88,46 +78,58 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-            progressDialog.dismiss()
+        progressDialog.dismiss()
     }
 
-    fun OlvideContrasena(view:View) {
-        if(isConnectedToNetwork()){
+    fun OlvideContrasena(view: View) {
+        if (isConnectedToNetwork()) {
             startActivity(Intent(this, RecuperoActivity::class.java))
-        }else{
-            Toast.makeText(this, "Compruebe su conexión a internet e intente de nuevo", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(
+                this,
+                "Compruebe su conexión a internet e intente de nuevo",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
     }
 
-    fun registrar(view:View) {
-        if(isConnectedToNetwork()){
+    fun registrar(view: View) {
+        if (isConnectedToNetwork()) {
             startActivity(Intent(this, RegistroActivity::class.java))
-        }else{
-            Toast.makeText(this, "Compruebe su conexión a internet e intente de nuevo", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(
+                this,
+                "Compruebe su conexión a internet e intente de nuevo",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
     }
 
-    fun login(view:View) {
-        if(isConnectedToNetwork()){
+    fun login(view: View) {
+        if (isConnectedToNetwork()) {
             loginUsuario()
-        }else{
-            Toast.makeText(this, "Compruebe su conexión a internet e intente de nuevo", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(
+                this,
+                "Compruebe su conexión a internet e intente de nuevo",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
     }
 
-    private fun loginUsuario(){
+    private fun loginUsuario() {
         val usuario = txtUsuario.text.toString()
         val contrasena = txtContrasena.text.toString()
 
-        if (!TextUtils.isEmpty(usuario) && !TextUtils.isEmpty(contrasena)){
+        if (!TextUtils.isEmpty(usuario) && !TextUtils.isEmpty(contrasena)) {
 
-            if(checkadmin.isChecked){
+            if (checkadmin.isChecked) {
                 val editor = preferencias.edit()
-                editor.putString(keyusuario,usuario)
-                editor.putString(keycontra,contrasena)
+                editor.putString(keyusuario, usuario)
+                editor.putString(keycontra, contrasena)
                 editor.apply()
             }
 
@@ -135,37 +137,45 @@ class LoginActivity : AppCompatActivity() {
             progressDialog.setMessage("Espere por favor")
             progressDialog.show()
 
-                auth.signInWithEmailAndPassword(usuario, contrasena)
-                    .addOnCompleteListener(this){
-                        task ->
+            auth.signInWithEmailAndPassword(usuario, contrasena)
+                .addOnCompleteListener(this) { task ->
 
-                        if(task.isSuccessful){
-                            Accion(usuario)
-                        }else{
-                            try {
-                                throw task.exception!!
-                            }catch (e: FirebaseAuthInvalidCredentialsException){
-                                progressDialog.dismiss()
-                                Toast.makeText(this, "Email o contraseña incorrecta, intente nuevamente", Toast.LENGTH_SHORT).show()
-                            }catch (e: FirebaseAuthInvalidUserException){
-                                progressDialog.dismiss()
-                                Toast.makeText(this, "Email o contraseña incorrecta, intente nuevamente", Toast.LENGTH_SHORT).show()
-                            }
-
+                    if (task.isSuccessful) {
+                        Accion(usuario)
+                    } else {
+                        try {
+                            throw task.exception!!
+                        } catch (e: FirebaseAuthInvalidCredentialsException) {
+                            progressDialog.dismiss()
+                            Toast.makeText(
+                                this,
+                                "Email o contraseña incorrecta, intente nuevamente",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } catch (e: FirebaseAuthInvalidUserException) {
+                            progressDialog.dismiss()
+                            Toast.makeText(
+                                this,
+                                "Email o contraseña incorrecta, intente nuevamente",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
+
                     }
-            }else{
-                if(TextUtils.isEmpty(usuario)){
-                    txtUsuario.error = getString(R.string.errorusu)
                 }
-                if(TextUtils.isEmpty(contrasena)){
-                    txtContrasena.error = getString(R.string.errorcontra)
-                }
+        } else {
+            if (TextUtils.isEmpty(usuario)) {
+                txtUsuario.error = getString(R.string.errorusu)
+            }
+            if (TextUtils.isEmpty(contrasena)) {
+                txtContrasena.error = getString(R.string.errorcontra)
+            }
         }
     }
 
     fun Context.isConnectedToNetwork(): Boolean {
-        val connectivityManager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+        val connectivityManager =
+            this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
         return connectivityManager?.activeNetworkInfo?.isConnectedOrConnecting() ?: false
     }
 
@@ -187,17 +197,17 @@ class LoginActivity : AppCompatActivity() {
                 override fun onCancelled(databaseError: DatabaseError) {}
             })
 
-        }
+    }
 
-    private fun recibirnombre(user:String , admin:String){
-        if(user=="roygenoff@gmail.com"){
+    private fun recibirnombre(user: String, admin: String) {
+        if (user == "roygenoff@gmail.com") {
             startActivity(Intent(this, ActividadSuperAdmin::class.java))
-        }else{
-                if (admin == "Si" || admin == "Restringido" || admin == "AdminRestringido") {
-                    startActivity(Intent(this, ActividadAdmin::class.java))
-                }else{
-                    startActivity(Intent(this, ActividadCliente::class.java))
-                }
+        } else {
+            if (admin == "Si" || admin == "Restringido" || admin == "AdminRestringido") {
+                startActivity(Intent(this, ActividadAdmin::class.java))
+            } else {
+                startActivity(Intent(this, ActividadCliente::class.java))
+            }
         }
     }
 
@@ -210,20 +220,4 @@ class LoginActivity : AppCompatActivity() {
         databaseReference.keepSynced(true)
     }
 
-    override fun onResume() {
-        super.onResume()
-        appUpdateManager.appUpdateInfo.addOnSuccessListener {
-            if(it.updateAvailability()==UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS){
-                appUpdateManager.startUpdateFlowForResult(it,AppUpdateType.IMMEDIATE,this,
-                    UPDATE_REQUEST_CODE)
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == UPDATE_REQUEST_CODE && resultCode == Activity.RESULT_CANCELED){
-            finish()
-        }
-    }
 }
