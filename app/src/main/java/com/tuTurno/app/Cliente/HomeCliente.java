@@ -72,7 +72,6 @@ public class HomeCliente extends Fragment {
 
     private Context micontexto;
     private ArrayList<turno> listturnos = new ArrayList<>();
-    private ArrayAdapter miadapter;
     private turno turnoselecc;
     boolean band;
     boolean band1;

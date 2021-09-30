@@ -57,7 +57,7 @@ public class ListTurnos extends Fragment {
     private boolean band1;
     private DatosTurno tur = new DatosTurno();
     private turno claseturno = new turno();
-    private cliente clientelisturnos, cli = new cliente();
+    private cliente cli = new cliente();
 
 
     private Date horadiaactual;
@@ -79,7 +79,7 @@ public class ListTurnos extends Fragment {
     private String idturnocambiado;
     private String horaturnocambiado;
     private String cupoalmacenado;
-    private String dias,coach;
+    private String dias, coach;
 
     //para el listview
     private ListView milistadatosturnos;
@@ -199,107 +199,108 @@ public class ListTurnos extends Fragment {
                 if (!band1) {
                     Snackbar.make(v, "Seleccione el turno a modificar", Snackbar.LENGTH_SHORT).show();
                 } else {
+                    if (turnosele.getAsistencia().equals("Si")) {
+                        Snackbar.make(v, "Asistencia registrada, imposible modificar", Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        if (horadiaactual.compareTo(horaturnoseleccionado) <= 0) {
+                            databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(turnosele.getDisciplina()).orderByChild("horacomienzo").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (DataSnapshot shot : snapshot.getChildren()) {
+                                        turno turhora = shot.getValue(turno.class);
 
+                                        if (tur.getIdturnoseleccionado().equals(shot.child("id").getValue())) {
+                                            cupotursele = Integer.parseInt(Objects.requireNonNull(shot.child("cupo").getValue()).toString());
+                                            idturnocambiado = Objects.requireNonNull(shot.child("id").getValue()).toString();
+                                            horaturnocambiado = Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString();
+                                            cupoalmacenado = Objects.requireNonNull(shot.child("cupoalmacenado").getValue()).toString();
+                                            dias = Objects.requireNonNull(shot.child("dias").getValue().toString());
+                                            coach = Objects.requireNonNull(shot.child("coach").getValue().toString());
+                                        }
+                                        String hora = Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString();
+                                        int cupo = Integer.parseInt(Objects.requireNonNull(shot.child("cupo").getValue()).toString());
+                                        int cupoalmacenado = Integer.parseInt(Objects.requireNonNull(shot.child("cupoalmacenado").getValue()).toString());
+                                        String listadias = (Objects.requireNonNull(shot.child("dias").getValue()).toString());
+                                        String coachlist = Objects.requireNonNull(shot.child("coach").getValue()).toString();
+                                        String id = Objects.requireNonNull(shot.child("id").getValue()).toString();
+                                        calendar.set(Calendar.HOUR_OF_DAY, (Integer.parseInt(hora.substring(0, 2))));
+                                        calendar.set(Calendar.MINUTE, (Integer.parseInt(hora.substring(3, 5))));
+                                        calendar.set(Calendar.SECOND, 0);
+                                        horaturn1 = sdf.format(calendar.getTime());
 
-                    if (horadiaactual.compareTo(horaturnoseleccionado) <= 0) {
-                        databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(turnosele.getDisciplina()).orderByChild("horacomienzo").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot shot : snapshot.getChildren()) {
-                                    turno turhora = shot.getValue(turno.class);
+                                        try {
+                                            horaturnolista = sdf.parse(horaturn1);
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
 
-                                    if (tur.getIdturnoseleccionado().equals(shot.child("id").getValue())) {
-                                        cupotursele = Integer.parseInt(Objects.requireNonNull(shot.child("cupo").getValue()).toString());
-                                        idturnocambiado = Objects.requireNonNull(shot.child("id").getValue()).toString();
-                                        horaturnocambiado = Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString();
-                                        cupoalmacenado = Objects.requireNonNull(shot.child("cupoalmacenado").getValue()).toString();
-                                        dias = Objects.requireNonNull(shot.child("dias").getValue().toString());
-                                        coach = Objects.requireNonNull(shot.child("coach").getValue().toString());
-                                    }
-                                    String hora = Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString();
-                                    int cupo = Integer.parseInt(Objects.requireNonNull(shot.child("cupo").getValue()).toString());
-                                    int cupoalmacenado = Integer.parseInt(Objects.requireNonNull(shot.child("cupoalmacenado").getValue()).toString());
-                                    String listadias = (Objects.requireNonNull(shot.child("dias").getValue()).toString());
-                                    String coachlist = Objects.requireNonNull(shot.child("coach").getValue()).toString();
-                                    String id = Objects.requireNonNull(shot.child("id").getValue()).toString();
-                                    calendar.set(Calendar.HOUR_OF_DAY, (Integer.parseInt(hora.substring(0, 2))));
-                                    calendar.set(Calendar.MINUTE, (Integer.parseInt(hora.substring(3, 5))));
-                                    calendar.set(Calendar.SECOND, 0);
-                                    horaturn1 = sdf.format(calendar.getTime());
-
-                                    try {
-                                        horaturnolista = sdf.parse(horaturn1);
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    if (horadiaactual.compareTo(horaturnolista) <= 0 && (cupo > 0) && (!hora.equals(horaturnocambiado))) {
-                                        assert turhora != null;
-                                        if (turhora.getDias().toLowerCase().contains(diass) || turhora.getDias().toLowerCase().contains("todos")) {
-                                            turnosdialog.add(hora);
-                                            turnosid.add(id);
-                                            cupos.add(cupo);
-                                            cuposalmacenado.add(cupoalmacenado);
-                                            diaslista.add(listadias);
-                                            coachlista.add(coachlist);
+                                        if (horadiaactual.compareTo(horaturnolista) <= 0 && (cupo > 0) && (!hora.equals(horaturnocambiado))) {
+                                            assert turhora != null;
+                                            if (turhora.getDias().toLowerCase().contains(diass) || turhora.getDias().toLowerCase().contains("todos")) {
+                                                turnosdialog.add(hora);
+                                                turnosid.add(id);
+                                                cupos.add(cupo);
+                                                cuposalmacenado.add(cupoalmacenado);
+                                                diaslista.add(listadias);
+                                                coachlista.add(coachlist);
+                                            }
                                         }
                                     }
+
+
+                                    AlertDialog.Builder elegirturnos = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
+                                    elegirturnos.setTitle("Seleccionar Turno");
+
+                                    elegirturnos.setSingleChoiceItems(turnosdialog.toArray(new String[0]), -1, (dialog, i) -> {
+
+                                        tur.setTurno(turnosdialog.get(i));
+                                        tur.setIdturnoseleccionado(turnosid.get(i));
+                                        tur.setAsistencia("No");
+                                        if (cupotursele != cuposalmacenado.get(i)) {
+                                            cupotursele++;
+                                        }
+                                        int cupoturclick = Integer.parseInt(cupos.get(i).toString());
+                                        cupoturclick--;
+                                        dialog.dismiss();
+                                        databaseReference.child(gimnasio.getText().toString()).child("Datos Turnos").child(tur.getIdTurno()).setValue(tur);
+
+                                        //CARGO LOS DATOS PARA EL TURNO QUE SE HACE CLICK
+                                        claseturno.setCupo(String.valueOf(cupoturclick));
+                                        claseturno.setDisciplina(turnosele.getDisciplina());
+                                        claseturno.setHoracomienzo(turnosdialog.get(i));
+                                        claseturno.setId(turnosid.get(i));
+                                        claseturno.setCupoalmacenado(cuposalmacenado.get(i).toString());
+                                        claseturno.setDias(diaslista.get(i));
+                                        claseturno.setCoach(coachlista.get(i));
+                                        databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(turnosele.getDisciplina()).child(turnosid.get(i)).setValue(claseturno);
+
+                                        //CARGO LOS DATOS PARA EL TURNO QUE SE DESECHA
+                                        claseturno.setCupo(String.valueOf(cupotursele));
+                                        claseturno.setId(idturnocambiado);
+                                        claseturno.setHoracomienzo(horaturnocambiado);
+                                        claseturno.setCupoalmacenado(cupoalmacenado);
+                                        claseturno.setDias(dias);
+                                        claseturno.setCoach(coach);
+                                        databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(turnosele.getDisciplina()).child(idturnocambiado).setValue(claseturno);
+                                    });
+                                    elegirturnos.setNeutralButton("Cancelar", (dialog, which) -> {
+
+                                    });
+
+                                    AlertDialog dialog = elegirturnos.create();
+                                    dialog.show();
                                 }
 
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                                AlertDialog.Builder elegirturnos = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
-                                elegirturnos.setTitle("Seleccionar Turno");
-
-                                elegirturnos.setSingleChoiceItems(turnosdialog.toArray(new String[0]), -1, (dialog, i) -> {
-
-                                    tur.setTurno(turnosdialog.get(i));
-                                    tur.setIdturnoseleccionado(turnosid.get(i));
-                                    tur.setAsistencia("No");
-                                    if (cupotursele != cuposalmacenado.get(i)) {
-                                        cupotursele++;
-                                    }
-                                    int cupoturclick = Integer.parseInt(cupos.get(i).toString());
-                                    cupoturclick--;
-                                    dialog.dismiss();
-                                    databaseReference.child(gimnasio.getText().toString()).child("Datos Turnos").child(tur.getIdTurno()).setValue(tur);
-
-                                    //CARGO LOS DATOS PARA EL TURNO QUE SE HACE CLICK
-                                    claseturno.setCupo(String.valueOf(cupoturclick));
-                                    claseturno.setDisciplina(turnosele.getDisciplina());
-                                    claseturno.setHoracomienzo(turnosdialog.get(i));
-                                    claseturno.setId(turnosid.get(i));
-                                    claseturno.setCupoalmacenado(cuposalmacenado.get(i).toString());
-                                    claseturno.setDias(diaslista.get(i));
-                                    claseturno.setCoach(coachlista.get(i));
-                                    databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(turnosele.getDisciplina()).child(turnosid.get(i)).setValue(claseturno);
-
-                                    //CARGO LOS DATOS PARA EL TURNO QUE SE DESECHA
-                                    claseturno.setCupo(String.valueOf(cupotursele));
-                                    claseturno.setId(idturnocambiado);
-                                    claseturno.setHoracomienzo(horaturnocambiado);
-                                    claseturno.setCupoalmacenado(cupoalmacenado);
-                                    claseturno.setDias(dias);
-                                    claseturno.setCoach(coach);
-                                    databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(turnosele.getDisciplina()).child(idturnocambiado).setValue(claseturno);
-                                });
-                                elegirturnos.setNeutralButton("Cancelar", (dialog, which) -> {
-
-                                });
-
-                                AlertDialog dialog = elegirturnos.create();
-                                dialog.show();
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    } else {
-                        Snackbar.make(v, "Ya no se puede modificar el turno", Snackbar.LENGTH_SHORT).show();
-                        modi.setEnabled(false);
-                        elimi.setEnabled(false);
-
+                                }
+                            });
+                        } else {
+                            Snackbar.make(v, "Ya no se puede modificar el turno", Snackbar.LENGTH_SHORT).show();
+                            modi.setEnabled(false);
+                            elimi.setEnabled(false);
+                        }
                     }
                 }
             }
@@ -332,24 +333,29 @@ public class ListTurnos extends Fragment {
                             }
 
                             //RENUEVO EL CUPO DEL TURNO ELIMINADO
-                            claseturno.setId(idturnocambiado);
-                            claseturno.setHoracomienzo(horaturnocambiado);
-                            cupotursele++;
-                            claseturno.setCupo(String.valueOf(cupotursele));
-                            claseturno.setDisciplina(turnosele.getDisciplina());
-                            claseturno.setCupoalmacenado(cupoalmacenado);
-                            claseturno.setDias(dias);
-                            claseturno.setCoach(coach);
-                            databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(turnosele.getDisciplina()).child(idturnocambiado).setValue(claseturno);
+                            if (turnosele.getAsistencia().equals("Si")) {
+                                Snackbar.make(v, "Asistencia registrada, imposible eliminar", Snackbar.LENGTH_SHORT).show();
+                            } else {
+                                claseturno.setId(idturnocambiado);
+                                claseturno.setHoracomienzo(horaturnocambiado);
+                                cupotursele++;
+                                claseturno.setCupo(String.valueOf(cupotursele));
+                                claseturno.setDisciplina(turnosele.getDisciplina());
+                                claseturno.setCupoalmacenado(cupoalmacenado);
+                                claseturno.setDias(dias);
+                                claseturno.setCoach(coach);
+                                databaseReference.child(gimnasio.getText().toString()).child("Disciplinas").child(turnosele.getDisciplina()).child(idturnocambiado).setValue(claseturno);
 
-                            //ELIMINO EL TURNO SELECCIONADO
-                            databaseReference.child(gimnasio.getText().toString()).child("Datos Turnos").child(tur.getIdTurno()).removeValue();
-                            adaptador.notifyDataSetChanged();
-                            milistadatosturnos.setAdapter(null);
-                            modi.setEnabled(false);
-                            elimi.setEnabled(false);
-                            actualizardiasemana();
-                            Snackbar.make(v, "Su turno fue eliminado correctamente", Snackbar.LENGTH_SHORT).show();
+                                //ELIMINO EL TURNO SELECCIONADO
+                                databaseReference.child(gimnasio.getText().toString()).child("Datos Turnos").child(tur.getIdTurno()).removeValue();
+                                adaptador.notifyDataSetChanged();
+                                milistadatosturnos.setAdapter(null);
+                                modi.setEnabled(false);
+                                elimi.setEnabled(false);
+                                actualizardiasemana();
+                                Snackbar.make(v, "Su turno fue eliminado correctamente", Snackbar.LENGTH_SHORT).show();
+                            }
+
 
                         }
 
@@ -374,7 +380,7 @@ public class ListTurnos extends Fragment {
 
     private void listarturnos(final View v, TextView gim) {
         firebaseDatabase.getReference().child(gim.getText().toString()).child("Datos Turnos");
-        databaseReference.child(gim.getText().toString()).child("Datos Turnos").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(gim.getText().toString()).child("Datos Turnos").addValueEventListener(new ValueEventListener() {
             boolean band = false;
 
             @SuppressLint("Assert")
@@ -419,7 +425,6 @@ public class ListTurnos extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot shot : snapshot.getChildren()) {
                     assert user != null;
-                    clientelisturnos = shot.getValue(cliente.class);
                     if (user.equals(shot.child("email").getValue())) {
                         cli = shot.getValue(cliente.class);
                         assert cli != null;

@@ -48,9 +48,8 @@ public class HomeRegistroAdmin extends Fragment {
     private NavigationView navi;
     private static EditText txtdni;
     boolean banderaturno, banderacliente;
-    String idturno, horaturn, emailcliente;
-    Date horaactualturno, horaactualdia;
-    Calendar cal, calendario;
+    String idturno, emailcliente;
+    Calendar cal;
     cliente cli = new cliente();
     public static Bundle bun = new Bundle();
     public static NavController nav;
@@ -69,9 +68,6 @@ public class HomeRegistroAdmin extends Fragment {
 
         @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         cal = Calendar.getInstance();
-        calendario = Calendar.getInstance();
-        //HORA ACTUAL
-        final String horaactual = sdf.format(cal.getTime());
 
         final FloatingActionButton fab = requireActivity().findViewById(R.id.fab_admin);
         final FloatingActionButton fabregistrar = root.findViewById(R.id.btnflotante1);
@@ -124,30 +120,12 @@ public class HomeRegistroAdmin extends Fragment {
                                                 idturno = datosTurno.getIdTurno();
                                                 emailcliente = datosTurno.getCliente();
 
-                                                //CONVIERTO LA HORA DEL TURNO PARA CONTROLAR CUANDO SE QUIERE REGISTRAR
-                                                calendario.set(Calendar.HOUR_OF_DAY, (Integer.parseInt(datosTurno.getTurno().substring(0, 2))));
-                                                calendario.set(Calendar.MINUTE, (Integer.parseInt(datosTurno.getTurno().substring(3, 5)) - 15));
-                                                calendario.set(Calendar.SECOND, 0);
-                                                horaturn = sdf.format(calendario.getTime());
+                                                HashMap<String, Object> hashMap = new HashMap<String, Object>();
+                                                hashMap.put("asistencia", "Si");
+                                                databaseReference.child(textologo.getText().toString()).child("Datos Turnos").child(idturno).updateChildren(hashMap).addOnSuccessListener(o -> {
+                                                });
+                                                Snackbar.make(view, "Turno registrado", Snackbar.LENGTH_SHORT).show();
 
-                                                try {
-                                                    horaactualturno = sdf.parse(horaturn);
-                                                    horaactualdia = sdf.parse(horaactual);
-                                                } catch (
-                                                        ParseException e) {
-                                                    e.printStackTrace();
-                                                }
-
-                                                assert horaactualdia != null;
-                                                if (horaactualturno.before(horaactualdia)) {
-                                                    HashMap<String, Object> hashMap = new HashMap<String, Object>();
-                                                    hashMap.put("asistencia", "Si");
-                                                    databaseReference.child(textologo.getText().toString()).child("Datos Turnos").child(idturno).updateChildren(hashMap).addOnSuccessListener(o -> {
-                                                    });
-                                                    Snackbar.make(view, "Turno registrado", Snackbar.LENGTH_SHORT).show();
-                                                } else {
-                                                    Snackbar.make(view, "Solo se registra 15 min antes de tu turno", Snackbar.LENGTH_SHORT).show();
-                                                }
                                             } else {
                                                 if (!banderaturno) {
                                                     Snackbar bar = Snackbar.make(view, "Usted no posee un turno", Snackbar.LENGTH_LONG);
