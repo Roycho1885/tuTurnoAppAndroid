@@ -87,8 +87,7 @@
             android:hint="@string/telefono"
             android:drawableStart="@drawable/ic_person_black_24dp"
             android:inputType="number"
-            app:mask="+52(____)___-____"
-            app:maskCharacter="_"
+            app:mask="+54      -    "
             app:maskStyle="completable" />
 
 

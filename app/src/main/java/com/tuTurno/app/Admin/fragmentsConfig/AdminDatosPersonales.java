@@ -25,6 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.santalu.maskara.widget.MaskEditText;
 import com.tuTurno.app.R;
 
+import java.util.Objects;
+
 import models.cliente;
 
 public class AdminDatosPersonales extends Fragment {
@@ -81,7 +83,7 @@ public class AdminDatosPersonales extends Fragment {
 
         txttelefonoadmin.setOnLongClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_DIAL);
-            intent.setData(Uri.parse("tel:" + clin.getTelefono().substring(5,17)));
+            intent.setData(Uri.parse("tel:" + clin.getTelefono().substring(3,14)));
             startActivity(intent);
             return false;
         });
@@ -111,7 +113,7 @@ public class AdminDatosPersonales extends Fragment {
                 if(txtdireccion.getText().toString().equals("")){
                     txtdireccion.setError("Ingrese Dirección");
                 }
-                if(txttelefonoadmin.getText().toString().equals("")){
+                if(Objects.requireNonNull(txttelefonoadmin.getText()).toString().equals("")){
                     txttelefonoadmin.setError("Ingrese Teléfono");
                 }else{
                     if(!(txttelefonoadmin.isDone())){
