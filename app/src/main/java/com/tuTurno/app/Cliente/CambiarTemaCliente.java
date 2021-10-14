@@ -76,6 +76,12 @@ public class CambiarTemaCliente extends Fragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        micontexto = null;
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }

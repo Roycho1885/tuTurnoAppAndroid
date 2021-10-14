@@ -10,7 +10,7 @@
         android:id="@+id/imagensplash"
         android:layout_width="195dp"
         android:layout_height="180dp"
-        android:src="@drawable/logo"
+        android:src="@drawable/tuturnoicon"
        android:layout_centerInParent="true">
 
     </ImageView>
