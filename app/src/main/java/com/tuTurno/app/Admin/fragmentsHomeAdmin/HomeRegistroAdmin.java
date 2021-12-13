@@ -1,7 +1,9 @@
 package com.tuTurno.app.Admin.fragmentsHomeAdmin;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -176,12 +179,11 @@ public class HomeRegistroAdmin extends Fragment {
         databaseReference.keepSynced(true);
     }
 
-    public static class pedirturno implements View.OnClickListener {
+    public class pedirturno implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            txtdni.setText("");
-            nav.navigate(R.id.AdminPedirturno, bun);
+            mostrarAlertDialog();
         }
     }
 
@@ -190,6 +192,25 @@ public class HomeRegistroAdmin extends Fragment {
         bun.putString("gimnasionombre", gimnasio);
     }
 
+    private void mostrarAlertDialog() {
+        //ALERT DIALOG PARA LOS QUE LLEGAN TARDE
+        AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
+        mensaje.setTitle("Atención!");
+        mensaje.setIcon(R.drawable.ic_baseline_warning_24);
+        mensaje.setMessage("¿Estas llegando tarde?");
+        mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
+            txtdni.setText("");
+            bun.putString("respuesta", "Si");
+            nav.navigate(R.id.AdminPedirturno, bun);
+        });
+        mensaje.setNegativeButton("No", (dialogInterface, i) -> {
+            txtdni.setText("");
+            bun.putString("respuesta", "No");
+            nav.navigate(R.id.AdminPedirturno, bun);
+        });
+        AlertDialog dialog = mensaje.create();
+        dialog.show();
+    }
 }
 
 
