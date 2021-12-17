@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical">
+
+    <Button
+        android:id="@+id/btnconturno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:drawablePadding="9dip"
+        android:paddingStart="30dip"
+        android:paddingEnd="30dip"
+        android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_24"
+        android:text="@string/btnconturno" />
+
+    <ImageButton
+        android:id="@+id/btnImgconturno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        style="?android:attr/borderlessButtonStyle"
+        android:src="@drawable/ic_baseline_info">
+    </ImageButton>
+
+    <Button
+        android:id="@+id/btnsinturno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:drawablePadding="9dip"
+        android:paddingStart="30dip"
+        android:paddingEnd="30dip"
+        android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_24"
+        android:text="@string/btnsinturno" />
+
+    <ImageButton
+        android:id="@+id/btnImgsinturno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        style="?android:attr/borderlessButtonStyle"
+        android:src="@drawable/ic_baseline_info">
+    </ImageButton>
+
+</LinearLayout>

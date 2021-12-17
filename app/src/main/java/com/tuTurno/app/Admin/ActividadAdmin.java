@@ -82,7 +82,7 @@ public class ActividadAdmin  extends AppCompatActivity {
 
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.fragment_admin)
+                R.id.PruebaPiloto)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_admin);
