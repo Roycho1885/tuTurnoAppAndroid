@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:id="@+id/scroolasis"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Admin.fragmentsHomeAdmin.HomeAdmin">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+
+        <TextView
+            android:id="@+id/regasist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/tituloverasist"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/setfecha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_marginBottom="623dp"
+            android:ems="10"
+            android:focusable="true"
+            android:fontFamily="@font/nougat_extrablack"
+            android:gravity="center"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/regasist"/>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/botondisci"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:hint="@string/hintdis"
+            android:layout_below="@+id/setfecha"
+            app:boxBackgroundMode="outline">
+
+            <AutoCompleteTextView
+                android:id="@+id/dropdown_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cursorVisible="false"
+                android:textSize="16sp"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fechaasistencias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_below="@+id/botondisci"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtfecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:drawableStart="@drawable/ic_baseline_today_24"
+                android:editable="false"
+                android:ems="10"
+                android:focusable="false"
+                android:hint="@string/fechaasistencias" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/infofecha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:layout_below="@+id/fechaasistencias"
+            android:text="@string/infofecha"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/imagenvacia"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_below="@+id/infofecha"
+            android:layout_centerHorizontal="true">
+        </ImageView>
+
+        <ListView
+            android:id="@+id/listadeturnoscliente"
+            android:layout_width="match_parent"
+            android:layout_height="350sp"
+            android:listSelector="@drawable/lista_selector"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/infofecha"
+            android:choiceMode="singleChoice"
+            tools:ignore="NestedScrolling" />
+    </RelativeLayout>
+
+</ScrollView>

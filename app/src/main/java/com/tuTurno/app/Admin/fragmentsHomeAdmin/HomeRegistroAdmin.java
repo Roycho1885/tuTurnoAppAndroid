@@ -179,37 +179,17 @@ public class HomeRegistroAdmin extends Fragment {
         databaseReference.keepSynced(true);
     }
 
-    public class pedirturno implements View.OnClickListener {
+    public static class pedirturno implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            mostrarAlertDialog();
+            nav.navigate(R.id.AdminPedirturno, bun);
         }
     }
 
     private void obtenerdatos(String email, String gimnasio) {
         bun.putString("clienteemail", email);
         bun.putString("gimnasionombre", gimnasio);
-    }
-
-    private void mostrarAlertDialog() {
-        //ALERT DIALOG PARA LOS QUE LLEGAN TARDE
-        AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
-        mensaje.setTitle("Atención!");
-        mensaje.setIcon(R.drawable.ic_baseline_warning_24);
-        mensaje.setMessage("¿Estas llegando tarde?");
-        mensaje.setPositiveButton("Si", (dialogInterface, i) -> {
-            txtdni.setText("");
-            bun.putString("respuesta", "Si");
-            nav.navigate(R.id.AdminPedirturno, bun);
-        });
-        mensaje.setNegativeButton("No", (dialogInterface, i) -> {
-            txtdni.setText("");
-            bun.putString("respuesta", "No");
-            nav.navigate(R.id.AdminPedirturno, bun);
-        });
-        AlertDialog dialog = mensaje.create();
-        dialog.show();
     }
 }
 

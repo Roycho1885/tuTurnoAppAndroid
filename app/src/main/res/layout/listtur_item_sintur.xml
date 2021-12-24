@@ -38,43 +38,20 @@
                 android:id="@+id/imgasis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="30dp"
+                android:layout_margin="20dp"
                 android:layout_alignParentStart="true">
             </ImageView>
-
-            <TextView
-                android:id="@+id/txt_direccioncli"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="direccion"
-                android:textColor="#FFFFFF"
-                android:layout_alignStart="@+id/txt_nombreyapecli"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:layout_below="@+id/txt_nombreyapecli"
-                app:drawableStartCompat="@drawable/ic_baseline_home_24" />
-
-            <TextView
-                android:id="@+id/txt_dnicli"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="dni"
-                android:textColor="#FFFFFF"
-                android:layout_alignStart="@+id/txt_nombreyapecli"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:layout_below="@+id/txt_direccioncli"
-                app:drawableStartCompat="@drawable/ic_baseline_credit_card_24" />
 
             <TextView
                 android:id="@+id/txt_disciplinacli"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:layout_marginTop="30dp"
                 android:layout_marginStart="10dp"
                 android:textColor="#FFFFFF"
                 android:text="disci"
-                android:layout_below="@+id/txt_dnicli"
+                android:layout_below="@+id/txt_nombreyapecli"
                 android:textSize="15sp"
                 app:drawableStartCompat="@drawable/ic_baseline_fitness_center_24"/>
 

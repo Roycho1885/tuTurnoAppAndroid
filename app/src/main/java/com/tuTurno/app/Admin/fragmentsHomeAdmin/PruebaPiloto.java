@@ -106,7 +106,7 @@ public class PruebaPiloto extends Fragment {
         clienteres = false;
 
         iniciarFirebase();
-
+        cargando = new ProgressDialog(micontexto);
         user = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
 
         micalendario = Calendar.getInstance();
@@ -199,7 +199,7 @@ public class PruebaPiloto extends Fragment {
             androidx.appcompat.app.AlertDialog.Builder mensaje = new AlertDialog.Builder(new ContextThemeWrapper(requireActivity(), R.style.AlertDialogCustom));
             mensaje.setTitle("Información");
             mensaje.setIcon(R.drawable.ic_baseline_info);
-            mensaje.setMessage("Se registrará al cliente con sus datos y hora de ingreso, previa verificación de su estado.");
+            mensaje.setMessage("Se registrará al cliente con sus datos, hora y fecha de ingreso, previa verificación de su estado.");
             mensaje.setPositiveButton("Ok", (dialogInterface, t) -> {
                 dialogInterface.dismiss();
             });
@@ -209,6 +209,10 @@ public class PruebaPiloto extends Fragment {
 
         btnconturno.setOnClickListener(view -> {
             Navigation.findNavController(view).navigate(R.id.fragment_admin);
+        });
+
+        btnsinturno.setOnClickListener(view -> {
+            Navigation.findNavController(view).navigate(R.id.fragment_admin_sintur);
         });
 
         //LECTURA CLIENTES PARA NOTIFICACIONES

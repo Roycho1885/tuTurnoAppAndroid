@@ -58,7 +58,7 @@ public class ClienteTurnoAdmin extends Fragment {
     Calendar cal, micalendario;
     private cliente c, cli = new cliente();
     private DatosTurno datosturno = new DatosTurno();
-    String horaturno, fecha_vence, disci1, textologo, diasporsemana, nombre, apellido, direccion, DNI, idcliente, respuesta;
+    String horaturno, fecha_vence, disci1, textologo, diasporsemana, nombre, apellido, direccion, DNI, idcliente;
     private Date horaactual3, horaactual1, fechaactual, fechavence;
 
     private FirebaseDatabase firebaseDatabase;
@@ -121,7 +121,6 @@ public class ClienteTurnoAdmin extends Fragment {
         if (getArguments() != null) {
             user = getArguments().getString("clienteemail");
             textologo = getArguments().getString("gimnasionombre");
-            respuesta = getArguments().getString("respuesta");
         }
 
 
@@ -293,7 +292,7 @@ public class ClienteTurnoAdmin extends Fragment {
                                         assert container != null;
                                         Snackbar.make(container, "Ya no hay cupo en este turno", Snackbar.LENGTH_SHORT).show();
                                     } else {
-                                        if (respuesta.equals("Si")) {
+                                        if (horaactual1.compareTo(horaactual3) <= 0) {
                                             assert user != null;
                                             agregardatos(user, turnoselecc.getDisciplina(), turnoselecc.getHoracomienzo(), turnoselecc.getId());
                                             databaseReference.child(textologo).child("Datos Turnos").child(datosturno.getIdTurno()).setValue(datosturno);
@@ -311,35 +310,12 @@ public class ClienteTurnoAdmin extends Fragment {
                                             tur.setCoach(turnoselecc.getCoach());
                                             databaseReference.child(textologo).child("Disciplinas").child(tur.getDisciplina()).child(tur.getId()).setValue(tur);
                                             assert container != null;
-                                            Snackbar.make(container, "Turno registrado, trata de asistir mas temprano. Gracias", Snackbar.LENGTH_LONG).show();
+                                            Snackbar.make(container, "Turno registrado correctamente", Snackbar.LENGTH_SHORT).show();
                                             band = true;
                                         } else {
-                                            if (horaactual1.compareTo(horaactual3) <= 0) {
-                                                assert user != null;
-                                                agregardatos(user, turnoselecc.getDisciplina(), turnoselecc.getHoracomienzo(), turnoselecc.getId());
-                                                databaseReference.child(textologo).child("Datos Turnos").child(datosturno.getIdTurno()).setValue(datosturno);
-                                                tur.setDisciplina(turnoselecc.getDisciplina());
-                                                tur.setHoracomienzo(turnoselecc.getHoracomienzo());
-                                                tur.setDias(turnoselecc.getDias());
-                                                cupo--;
-                                                //VERIFICO SI TIENE DIAS EN 5
-                                                if (!diasporsemana.equals("5")) {
-                                                    diasporsemana = String.valueOf(Integer.parseInt(diasporsemana) - 1);
-                                                    actualizardiaporsemana(idcliente, diasporsemana);
-                                                }
-                                                tur.setCupo(String.valueOf(cupo));
-                                                tur.setCupoalmacenado(turnoselecc.getCupoalmacenado());
-                                                tur.setCoach(turnoselecc.getCoach());
-                                                databaseReference.child(textologo).child("Disciplinas").child(tur.getDisciplina()).child(tur.getId()).setValue(tur);
-                                                assert container != null;
-                                                Snackbar.make(container, "Turno registrado correctamente", Snackbar.LENGTH_SHORT).show();
-                                                band = true;
-                                            } else {
-                                                assert container != null;
-                                                Snackbar.make(container, "Ya no se puede registrar este turno", Snackbar.LENGTH_SHORT).show();
-                                            }
+                                            assert container != null;
+                                            Snackbar.make(container, "Ya no se puede registrar este turno", Snackbar.LENGTH_SHORT).show();
                                         }
-
                                     }
                                 }
                             }

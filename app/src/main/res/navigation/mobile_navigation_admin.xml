@@ -13,7 +13,18 @@
         <action
             android:id="@+id/action_PruebaPiloto_to_fragment_admin"
             app:destination="@id/fragment_admin" />
+        <action
+            android:id="@+id/action_PruebaPiloto_to_fragment_admin_sintur"
+            app:destination="@id/fragment_admin_sintur" />
     </fragment>
+
+    <fragment
+        android:id="@+id/fragment_admin_sintur"
+        android:name="com.tuTurno.app.Admin.fragmentsHomeAdmin.AdminHomePagerSinTur"
+        android:label="@string/app_name"
+        tools:layout="@layout/homeadminsintur">
+    </fragment>
+
 
     <fragment
         android:id="@+id/fragment_admin"

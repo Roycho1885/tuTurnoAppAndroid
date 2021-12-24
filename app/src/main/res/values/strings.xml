@@ -41,6 +41,7 @@
     <string name="action_settings">Compartir</string>
     <string name="btnconturno">Con turno</string>
     <string name="btnsinturno">Sin turno</string>
+    <string name="descripsintur">¿Cómo desea registrar sus clientes?</string>
 
     <string name="action_color">Cambiar Tema</string>
     <string name="tema1">Tema 1</string>
