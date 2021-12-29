@@ -73,7 +73,7 @@ public class HomeCliente extends Fragment {
     private Context micontexto;
     private ArrayList<turno> listturnos = new ArrayList<>();
     private turno turnoselecc;
-    boolean band;
+    boolean band, bandsintur;
     boolean band1;
     String disci1;
     private Date horaactual3 = null;
@@ -96,7 +96,7 @@ public class HomeCliente extends Fragment {
     TextView textologo;
 
     //CREO UN EVENTLISTENER
-    private ValueEventListener milistener, milistenercliente;
+    private ValueEventListener milistener;
 
 
     //para el listview
@@ -310,6 +310,7 @@ public class HomeCliente extends Fragment {
 
                 //REVISO SI EL CLIENTE YA TIENE UN TURNO PARA EL DIA ACTUAL
                 band = false;
+                bandsintur = false;
                 databaseReference.child(textologo.getText().toString()).child("Datos Turnos").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot shot) {
@@ -317,6 +318,23 @@ public class HomeCliente extends Fragment {
                             assert user != null;
                             if (user.equals(shot1.child("cliente").getValue()) && (setFecha.getText().toString().equals(shot1.child("fecha").getValue()))) {
                                 band = true;
+                                Snackbar.make(container, "Usted ya posee un turno para este día, revise en la sección Mi Turno", Snackbar.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+
+                databaseReference.child(textologo.getText().toString()).child("Datos SinTurno").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot shot) {
+                        for (DataSnapshot shot2 : shot.getChildren()) {
+                            assert user != null;
+                            if (user.equals(shot2.child("clienteemail").getValue()) && (setFecha.getText().toString().equals(shot2.child("fecha").getValue()))) {
+                                bandsintur = true;
                                 Snackbar.make(container, "Usted ya posee un turno para este día, revise en la sección Mi Turno", Snackbar.LENGTH_LONG).show();
                             }
                         }
@@ -379,7 +397,7 @@ public class HomeCliente extends Fragment {
                             if (Integer.parseInt(diasporsemana) == 0) {
                                 Snackbar.make(container, "Ya ocupo todos sus dias", Snackbar.LENGTH_SHORT).show();
                             } else {
-                                if (band) {
+                                if (band || bandsintur) {
                                     Snackbar.make(container, "Usted ya posee un turno para este día", Snackbar.LENGTH_SHORT).show();
                                 } else {
                                     if (cupo <= 0) {

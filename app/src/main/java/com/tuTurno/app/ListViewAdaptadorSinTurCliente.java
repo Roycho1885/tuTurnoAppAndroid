@@ -10,15 +10,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import models.DatosSinTurno;
 import models.DatosTurno;
 
-
-public class ListViewAdaptadorLT extends BaseAdapter {
+public class ListViewAdaptadorSinTurCliente extends BaseAdapter {
     private final Context contexto;
-    private final ArrayList<DatosTurno> listadatosturnos;
+    private final ArrayList<DatosSinTurno> listadatosturnos;
 
-
-    public ListViewAdaptadorLT(Context contexto, ArrayList<DatosTurno> listadatosturnos) {
+    public ListViewAdaptadorSinTurCliente(Context contexto, ArrayList<DatosSinTurno> listadatosturnos) {
         this.contexto = contexto;
         this.listadatosturnos = listadatosturnos;
     }
@@ -38,10 +37,11 @@ public class ListViewAdaptadorLT extends BaseAdapter {
         return 0;
     }
 
-    @SuppressLint({"ViewHolder", "InflateParams", "SetTextI18n"})
+    @SuppressLint({"ViewHolder", "SetTextI18n", "InflateParams"})
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        DatosTurno items = (DatosTurno) getItem(i);
+
+        DatosSinTurno items = (DatosSinTurno) getItem(i);
         view = LayoutInflater.from(contexto).inflate(R.layout.listtur_item,null);
         TextView nombre = view.findViewById(R.id.txt_nombreyape);
         TextView disciplina = view.findViewById(R.id.txt_disciplina);
@@ -51,8 +51,7 @@ public class ListViewAdaptadorLT extends BaseAdapter {
         nombre.setText(items.getApellido() +" "+ items.getNombre());
         disciplina.setText(items.getDisciplina());
         diaturno.setText(items.getFecha());
-        horacom.setText(items.getTurno());
-
+        horacom.setText(items.getHora());
 
         return view;
     }

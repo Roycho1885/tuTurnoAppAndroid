@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.tuTurno.app.ListViewAdaptadorLT;
+import com.tuTurno.app.ListViewAdaptadorSinTurCliente;
 import com.tuTurno.app.R;
 
 import java.text.DateFormat;
@@ -37,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import models.DatosSinTurno;
 import models.DatosTurno;
 import models.cliente;
 import models.turno;
@@ -53,8 +55,8 @@ public class ListTurnos extends Fragment {
     private Context micontexto;
     private String user;
     private boolean band1;
-    private DatosTurno tur = new DatosTurno();
-    private turno claseturno = new turno();
+    private final DatosTurno tur = new DatosTurno();
+    private final turno claseturno = new turno();
     private cliente cli = new cliente();
 
 
@@ -66,7 +68,8 @@ public class ListTurnos extends Fragment {
     private Date horaIngresada = null;
 
 
-    private ArrayList<DatosTurno> listadatosturnos = new ArrayList<>();
+    private final ArrayList<DatosTurno> listadatosturnos = new ArrayList<>();
+    private final ArrayList<DatosSinTurno> listadatossintur = new ArrayList<>();
     private final List<String> turnosdialog = new ArrayList<>();
     private final List<String> turnosid = new ArrayList<>();
     private final List<Integer> cupos = new ArrayList<>();
@@ -82,6 +85,10 @@ public class ListTurnos extends Fragment {
     //para el listview
     private ListView milistadatosturnos;
     private ListViewAdaptadorLT adaptador;
+    private ListViewAdaptadorSinTurCliente adaptadorSinTur;
+
+    private boolean band = false;
+    private boolean bandsintur = false;
 
 
     @Override
@@ -126,6 +133,7 @@ public class ListTurnos extends Fragment {
 
         //CLICK EN LISTVIEW DATOS TURNO
         adaptador = new ListViewAdaptadorLT(micontexto, listadatosturnos);
+        adaptadorSinTur = new ListViewAdaptadorSinTurCliente(micontexto, listadatossintur);
         milistadatosturnos.setOnItemClickListener((adapterView, view, i, l) -> {
             @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             Calendar calendar1 = Calendar.getInstance();
@@ -212,8 +220,8 @@ public class ListTurnos extends Fragment {
                                             idturnocambiado = Objects.requireNonNull(shot.child("id").getValue()).toString();
                                             horaturnocambiado = Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString();
                                             cupoalmacenado = Objects.requireNonNull(shot.child("cupoalmacenado").getValue()).toString();
-                                            dias = Objects.requireNonNull(shot.child("dias").getValue().toString());
-                                            coach = Objects.requireNonNull(shot.child("coach").getValue().toString());
+                                            dias = Objects.requireNonNull(Objects.requireNonNull(shot.child("dias").getValue()).toString());
+                                            coach = Objects.requireNonNull(Objects.requireNonNull(shot.child("coach").getValue()).toString());
                                         }
                                         String hora = Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString();
                                         int cupo = Integer.parseInt(Objects.requireNonNull(shot.child("cupo").getValue()).toString());
@@ -326,7 +334,7 @@ public class ListTurnos extends Fragment {
                                     horaturnocambiado = Objects.requireNonNull(shot.child("horacomienzo").getValue()).toString();
                                     cupoalmacenado = Objects.requireNonNull(shot.child("cupoalmacenado").getValue()).toString();
                                     dias = Objects.requireNonNull(shot.child("dias").getValue()).toString();
-                                    coach = Objects.requireNonNull(shot.child("coach").getValue().toString());
+                                    coach = Objects.requireNonNull(Objects.requireNonNull(shot.child("coach").getValue()).toString());
                                 }
                             }
 
@@ -377,10 +385,7 @@ public class ListTurnos extends Fragment {
 
 
     private void listarturnos(final View v, TextView gim) {
-        firebaseDatabase.getReference().child(gim.getText().toString()).child("Datos Turnos");
         databaseReference.child(gim.getText().toString()).child("Datos Turnos").addValueEventListener(new ValueEventListener() {
-            boolean band = false;
-
             @SuppressLint("Assert")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -395,18 +400,42 @@ public class ListTurnos extends Fragment {
                     }
                 }
                 if (!band) {
-                    assert false;
-                    Snackbar.make(v, "Usted no tiene turnos asignados para este día", Snackbar.LENGTH_SHORT).show();
-                    modi.setEnabled(false);
-                    elimi.setEnabled(false);
+                    databaseReference.child(gim.getText().toString()).child("Datos SinTurno").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            listadatossintur.clear();
+                            for (DataSnapshot shot : snapshot.getChildren()) {
+                                assert user != null;
+                                if (user.equals(shot.child("clienteemail").getValue()) && fechaactual.equals(shot.child("fecha").getValue())) {
+                                    bandsintur = true;
+                                    DatosSinTurno sintur = shot.getValue(DatosSinTurno.class);
+                                    listadatossintur.add(sintur);
+                                    milistadatosturnos.setAdapter(adaptadorSinTur);
+                                }
+                            }
+                            if(!bandsintur && !band){
+                                Snackbar.make(v, "Usted no tiene turnos asignados para este día", Snackbar.LENGTH_SHORT).show();
+                            }else{
+                                Snackbar.make(v, "Este es su registro sin turno, imposible modificar", Snackbar.LENGTH_SHORT).show();
+                            }
+                            modi.setEnabled(false);
+                            elimi.setEnabled(false);
+                            milistadatosturnos.setEnabled(false);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
+
+
     }
 
     private void iniciarFirebase() {

@@ -62,7 +62,7 @@ public class PruebaPiloto extends Fragment {
     private CollapsingToolbarLayout tool;
     private NavigationView navi;
     private cliente c, cli = new cliente();
-    private String nombre, apellido, urldire, user, fecha_venci, fechaactual, fecha_ulti, fecha;
+    private String urldire, user, fecha_venci, fechaactual, fecha_ulti, fecha;
     Date fechaultimopago, fechaact, fechavencimiento;
     MisFunciones cargarNav = new MisFunciones();
     MisFunciones enviarno = new MisFunciones();
@@ -139,8 +139,6 @@ public class PruebaPiloto extends Fragment {
                         cli = shot.getValue(cliente.class);
                         assert cli != null;
                         //CARGO NOMBRE, GIMNASIO E IMAGEN AL HEADER
-                        nombre = c.getNombre();
-                        apellido = c.getApellido();
                         cliente_admin.setText(getString(R.string.cliente) + " " + c.getNombre());
                         tool.setTitle(c.getGym());
                         textologo.setText(c.getGym());
@@ -188,9 +186,7 @@ public class PruebaPiloto extends Fragment {
             mensaje.setTitle("Información");
             mensaje.setIcon(R.drawable.ic_baseline_info);
             mensaje.setMessage("Se registrará al cliente con uno de los turnos que se hayan creado, previa verificación de su estado.");
-            mensaje.setPositiveButton("Ok", (dialogInterface, t) -> {
-                dialogInterface.dismiss();
-            });
+            mensaje.setPositiveButton("Ok", (dialogInterface, t) -> dialogInterface.dismiss());
             AlertDialog dialog = mensaje.create();
             dialog.show();
         });
@@ -200,20 +196,14 @@ public class PruebaPiloto extends Fragment {
             mensaje.setTitle("Información");
             mensaje.setIcon(R.drawable.ic_baseline_info);
             mensaje.setMessage("Se registrará al cliente con sus datos, hora y fecha de ingreso, previa verificación de su estado.");
-            mensaje.setPositiveButton("Ok", (dialogInterface, t) -> {
-                dialogInterface.dismiss();
-            });
+            mensaje.setPositiveButton("Ok", (dialogInterface, t) -> dialogInterface.dismiss());
             AlertDialog dialog = mensaje.create();
             dialog.show();
         });
 
-        btnconturno.setOnClickListener(view -> {
-            Navigation.findNavController(view).navigate(R.id.fragment_admin);
-        });
+        btnconturno.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.fragment_admin));
 
-        btnsinturno.setOnClickListener(view -> {
-            Navigation.findNavController(view).navigate(R.id.fragment_admin_sintur);
-        });
+        btnsinturno.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.fragment_admin_sintur));
 
         //LECTURA CLIENTES PARA NOTIFICACIONES
         databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
