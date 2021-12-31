@@ -49,6 +49,7 @@ import java.util.Objects;
 import models.DatosNotificaciones;
 import models.DatosSinTurno;
 import models.DatosTurno;
+import models.cliente;
 import models.turno;
 
 public class HomeAdminSinTur extends Fragment {
@@ -63,6 +64,7 @@ public class HomeAdminSinTur extends Fragment {
     private DatosNotificaciones datos = new DatosNotificaciones();
     private DatosSinTurno t, listadeturnos = new DatosSinTurno();
     private ScrollView scroolasis;
+    private cliente c = new cliente();
 
     private ArrayList<DatosSinTurno> listturnos = new ArrayList<>();
 
@@ -149,7 +151,28 @@ public class HomeAdminSinTur extends Fragment {
         DateFormat formato = DateFormat.getDateInstance(DateFormat.FULL);
         fechaactual = formato.format(calendar.getTime());
 
-        @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
+        //LECTURA DEL CLIENTE
+        databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot shot : snapshot.getChildren()) {
+
+                    c = shot.getValue(cliente.class);
+                    assert c != null;
+
+                    if (c.getEmail().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail())) {
+                        if (c.getAdmin().equals("Restringido")) {
+                            fab.setClickable(false);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
 
 
         //CARGO DISCIPLINA

@@ -50,7 +50,7 @@ public class HomeRegistroAdmin extends Fragment {
     private DatosTurno datosTurno = new DatosTurno();
     private NavigationView navi;
     private static EditText txtdni;
-    boolean banderaturno, banderacliente;
+    boolean banderaturno, banderacliente, band;
     String idturno, emailcliente;
     Calendar cal;
     cliente cli = new cliente();
@@ -85,6 +85,7 @@ public class HomeRegistroAdmin extends Fragment {
         iniciarFirebase();
         setearfecha(cal);
 
+
         fabregistrar.setOnClickListener(view -> {
             banderaturno = false;
             banderacliente = false;
@@ -109,6 +110,22 @@ public class HomeRegistroAdmin extends Fragment {
                             Snackbar.make(view, "Usted no se encuentra registrado", Snackbar.LENGTH_LONG).show();
                             txtdni.setText("");
                         } else {
+                            band = false;
+                            databaseReference.child(textologo.getText().toString()).child("Datos SinTurno").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot shot) {
+                                    for (DataSnapshot shot1 : shot.getChildren()) {
+                                        assert emailcliente != null;
+                                        if (emailcliente.equals(shot1.child("clienteemail").getValue()) && (setFecha.getText().toString().equals(shot1.child("fecha").getValue()))) {
+                                            band = true;
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
                             //VERIFICO EN TURNOS
                             databaseReference.child(textologo.getText().toString()).child("Datos Turnos").orderByChild("fecha").equalTo(setFecha.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -130,20 +147,26 @@ public class HomeRegistroAdmin extends Fragment {
                                                 Snackbar.make(view, "Turno registrado", Snackbar.LENGTH_SHORT).show();
 
                                             } else {
-                                                if (!banderaturno) {
+                                                if (!banderaturno && !band) {
                                                     Snackbar bar = Snackbar.make(view, "Usted no posee un turno", Snackbar.LENGTH_LONG);
                                                     obtenerdatos(emailcliente, textologo.getText().toString());
                                                     bar.setAction(R.string.pedturno, new pedirturno());
                                                     bar.show();
+                                                }else{
+                                                    Snackbar.make(view, "Usted ya posee un turno asignado", Snackbar.LENGTH_LONG).show();
                                                 }
                                             }
                                             txtdni.setText("");
                                         }
                                     } else {
-                                        Snackbar bar = Snackbar.make(view, "Usted no posee un turno", Snackbar.LENGTH_LONG);
-                                        obtenerdatos(emailcliente, textologo.getText().toString());
-                                        bar.setAction(R.string.pedturno, new pedirturno());
-                                        bar.show();
+                                        if (!band) {
+                                            Snackbar bar = Snackbar.make(view, "Usted no posee un turno", Snackbar.LENGTH_LONG);
+                                            obtenerdatos(emailcliente, textologo.getText().toString());
+                                            bar.setAction(R.string.pedturno, new pedirturno());
+                                            bar.show();
+                                        }else{
+                                            Snackbar.make(view, "Usted ya posee un turno asignado", Snackbar.LENGTH_LONG).show();
+                                        }
                                     }
                                 }
 

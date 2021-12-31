@@ -51,7 +51,7 @@ import models.MisFunciones;
 import models.cliente;
 import models.gimnasios;
 
-public class PruebaPiloto extends Fragment {
+public class HomeOpcionesRegistro extends Fragment {
     private ImageButton btnImgconTurno, btnImgsinTurno;
     private Button btnconturno, btnsinturno;
     private FirebaseDatabase firebaseDatabase;
@@ -142,10 +142,6 @@ public class PruebaPiloto extends Fragment {
                         cliente_admin.setText(getString(R.string.cliente) + " " + c.getNombre());
                         tool.setTitle(c.getGym());
                         textologo.setText(c.getGym());
-
-                        if (cli.getAdmin().equals("Restringido")) {
-                            fab.setClickable(false);
-                        }
                     }
                 }
 
@@ -200,6 +196,7 @@ public class PruebaPiloto extends Fragment {
             AlertDialog dialog = mensaje.create();
             dialog.show();
         });
+
 
         btnconturno.setOnClickListener(view -> Navigation.findNavController(view).navigate(R.id.fragment_admin));
 

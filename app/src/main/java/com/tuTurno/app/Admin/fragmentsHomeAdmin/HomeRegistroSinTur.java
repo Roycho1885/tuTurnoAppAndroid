@@ -208,6 +208,7 @@ public class HomeRegistroSinTur extends Fragment {
                                         }
                                     } else {
                                         if(banderaturno){
+                                            assert container != null;
                                             Snackbar.make(container, "Acceso registrado correctamente", Snackbar.LENGTH_LONG).show();
                                         }else{
                                             Snackbar.make(container, "Usted ya se registro", Snackbar.LENGTH_LONG).show();
@@ -221,25 +222,6 @@ public class HomeRegistroSinTur extends Fragment {
                                 public void onCancelled(@NonNull DatabaseError error) {
                                 }
                             });
-
-                            /*if (!deuda) {
-                                if (Integer.parseInt(diasporsemana) == 0) {
-                                    Snackbar bar = Snackbar.make(view, "Ya ocupo todos sus dias", Snackbar.LENGTH_LONG);
-                                    bar.show();
-                                } else {
-                                    if (band) {
-                                        Snackbar.make(container, "Usted ya se registro", Snackbar.LENGTH_LONG).show();
-                                    } else {
-                                        agregardatos(textologo, view);
-                                        //VERIFICO SI TIENE DIAS EN 5
-                                        if (!diasporsemana.equals("5")) {
-                                            diasporsemana = String.valueOf(Integer.parseInt(diasporsemana) - 1);
-                                            actualizardiaporsemana(idcliente, diasporsemana);
-                                        }
-                                    }
-                                }
-                                txtdni.setText("");
-                            }*/
                         }
                     }
 

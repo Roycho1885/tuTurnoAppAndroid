@@ -35,6 +35,7 @@ public class AdminHomePager extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.tablayouthomeadmin);
         final FloatingActionButton fab = requireActivity().findViewById(R.id.fab_admin);
 
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

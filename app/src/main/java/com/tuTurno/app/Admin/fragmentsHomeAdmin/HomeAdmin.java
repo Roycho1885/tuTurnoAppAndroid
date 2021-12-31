@@ -70,6 +70,7 @@ public class HomeAdmin extends Fragment {
     private DatosNotificaciones datos = new DatosNotificaciones();
     private DatosTurno t, listadeturnos = new DatosTurno();
     private ScrollView scroolasis;
+    private cliente c = new cliente();
 
     private ArrayList<DatosTurno> listturnos = new ArrayList<>();
 
@@ -160,7 +161,28 @@ public class HomeAdmin extends Fragment {
         DateFormat formato = DateFormat.getDateInstance(DateFormat.FULL);
         fechaactual = formato.format(calendar.getTime());
 
-        @SuppressLint("SimpleDateFormat") final SimpleDateFormat sdf = new SimpleDateFormat("dd-MMMM-yyyy");
+        //LECTURA DEL CLIENTE
+        databaseReference.child("Clientes").addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot shot : snapshot.getChildren()) {
+
+                    c = shot.getValue(cliente.class);
+                    assert c != null;
+
+                    if (c.getEmail().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail())) {
+                        if (c.getAdmin().equals("Restringido")) {
+                            fab.setClickable(false);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
 
 
         //CARGO DISCIPLINA

@@ -416,7 +416,7 @@ public class ListTurnos extends Fragment {
                             if(!bandsintur && !band){
                                 Snackbar.make(v, "Usted no tiene turnos asignados para este día", Snackbar.LENGTH_SHORT).show();
                             }else{
-                                Snackbar.make(v, "Este es su registro sin turno, imposible modificar", Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(v, "Este es su registro, imposible modificar", Snackbar.LENGTH_LONG).show();
                             }
                             modi.setEnabled(false);
                             elimi.setEnabled(false);

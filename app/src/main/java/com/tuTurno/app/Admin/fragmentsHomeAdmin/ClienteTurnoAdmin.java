@@ -53,7 +53,7 @@ public class ClienteTurnoAdmin extends Fragment {
 
     private ArrayList<turno> listturnos = new ArrayList<>();
     private turno turnoselecc;
-    boolean band1, finde, deuda, band;
+    boolean band1, finde, deuda, band, bandsintur;
     private String user;
     Calendar cal, micalendario;
     private cliente c, cli = new cliente();
@@ -222,6 +222,7 @@ public class ClienteTurnoAdmin extends Fragment {
 
                 //REVISO SI EL CLIENTE YA TIENE UN TURNO PARA EL DIA ACTUAL
                 band = false;
+                bandsintur = false;
                 databaseReference.child(textologo).child("Datos Turnos").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot shot) {
@@ -230,6 +231,23 @@ public class ClienteTurnoAdmin extends Fragment {
                             if (user.equals(shot1.child("cliente").getValue()) && (setFecha.getText().toString().equals(shot1.child("fecha").getValue()))) {
                                 band = true;
                                 assert container != null;
+                                Snackbar.make(container, "Usted ya posee un turno para este día, revise en la sección Mi Turno", Snackbar.LENGTH_LONG).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+
+                databaseReference.child(textologo).child("Datos SinTurno").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot shot) {
+                        for (DataSnapshot shot2 : shot.getChildren()) {
+                            assert user != null;
+                            if (user.equals(shot2.child("clienteemail").getValue()) && (setFecha.getText().toString().equals(shot2.child("fecha").getValue()))) {
+                                bandsintur = true;
                                 Snackbar.make(container, "Usted ya posee un turno para este día, revise en la sección Mi Turno", Snackbar.LENGTH_LONG).show();
                             }
                         }
@@ -284,7 +302,7 @@ public class ClienteTurnoAdmin extends Fragment {
                                 assert container != null;
                                 Snackbar.make(container, "Ya ocupo todos sus dias", Snackbar.LENGTH_SHORT).show();
                             } else {
-                                if (band) {
+                                if (band || bandsintur) {
                                     assert container != null;
                                     Snackbar.make(container, "Usted ya posee un turno para este día", Snackbar.LENGTH_SHORT).show();
                                 } else {
