@@ -66,7 +66,6 @@ public class AdminCuotas extends Fragment {
     private ArrayAdapter miadapter;
     private ArrayAdapter miadaptercuotas;
     private TextView registros;
-    private SwipeRefreshLayout swipeContainer;
 
     //CREO UN EVENTLISTENER
     private ValueEventListener milistener;

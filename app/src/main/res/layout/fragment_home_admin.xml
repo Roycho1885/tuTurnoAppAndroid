@@ -109,6 +109,15 @@
             android:text="@string/infofecha"
             android:textSize="12sp" />
 
+        <TextView
+            android:id="@+id/registrosintur"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/infofecha"
+            android:textStyle="bold" />
+
         <ImageView
             android:id="@+id/imagenvacia"
             android:layout_width="200dp"
@@ -123,7 +132,7 @@
             android:layout_height="350sp"
             android:listSelector="@drawable/lista_selector"
             android:layout_marginTop="10dp"
-            android:layout_below="@+id/infofecha"
+            android:layout_below="@+id/registrosintur"
             android:choiceMode="singleChoice"
             tools:ignore="NestedScrolling" />
     </RelativeLayout>

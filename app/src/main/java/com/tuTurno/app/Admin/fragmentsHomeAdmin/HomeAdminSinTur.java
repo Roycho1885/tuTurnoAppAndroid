@@ -77,7 +77,7 @@ public class HomeAdminSinTur extends Fragment {
     boolean bandera1;
     ProgressDialog cargando;
     Calendar micalendario, micalendario1;
-    TextView textologo;
+    TextView textologo, registros;
 
     //CREO UN EVENTLISTENER
     private ValueEventListener milistener;
@@ -115,6 +115,7 @@ public class HomeAdminSinTur extends Fragment {
         fab.setImageResource(R.drawable.lista_admin);
         imagenvacia.setVisibility(View.GONE);
         navi = requireActivity().findViewById(R.id.nav_view_admin);
+        registros = root.findViewById(R.id.registrosintur);
 
         View head = navi.getHeaderView(0);
         textologo = head.findViewById(R.id.textologo);
@@ -219,8 +220,10 @@ public class HomeAdminSinTur extends Fragment {
             } else {
                 band = false;
                 milistener = new ValueEventListener() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int contador = 0;
                         listturnos.clear();
                         for (DataSnapshot shot : snapshot.getChildren()) {
                             t = shot.getValue(DatosSinTurno.class);
@@ -229,6 +232,7 @@ public class HomeAdminSinTur extends Fragment {
                                 if (Objects.equals(shot.child("disciplina").getValue(), disci1)
                                         && (Objects.equals(shot.child("fecha").getValue(), fecha.getText().toString()))) {
                                     listturnos.add(t);
+                                    contador = contador +1;
                                     adaptador = new ListViewAdaptadorSinTur(micontexto, listturnos);
                                     milistaturnoscliente.setAdapter(adaptador);
                                     band = true;
@@ -237,12 +241,19 @@ public class HomeAdminSinTur extends Fragment {
                                 if (Objects.equals(shot.child("disciplina").getValue(), disci1)
                                         && (Objects.equals(shot.child("fecha").getValue(), fechaactual))) {
                                     listturnos.add(t);
+                                    contador = contador +1;
                                     adaptador = new ListViewAdaptadorSinTur(micontexto, listturnos);
                                     milistaturnoscliente.setAdapter(adaptador);
                                     band = true;
                                 }
                             }
 
+                        }
+                        if(contador == 0){
+                            registros.setVisibility(View.GONE);
+                        }else {
+                            registros.setVisibility(View.VISIBLE);
+                            registros.setText(contador + " registros encontrados");
                         }
                         fecha.setText("");
                         menudis.post(() -> menudis.getText().clear());

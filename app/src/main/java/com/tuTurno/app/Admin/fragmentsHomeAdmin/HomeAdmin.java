@@ -84,7 +84,7 @@ public class HomeAdmin extends Fragment {
     boolean bandera1;
     ProgressDialog cargando;
     Calendar micalendario, micalendario1;
-    TextView textologo;
+    TextView textologo, registros;
 
     //CREO UN EVENTLISTENER
     private ValueEventListener milistener;
@@ -123,6 +123,7 @@ public class HomeAdmin extends Fragment {
         fab.setImageResource(R.drawable.lista_admin);
         imagenvacia.setVisibility(View.GONE);
         navi = requireActivity().findViewById(R.id.nav_view_admin);
+        registros = root.findViewById(R.id.registrosintur);
 
         View head = navi.getHeaderView(0);
         textologo = head.findViewById(R.id.textologo);
@@ -268,6 +269,7 @@ public class HomeAdmin extends Fragment {
                 milistener = new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int contador = 0;
                         listturnos.clear();
                         for (DataSnapshot shot : snapshot.getChildren()) {
                             t = shot.getValue(DatosTurno.class);
@@ -281,6 +283,7 @@ public class HomeAdmin extends Fragment {
                                         t.setIcono(R.drawable.ic_baseline_cancel_24);
                                     }
                                     listturnos.add(t);
+                                    contador = contador +1;
                                     adaptador = new ListViewAdaptadorLA(micontexto, listturnos);
                                     milistaturnoscliente.setAdapter(adaptador);
                                     band = true;
@@ -294,12 +297,19 @@ public class HomeAdmin extends Fragment {
                                         t.setIcono(R.drawable.ic_baseline_cancel_24);
                                     }
                                     listturnos.add(t);
+                                    contador = contador +1;
                                     adaptador = new ListViewAdaptadorLA(micontexto, listturnos);
                                     milistaturnoscliente.setAdapter(adaptador);
                                     band = true;
                                 }
                             }
 
+                        }
+                        if(contador == 0){
+                            registros.setVisibility(View.GONE);
+                        }else {
+                            registros.setVisibility(View.VISIBLE);
+                            registros.setText(contador + " registros encontrados");
                         }
                         fechapago.setText("");
                         menudis.post(() -> menudis.getText().clear());
