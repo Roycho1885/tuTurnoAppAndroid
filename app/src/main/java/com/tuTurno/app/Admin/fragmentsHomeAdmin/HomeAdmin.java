@@ -63,7 +63,7 @@ public class HomeAdmin extends Fragment {
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private Context micontexto;
-    private TextView cliente_admin, setFecha;
+    private TextView setFecha;
     private ImageView imagenvacia;
     private NavigationView navi;
     private String fechaactual;
@@ -119,7 +119,6 @@ public class HomeAdmin extends Fragment {
         imagenvacia = root.findViewById(R.id.imagenvacia);
         fechapago = root.findViewById(R.id.txtfecha);
         setFecha = root.findViewById(R.id.setfecha);
-        cliente_admin = requireActivity().findViewById(R.id.versianda);
         fab.setImageResource(R.drawable.lista_admin);
         imagenvacia.setVisibility(View.GONE);
         navi = requireActivity().findViewById(R.id.nav_view_admin);
