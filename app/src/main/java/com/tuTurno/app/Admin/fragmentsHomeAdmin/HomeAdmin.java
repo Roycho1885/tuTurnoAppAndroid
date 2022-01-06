@@ -67,7 +67,6 @@ public class HomeAdmin extends Fragment {
     private ImageView imagenvacia;
     private NavigationView navi;
     private String fechaactual;
-    private DatosNotificaciones datos = new DatosNotificaciones();
     private DatosTurno t, listadeturnos = new DatosTurno();
     private ScrollView scroolasis;
     private cliente c = new cliente();
